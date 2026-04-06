@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Food Safety Inspection Report</title>
+<style>
+:root{
+  --bg:#f3f7fb;--card:#fff;--line:#d6e1ec;--text:#0f172a;--muted:#607186;
+  --brand:#0f4c81;--brand2:#0b3d67;--accent:#0ea5a4;
+  --good:#15803d;--good-bg:#dcfce7;
+  --warn:#b45309;--warn-bg:#fef3c7;
+  --bad:#b91c1c;--bad-bg:#fee2e2;
+  --na:#475467;--na-bg:#eceff3;
+  --shadow:0 8px 24px rgba(15,23,42,.08);--radius:20px;
+  --field-bg:#fff;--field-border:#cfd8e3;--field-text:#0f172a;
+  --section-head-bg:linear-gradient(180deg,#fbfdff,#f2f7fc);
+  --info-card-bg:#f7f8fa;--info-card-border:#d7dde5;
+  --mini-stat-bg:#f7f8fa;--note-card-bg:#f8fbff;
+  --check-row-bg:#fff;--hero-opacity:1;
+  --criteria-bg:#fff;--panel-bg:#fff;--sheet-bg:#fff;
+  --check-head-bg:linear-gradient(180deg,#edf5fd,#e5f0fa);
+  --progress-bg:#e8edf3;
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--card:#1e293b;--line:#334155;--text:#e2e8f0;--muted:#94a3b8;
+  --brand:#38bdf8;--brand2:#0ea5e8;--accent:#2dd4bf;
+  --good:#22c55e;--good-bg:#14532d;
+  --warn:#f59e0b;--warn-bg:#78350f;
+  --bad:#ef4444;--bad-bg:#7f1d1d;
+  --na:#9ca3af;--na-bg:#374151;
+  --shadow:0 8px 24px rgba(0,0,0,.4);
+  --field-bg:#0f172a;--field-border:#475569;--field-text:#e2e8f0;
+  --section-head-bg:linear-gradient(180deg,#1e293b,#172032);
+  --info-card-bg:#1e293b;--info-card-border:#334155;
+  --mini-stat-bg:#1e293b;--note-card-bg:#172032;
+  --check-row-bg:#1e293b;--hero-opacity:.85;
+  --criteria-bg:#1e293b;--panel-bg:#1e293b;--sheet-bg:#1e293b;
+  --check-head-bg:linear-gradient(180deg,#1a2d40,#162538);
+  --progress-bg:#334155;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:var(--bg);padding:12px;transition:background .2s,color .2s}
+.app{max-width:1600px;margin:0 auto;display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;align-items:start}
+.panel{position:sticky;top:12px;background:var(--panel-bg);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;border-top:4px solid var(--brand);transition:background .2s,border-color .2s}
+.brand{display:flex;gap:10px;align-items:center;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.brand-mark{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
+.brand h1{font-size:14px;line-height:1.25;font-weight:800;color:var(--text)}
+.sub{color:var(--muted);font-size:10px;margin-top:2px}
+.tool-group{margin-top:12px}
+.tool-title{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+.stack{display:grid;gap:6px}
+.btn{width:100%;border:none;border-radius:10px;padding:9px 12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s;min-height:40px}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn-primary{background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff}
+.btn-soft{background:linear-gradient(135deg,#1a6eb5,#1495a3);color:#fff}
+.btn-send{background:linear-gradient(135deg,var(--brand),#1766a3);color:#fff}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#b91c1c);color:#fff}
+.btn-theme{background:var(--info-card-bg);border:1px solid var(--line);color:var(--text);font-size:12px}
+.btn-theme:hover{background:var(--line)}
+.note-card{border:1px solid var(--line);border-radius:10px;background:var(--note-card-bg);padding:9px;font-size:11px;line-height:1.6;color:var(--muted)}
+.hidden{display:none!important}
+
+
+
+.mobile-topbar{display:none;background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:10px}
+.mobile-topbar .brand-mark{background:rgba(255,255,255,.2);font-size:13px;width:38px;height:38px;border-radius:10px}
+.mobile-topbar h1{font-size:14px;font-weight:800;line-height:1.2}
+.mobile-topbar .sub{font-size:10px;opacity:.85}
+.hamburger{background:rgba(255,255,255,.2);border:none;border-radius:8px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;font-size:18px;color:#fff}
+.panel-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200}
+.panel-backdrop.active{display:block}
+
+.sheet{background:var(--sheet-bg);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 20px 60px rgba(15,23,42,.10);overflow:hidden;min-width:0;transition:background .2s}
+.hero{padding:24px 20px 28px;background:linear-gradient(135deg,#0b3356 0%,var(--brand) 42%,#155e75 76%,var(--accent) 100%);color:#fff;position:relative;overflow:hidden;opacity:var(--hero-opacity)}
+.hero:before{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.18),transparent 68%)}
+.hero h2{margin:0 0 6px;font-size:22px;font-weight:900}
+.hero p{margin:0;font-size:12px;opacity:.93;line-height:1.6;max-width:600px}
+.confidential{text-align:right;padding:5px 18px 0;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+.content{padding:14px;display:grid;gap:12px}
+
+.section{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);box-shadow:0 4px 12px rgba(15,23,42,.03);transition:background .2s,border-color .2s}
+.sec-head{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--section-head-bg);flex-wrap:wrap;gap:4px}
+.sec-head h3{font-size:14px;font-weight:800;color:var(--brand)}
+.sec-head h3:before{content:"";display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:linear-gradient(135deg,var(--brand),var(--accent));vertical-align:middle}
+.sec-note{font-size:11px;color:var(--muted)}
+.sec-body{padding:14px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin:0 0 4px;text-transform:uppercase;letter-spacing:.03em}
+.field input,.field textarea,.field select{width:100%;border:1px solid var(--field-border);border-radius:9px;padding:8px 10px;font-size:13px;color:var(--field-text);background:var(--field-bg);outline:none;font-family:inherit;min-height:38px;transition:background .2s,border-color .2s,color .2s}
+.field textarea{resize:vertical;min-height:80px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,164,.12)}
+
+.report-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.info-card{border:1px solid var(--info-card-border);border-radius:12px;padding:10px;background:var(--info-card-bg)}
+.info-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.info-value{font-size:13px;font-weight:700;color:var(--text);line-height:1.4;min-height:34px;display:flex;align-items:center}
+
+.score-wrap{display:grid;gap:10px}
+.score-banner{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--info-card-bg)}
+.score-circle{height:130px;width:130px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:auto;background:conic-gradient(var(--brand) 0deg,var(--brand) 0deg,#e5e7eb 0deg 360deg);position:relative}
+.score-circle:before{content:"";position:absolute;inset:12px;background:var(--card);border-radius:50%}
+.score-circle-inner{position:relative;z-index:1;text-align:center}
+.score-circle-inner strong{display:block;font-size:26px;line-height:1;font-weight:900;color:var(--brand)}
+.score-circle-inner span{display:block;margin-top:4px;font-size:9px;color:var(--muted);font-weight:700}
+.score-summary h4{font-size:17px;color:var(--brand);margin:0 0 4px}
+.score-summary p{font-size:12px;color:var(--muted);line-height:1.5}
+.score-grade{display:inline-flex;align-items:center;gap:8px;padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;margin-top:8px}
+.mini-stat{border:1px solid var(--info-card-border);border-radius:12px;padding:10px;background:var(--mini-stat-bg);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.mini-stat .lbl{font-size:9px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.mini-stat .val{font-size:22px;font-weight:900;color:var(--text)}
+.criteria-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.criteria-card{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--criteria-bg)}
+.criteria-card h4{font-size:13px;font-weight:800;color:var(--brand);margin:0 0 4px}
+.criteria-card p{font-size:12px;color:var(--muted);line-height:1.5}
+
+.issue-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.issue-box{border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.issue-box .k{font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin-bottom:4px}
+.issue-box .n{font-size:20px;font-weight:900;line-height:1}
+.issue-box.warn{border-left:3px solid #f59e0b;background:var(--info-card-bg)}
+.issue-box.bad{border-left:3px solid #ef4444;background:var(--info-card-bg)}
+.issue-box.warn .k,.issue-box.warn .n{color:var(--warn)}
+.issue-box.bad .k,.issue-box.bad .n{color:var(--bad)}
+.issue-list{margin:6px 0 0;padding-left:14px;display:grid;gap:3px;font-size:12px;line-height:1.6;color:var(--text)}
+.issue-list li{margin:0}
+.issue-empty{margin-top:6px;font-size:12px;color:var(--muted)}
+
+.check-section{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:8px}
+.check-section:last-child{margin-bottom:0}
+.check-sec-head{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:var(--check-head-bg);border-bottom:1px solid var(--line);flex-wrap:wrap;gap:6px}
+.check-sec-head h4{margin:0;font-size:13px;color:var(--brand);font-weight:800}
+.sec-pill{display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;min-width:80px;height:26px}
+.check-items{display:grid;gap:7px;padding:9px}
+.check-row{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--check-row-bg);display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:6px 10px;align-items:center;transition:background .2s}
+.check-row:hover{border-color:#bfd0e1}
+.check-title{font-size:13px;font-weight:700;line-height:1.45;grid-column:1;grid-row:1;color:var(--text)}
+.rating-group{grid-column:2;grid-row:1;display:flex;flex-direction:row;gap:4px;align-items:center;flex-wrap:nowrap}
+.status-opt{border:1.5px solid var(--line);border-radius:18px;background:transparent;padding:0;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center}
+.status-opt input{display:none}
+.status-chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:18px;font-size:10px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--info-card-bg);transition:.15s}
+.status-opt:hover .status-chip{background:var(--line)}
+.status-opt.is-selected{border-color:transparent}
+.status-opt.is-selected .status-chip[data-value="achieved"]{background:#22c55e;color:#14532d}
+.status-opt.is-selected .status-chip[data-value="partial"]{background:#f59e0b;color:#78350f}
+.status-opt.is-selected .status-chip[data-value="not_achieved"]{background:#ef4444;color:#7f1d1d}
+.status-opt.is-selected .status-chip[data-value="na"]{background:#9ca3af;color:#1f2937}
+.checklist-comment-field{grid-column:1 / -1;grid-row:2;display:flex;align-items:center;gap:8px}
+.checklist-comment-field label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;flex:none}
+.checklist-comment-field textarea{flex:1;border:1px solid var(--field-border);border-radius:7px;padding:6px 9px;font-size:12px;color:var(--field-text);background:var(--field-bg);outline:none;font-family:inherit;min-height:32px;height:32px;line-height:1.45;resize:none;overflow:hidden;transition:background .2s}
+.checklist-comment-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(14,165,164,.10)}
+
+/* Photo quick-add bar */
+.photo-add-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--check-head-bg);border-bottom:1px solid var(--line)}
+.photo-add-bar span{font-size:12px;color:var(--muted);font-weight:600}
+.btn-photo-quick{background:linear-gradient(135deg,var(--brand),var(--accent));color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:.15s}
+.btn-photo-quick:hover{filter:brightness(1.08);transform:translateY(-1px)}
+
+.photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.photo-card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+.photo-head{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px;background:var(--check-head-bg);border-bottom:1px solid var(--line)}
+.photo-num{font-size:13px;font-weight:800;color:var(--brand)}
+.photo-tools{display:flex;gap:4px;flex-wrap:wrap}
+.photo-wrap{padding:7px;background:repeating-conic-gradient(var(--info-card-bg) 0% 25%,transparent 0% 50%) 0 0/12px 12px;display:flex;justify-content:center;align-items:center;min-height:170px}
+.photo-img{width:100%;height:155px;max-width:100%;max-height:155px;object-fit:contain;border:1px solid var(--line);border-radius:8px;display:block;transform-origin:center}
+.photo-body{padding:9px}
+.mini-btn{border:none;border-radius:6px;padding:4px 8px;cursor:pointer;font-weight:700;font-size:11px;background:var(--brand);color:#fff}
+.mini-btn-danger{background:#dc2626!important;color:#fff!important}
+.notes-list{padding-left:16px;display:grid;gap:6px;font-size:13px;line-height:1.65;color:var(--text)}
+.footer-note{text-align:center;color:var(--muted);font-size:11px;padding:4px 0}
+
+.tag-good{background:#22c55e!important;color:#14532d!important;font-weight:800}
+.tag-warn{background:#f59e0b!important;color:#78350f!important;font-weight:800}
+.tag-bad{background:#ef4444!important;color:#7f1d1d!important;font-weight:800}
+.tag-na{background:#9ca3af!important;color:#1f2937!important;font-weight:800}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--card);border-radius:16px;padding:20px;width:90%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.28);max-height:90vh;overflow-y:auto}
+.modal h3{font-size:16px;margin:0 0 12px;font-weight:800;color:var(--text)}
+.settings-modal-shell{background:var(--card);border-radius:16px;width:94%;max-width:940px;box-shadow:0 20px 60px rgba(0,0,0,.28);max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+.settings-modal-header{padding:16px 20px 10px;border-bottom:1px solid var(--line);background:var(--card)}
+.settings-modal-body{padding:16px 20px 70px;overflow:auto;flex:1}
+.modal-actions,.settings-modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;padding:12px 20px;border-top:1px solid var(--line);background:var(--card)}
+.settings-block{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--info-card-bg);margin-bottom:10px}
+.settings-block h4{margin:0 0 9px;font-size:14px;color:var(--brand);font-weight:800}
+.inline-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+.settings-list{display:grid;gap:6px}
+.setting-row{display:flex;gap:7px;align-items:center;border:1px solid var(--line);border-radius:9px;padding:6px 9px;background:var(--card);flex-wrap:wrap}
+.setting-row span,.setting-row input{font-size:13px;font-weight:700;color:var(--text)}
+.setting-row input{flex:1;border:1px solid var(--field-border);border-radius:7px;padding:6px 9px;background:var(--field-bg);font-family:inherit;min-height:32px;min-width:80px;color:var(--field-text)}
+.setting-actions{display:flex;gap:4px;flex-wrap:wrap}
+.criteria-editor{display:grid;gap:6px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.criteria-item{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.criteria-item input{flex:1;border:1px solid var(--field-border);border-radius:7px;padding:6px 9px;font-family:inherit;min-height:32px;min-width:80px;background:var(--field-bg);color:var(--field-text)}
+.order-badge{display:inline-flex;align-items:center;justify-content:min-width:24px;height:24px;border-radius:999px;background:var(--info-card-bg);color:var(--brand);font-size:11px;font-weight:800;padding:0 6px;min-width:24px}
+.settings-grid{display:grid;gap:12px}
+.order-input{width:54px;text-align:center;border:1px solid var(--field-border);border-radius:7px;padding:4px;font-family:inherit;background:var(--field-bg);color:var(--field-text)}
+
+.progress-overlay{position:fixed;inset:0;background:rgba(15,23,42,.4);backdrop-filter:blur(2px);z-index:1200;display:flex;align-items:center;justify-content:center;padding:16px}
+.progress-card{width:min(380px,92vw);background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 60px rgba(15,23,42,.2);padding:18px}
+.progress-title{font-size:16px;font-weight:800;color:var(--brand);margin:0 0 6px}
+.progress-text{font-size:13px;color:var(--muted);margin:0 0 10px;line-height:1.5}
+.progress-bar{height:9px;border-radius:999px;background:var(--progress-bg);overflow:hidden}
+.progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .25s}
+.progress-meta{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--muted);font-weight:700}
+#pdfRenderRoot{position:fixed;left:-100000px;top:0;width:210mm;background:#fff;z-index:-1;pointer-events:none}
+
+/* PDF STYLES */
+.pdf-report{width:210mm;min-height:297mm;background:#fff;color:#0f172a;font-family:"Segoe UI",Inter,Arial,sans-serif}
+.pdf-page{width:210mm;min-height:297mm;padding:10mm 9mm;background:#fff;page-break-after:always;break-after:page;overflow:hidden}
+.pdf-page:last-child{page-break-after:auto;break-after:auto}
+.pdf-confidential{text-align:right;font-size:9px;font-weight:700;color:#64748b;letter-spacing:.05em;margin-bottom:4mm}
+.pdf-hero{margin:-10mm -9mm 8mm;padding:14mm 14mm 11mm;background:linear-gradient(135deg,#0b3356 0%,#0f4c81 42%,#155e75 76%,#1295a8 100%);color:#fff;position:relative;overflow:hidden}
+.pdf-hero:before{content:"";position:absolute;right:-20mm;top:-20mm;width:55mm;height:55mm;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 68%)}
+.pdf-hero h1{margin:0 0 5px;font-size:26px;font-weight:900}
+.pdf-hero p{margin:0;font-size:11px;opacity:.95;line-height:1.5;max-width:130mm}
+.pdf-section{border:1px solid #dbe5f0;border-radius:14px;overflow:hidden;background:#fff;margin-bottom:7px;position:relative}
+.pdf-section:before{content:"";position:absolute;inset:0 auto 0 0;width:1.4mm;background:linear-gradient(180deg,#0f4c81,#0ea5a4)}
+.pdf-sec-head{padding:8px 11px 8px 13px;border-bottom:1px solid #e2e8f0;background:linear-gradient(180deg,#fbfdff,#f2f7fc);display:flex;justify-content:space-between;align-items:center}
+.pdf-sec-head h3{margin:0;font-size:13px;font-weight:900;color:#0f4c81}
+.pdf-sec-note{font-size:9px;color:#64748b;font-weight:700}
+.pdf-sec-body{padding:9px 10px 9px 12px}
+.pdf-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pdf-info-card{border:1px solid #dbe5f0;border-radius:12px;padding:9px 10px;background:#fff;position:relative}
+.pdf-info-card:before{content:"";position:absolute;left:10px;top:0;width:14mm;height:.9mm;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#14b8a6)}
+.pdf-info-card .l{font-size:8.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin:0 0 5px}
+.pdf-info-card .v{font-size:11.5px;font-weight:800;color:#0f172a;line-height:1.45;min-height:28px;white-space:pre-wrap;word-break:break-word}
+.pdf-info-card .v.normal-text{font-weight:500!important;font-size:10.5px!important;line-height:1.6;color:#334155}
+.pdf-score-banner{display:grid;grid-template-columns:42mm 1fr;gap:10px;align-items:center;padding:10px;border:1px solid #dbe7f0;border-radius:13px;background:#f5f9ff;margin-bottom:8px}
+.pdf-score-circle{width:36mm;height:36mm;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:auto;border:3.5mm solid #0f4c81;background:#fff;font-weight:900;font-size:17px;color:#0f4c81;text-align:center;line-height:1.1}
+.pdf-score-circle small{display:block;font-size:7.5px;color:#64748b;font-weight:800;margin-top:2px}
+.pdf-score-summary h4{margin:0 0 3px;font-size:15px;color:#0b4f64;font-weight:900}
+.pdf-score-summary p{margin:0;font-size:10px;line-height:1.5;color:#64748b}
+.pdf-grade{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;font-size:10px;font-weight:900}
+.pdf-mini-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.pdf-mini{border:1px solid #d9e3ee;border-radius:11px;padding:8px;text-align:center;background:#fff}
+.pdf-mini .l{font-size:8.5px;color:#64748b;font-weight:900;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.pdf-mini .v{font-size:17px;font-weight:900;color:#0f172a}
+.pdf-issue-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.pdf-issue-box{border:1px solid #d9e3ee;border-radius:11px;padding:8px 10px;background:#fff}
+.pdf-issue-box.warn{border-left:1.8mm solid #f59e0b;background:#fffdf0}
+.pdf-issue-box.bad{border-left:1.8mm solid #dc2626;background:#fff5f5}
+.pdf-issue-box .k{font-size:8.5px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.pdf-issue-box .n{font-size:16px;font-weight:900;line-height:1}
+.pdf-issue-box.warn .k,.pdf-issue-box.warn .n{color:#b45309}
+.pdf-issue-box.bad .k,.pdf-issue-box.bad .n{color:#b91c1c}
+.pdf-issue-list{margin:6px 0 0;padding-left:14px;display:grid;gap:3px;font-size:10px;line-height:1.55;color:#334155}
+.pdf-issue-list li{margin:0}
+.pdf-issue-empty{margin-top:6px;font-size:9px;color:#64748b}
+.pdf-check-section{border:1px solid #dbe5ef;border-radius:11px;overflow:hidden;margin-bottom:6px;background:#fff}
+.pdf-check-head{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:linear-gradient(135deg,#ebf7ff,#eafbf5);border-bottom:1px solid #dbe5ef}
+.pdf-check-head h4{margin:0;font-size:12px;color:#0b4f64;font-weight:900}
+.pdf-check-pill{display:inline-flex;align-items:center;justify-content:center;padding:3px 10px;border-radius:999px;font-size:10px;font-weight:900;min-width:80px;height:24px}
+.pdf-check-items{padding:7px;display:grid;gap:6px}
+.pdf-check-row{border:1px solid #e2e8f0;border-radius:9px;padding:7px 9px;background:#fff;display:grid;grid-template-columns:minmax(0,1.8fr) 26mm minmax(0,1.5fr);gap:6px 8px;align-items:center;page-break-inside:avoid;break-inside:avoid}
+.pdf-check-title{font-size:10.5px;font-weight:800;line-height:1.45;color:#0f172a}
+.pdf-check-status{display:inline-flex;align-items:center;justify-content:center;text-align:center;padding:3px 6px;border-radius:999px;font-size:9.5px;font-weight:900;line-height:1.1;white-space:normal;word-break:break-word;min-width:60px;max-width:72px}
+.pdf-check-status.good{background:#22c55e;color:#14532d}
+.pdf-check-status.warn{background:#f59e0b;color:#78350f}
+.pdf-check-status.bad{background:#ef4444;color:#7f1d1d}
+.pdf-check-status.na{background:#9ca3af;color:#1f2937}
+.pdf-check-comment{font-size:10px;line-height:1.5;color:#475569;white-space:pre-wrap;word-break:break-word}
+.pdf-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.pdf-photo-card{border:1px solid #dbe4ee;border-radius:11px;padding:8px;background:#fff;page-break-inside:avoid;break-inside:avoid}
+.pdf-photo-title{font-size:10px;font-weight:900;color:#0b4f64;margin-bottom:6px}
+.pdf-photo-box{border:1px solid #dfe7ef;border-radius:9px;padding:3px;height:56mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fafbfc}
+.pdf-photo-desc{margin-top:6px;font-size:9.5px;line-height:1.45;color:#334155;white-space:pre-wrap;word-break:break-word}
+.pdf-notes-list{margin:0;padding-left:16px;display:grid;gap:5px;font-size:10px;line-height:1.55;color:#334155}
+.pdf-page-footer{text-align:center;font-size:9px;color:#64748b;margin-top:7px;font-weight:700}
+
+@media(max-width:1050px){
+  .app{grid-template-columns:1fr}
+  .mobile-topbar{display:flex}
+  .hamburger{display:none}
+  .panel-backdrop{display:none!important}
+  .panel{position:relative;top:0;left:0;height:auto;overflow:visible;z-index:1;width:auto;border-radius:16px;border-top:4px solid var(--brand);border-left:1px solid var(--line);transition:none;margin-bottom:12px;padding:14px;}
+  .panel.open{left:0}
+  .panel .brand{padding-bottom:10px;margin-bottom:2px;}
+  .panel .tool-group:first-of-type{margin-top:10px;}
+  .panel .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  .panel .btn{min-height:42px;font-size:12px;padding:10px 8px;}
+}
+@media(max-width:768px){
+  body{padding:8px}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .criteria-grid{grid-template-columns:1fr 1fr}
+  .score-banner{grid-template-columns:120px 1fr;gap:10px}
+  .score-circle{width:110px;height:110px}
+  .score-circle-inner strong{font-size:22px}
+  .hero h2{font-size:18px}
+  .hero p{font-size:11px}
+  .content{padding:10px;gap:10px}
+  .sec-body{padding:10px}
+  .issue-summary{grid-template-columns:1fr 1fr}
+}
+@media(max-width:540px){
+  body{padding:6px}
+  .grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .criteria-grid{grid-template-columns:1fr 1fr}
+  .score-banner{grid-template-columns:1fr;text-align:center}
+  .score-circle{width:110px;height:110px}
+  .issue-summary{grid-template-columns:1fr}
+  .hero{padding:18px 14px 22px}
+  .hero h2{font-size:16px}
+  .content{padding:8px;gap:8px}
+  .sec-body{padding:8px}
+  .panel{padding:12px}
+  .panel .brand{display:none}
+  .panel .tool-group{margin-top:0}
+  .panel .tool-title{margin-bottom:8px}
+  .panel .stack{grid-template-columns:1fr 1fr}
+  .panel .btn{font-size:11px;min-height:40px}
+  .check-row{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+  .check-title{grid-column:1;grid-row:1}
+  .rating-group{grid-column:1;grid-row:2;flex-wrap:wrap;justify-content:flex-start}
+  .checklist-comment-field{grid-column:1;grid-row:3;align-items:flex-start}
+  .checklist-comment-field textarea{min-height:38px}
+  .status-chip{font-size:10px;padding:5px 8px}
+  .photos-grid{grid-template-columns:1fr}
+  .photo-tools{gap:3px}
+  .mini-btn{font-size:10px;padding:4px 7px}
+  .modal{width:100%;max-width:100%;border-radius:14px 14px 0 0;position:fixed;bottom:0;left:0;right:0;border-radius:16px}
+  .overlay{align-items:flex-end;padding:0}
+  .settings-modal-shell{width:100%;max-width:100%;border-radius:14px 14px 0 0;max-height:92vh}
+  .sec-head h3{font-size:13px}
+  .mini-stat .val{font-size:20px}
+  .mini-stat .lbl{font-size:9px}
+}
+@media(max-width:380px){
+  .grid-4{grid-template-columns:1fr 1fr}
+  .criteria-grid{grid-template-columns:1fr}
+  .rating-group{gap:3px}
+  .status-chip{font-size:9px;padding:4px 7px}
+  .score-circle-inner strong{font-size:20px}
+  .hero h2{font-size:15px}
+}
+</style>
+</head>
+<body>
+
+<div class="mobile-topbar" id="mobileTopbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="brand-mark">FS</div>
+    <div><h1>Food Safety Report</h1><div class="sub">Premium A4 Layout</div></div>
+  </div>
+  <button class="hamburger" id="hamburgerBtn" onclick="togglePanel()" aria-label="Menu">☰</button>
+</div>
+
+<div class="panel-backdrop" id="panelBackdrop" onclick="closePanel()"></div>
+
+<div class="app">
+  <aside class="panel" id="sidePanel">
+    <div class="brand">
+      <div class="brand-mark">FS</div>
+      <div><h1>Food Safety<br>Report</h1><div class="sub">Direct PDF · Premium A4 layout</div></div>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-title">Appearance</div>
+      <div class="stack">
+        <button class="btn btn-theme" id="themeToggleBtn" onclick="toggleTheme()">🌙 Dark Mode</button>
+      </div>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-title">Actions</div>
+      <div class="stack" id="actionStack">
+        <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF</button>
+        <button class="btn btn-send" id="btnEmail" onclick="openSendModal()">✉️ Email Draft</button>
+        <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()">📷 Add Photos</button>
+        <input class="hidden" type="file" id="photoInput" multiple accept="image/*">
+        <input class="hidden" type="file" id="loadInput" accept=".json,application/json">
+        <input class="hidden" type="file" id="settingsLoadInput" accept=".json,application/json">
+        <button class="btn btn-soft" id="btnSettings" onclick="openSettingsModal()">⚙️ Settings</button>
+        <button class="btn btn-soft" id="btnSave" onclick="saveData()">💾 Auto File Save</button>
+        <button class="btn btn-soft" id="btnLoad" onclick="document.getElementById('loadInput').click()">📂 Load Data</button>
+        <button class="btn btn-soft" id="btnLoadSettings" onclick="document.getElementById('settingsLoadInput').click()">📥 Load Settings</button>
+        <button class="btn btn-danger" id="btnClear" onclick="clearAll()">🗑️ Clear All</button>
+      </div>
+    </div>
+
+    <div class="tool-group">
+      <div class="tool-title">Scoring Guide</div>
+      <div class="note-card">
+        Achieved = 100%&nbsp;&nbsp;·&nbsp;&nbsp;Partial = 50%<br>
+        Did Not Achieve = 0%&nbsp;&nbsp;·&nbsp;&nbsp;N/A = excluded
+      </div>
+    </div>
+  </aside>
+
+  <main class="sheet" id="reportSheet">
+    <div class="hero">
+      <h2>Food Safety Inspection Report</h2>
+      <p>Executive-quality inspection report with clear professional audit layout.</p>
+    </div>
+    <div class="confidential">Private &amp; Confidential</div>
+    <div class="content">
+
+      <section class="section">
+        <div class="sec-head"><h3>Report Information</h3></div>
+        <div class="sec-body">
+          <div class="grid-3">
+            <div class="field"><label>Hotel / Property Name</label><input id="hotelName" list="propertyOptions" placeholder="Select or type property name"></div><datalist id="propertyOptions"></datalist>
+            <div class="field"><label>Location / Outlet</label><input id="locationOutlet" list="locationOutletOptions" placeholder="Select or type outlet"></div><datalist id="locationOutletOptions"></datalist>
+            <div class="field"><label>Inspection Date &amp; Time</label><input id="inspectionDateTime" type="datetime-local"></div>
+            <div class="field"><label>Person on Duty</label><input id="personOnDuty" placeholder="Name of person on duty"></div>
+            <div class="field"><label>Department</label><input id="departmentName" list="departmentOptions" placeholder="Select or type department"></div><datalist id="departmentOptions"></datalist>
+            <div class="field"><label>Inspection Done By</label><input id="auditorName" placeholder="Auditor / inspector name"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Overall Score</h3><span class="sec-note">Automatically calculated</span></div>
+        <div class="sec-body">
+          <div class="score-wrap">
+            <div class="score-banner">
+              <div class="score-circle" id="overallScoreCircle">
+                <div class="score-circle-inner">
+                  <strong id="overallScorePct">0%</strong>
+                  <span>Overall Score</span>
+                </div>
+              </div>
+              <div class="score-summary">
+                <h4 id="overallScoreTitle">Not Rated</h4>
+                <p id="overallScoreText">Start rating checklist items to calculate the overall inspection score.</p>
+                <div class="score-grade tag-na" id="overallScoreGrade">Not Rated</div>
+              </div>
+            </div>
+            <div class="grid-4">
+              <div class="mini-stat"><div class="lbl">Rated Items</div><div class="val" id="ratedItemsVal">0</div></div>
+              <div class="mini-stat"><div class="lbl">Achieved</div><div class="val" id="achievedItemsVal">0</div></div>
+              <div class="mini-stat"><div class="lbl">Partially Achieved</div><div class="val" id="partialItemsVal">0</div></div>
+              <div class="mini-stat"><div class="lbl">Did Not Achieve</div><div class="val" id="failedItemsVal">0</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Score Criteria</h3></div>
+        <div class="sec-body">
+          <div class="criteria-grid">
+            <div class="criteria-card"><h4>Achieved</h4><p>Fully compliant. Score: <strong>100%</strong>.</p></div>
+            <div class="criteria-card"><h4>Partially Achieved</h4><p>Partially compliant. Score: <strong>50%</strong>.</p></div>
+            <div class="criteria-card"><h4>Did Not Achieve</h4><p>Non-compliant. Score: <strong>0%</strong>.</p></div>
+            <div class="criteria-card"><h4>Not Applicable</h4><p>Excluded from score calculation.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Issues Requiring Attention</h3><span class="sec-note">Quick view before checklist details</span></div>
+        <div class="sec-body">
+          <div class="issue-summary">
+            <div class="issue-box warn">
+              <div class="k">Partially Achieved</div>
+              <div class="n" id="partialItemsSummaryVal">0</div>
+              <div id="partialIssueDetails" class="issue-empty">No partially achieved items.</div>
+            </div>
+            <div class="issue-box bad">
+              <div class="k">Did Not Achieve</div>
+              <div class="n" id="failedItemsSummaryVal">0</div>
+              <div id="failedIssueDetails" class="issue-empty">No failed items.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Inspection Check Lists</h3></div>
+        <div class="sec-body"><div id="checklistRoot"></div></div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>General Observation &amp; Corrective Action</h3></div>
+        <div class="sec-body">
+          <div class="grid-2">
+            <div class="field"><label>General Observation</label><textarea id="generalObservation" placeholder="Overall observations…"></textarea></div>
+            <div class="field"><label>Corrective Action Taken</label><textarea id="correctiveAction" placeholder="Corrective actions taken or planned…"></textarea></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Photo Evidence</h3></div>
+        <div class="photo-add-bar">
+          <span>Add photographic evidence</span>
+          <button class="btn-photo-quick" onclick="triggerPhoto()">📷 Add Photos</button>
+        </div>
+        <div class="sec-body">
+          <div class="photos-grid" id="photoGrid"></div>
+          <p id="noPhotoMsg" style="color:var(--muted);font-size:13px;margin:4px 0 0">No photos yet — click "Add Photos" above or in the action panel.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="sec-head"><h3>Notes &amp; Guidance</h3></div>
+        <div class="sec-body"><ol class="notes-list" id="notesList"></ol></div>
+      </section>
+
+      <div class="footer-note"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Send Modal -->
+<div class="overlay" id="sendModal" style="display:none">
+  <div class="modal">
+    <h3>Send Report via Email</h3>
+    <div class="field" style="margin-bottom:10px"><label>To</label><input id="emailTo" type="email" placeholder="recipient@example.com"></div>
+    <div class="field" style="margin-bottom:10px"><label>CC (optional)</label><input id="emailCc" type="email" placeholder="cc@example.com"></div>
+    <div class="field" style="margin-bottom:10px"><label>Subject</label><input id="emailSubject"></div>
+    <div class="field" style="margin-bottom:10px"><label>Message Body</label><textarea id="emailBody" style="min-height:80px"></textarea></div>
+    <div class="note-card">Email draft opens in your mail client. Generate and attach the PDF separately.</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-soft" style="width:auto;padding:9px 14px" onclick="closeSendModal()">Cancel</button>
+      <button class="btn btn-send" style="width:auto;padding:9px 14px" onclick="doSendFlow()">Open Draft</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="overlay" id="settingsModal" style="display:none">
+  <div class="settings-modal-shell">
+    <div class="settings-modal-header"><h3 style="font-size:16px;margin:0;font-weight:800;color:var(--text)">Report Settings</h3></div>
+    <div class="settings-modal-body">
+      <div class="settings-grid">
+        <div class="settings-block">
+          <h4>General Lists</h4>
+          <div class="field" style="margin-bottom:10px"><label>Default Property Name</label><input id="settingPropertyName" placeholder="Enter default property name"></div>
+          <div style="margin-bottom:10px">
+            <div class="inline-row" style="margin-bottom:7px">
+              <div class="field" style="margin:0;flex:1"><label>Add Outlet</label><input id="newOutletName" placeholder="Enter outlet name"></div>
+              <button class="btn btn-soft" style="width:auto;padding:9px 12px;margin-top:18px" onclick="addSettingItem('outlets')">Add</button>
+            </div>
+            <div id="settingsOutletList" class="settings-list"></div>
+          </div>
+          <div>
+            <div class="inline-row" style="margin-bottom:7px">
+              <div class="field" style="margin:0;flex:1"><label>Add Department</label><input id="newDepartmentName" placeholder="Enter department name"></div>
+              <button class="btn btn-soft" style="width:auto;padding:9px 12px;margin-top:18px" onclick="addSettingItem('departments')">Add</button>
+            </div>
+            <div id="settingsDepartmentList" class="settings-list"></div>
+          </div>
+        </div>
+        <div class="settings-block">
+          <h4>Checklist Groups</h4>
+          <div class="inline-row" style="margin-bottom:8px">
+            <div class="field" style="margin:0;flex:1"><label>Add New Group</label><input id="newChecklistGroupName" placeholder="Group name"></div>
+            <button class="btn btn-soft" style="width:auto;padding:9px 12px;margin-top:18px" onclick="addChecklistGroup()">Add</button>
+          </div>
+          <div id="settingsChecklistGroups" class="settings-list"></div>
+        </div>
+        <div class="settings-block">
+          <h4>Notes &amp; Guidance</h4>
+          <div class="inline-row" style="margin-bottom:8px">
+            <div class="field" style="margin:0;flex:1"><label>Add New Note</label><input id="newReportNote" placeholder="Enter note text"></div>
+            <button class="btn btn-soft" style="width:auto;padding:9px 12px;margin-top:18px" onclick="addReportNote()">Add</button>
+          </div>
+          <div id="settingsNotesList" class="settings-list"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions settings-modal-footer">
+      <button class="btn btn-soft" style="width:auto;padding:9px 14px" onclick="closeSettingsModal()">Close</button>
+      <button class="btn btn-primary" style="width:auto;padding:9px 14px" onclick="saveSettings()">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- Progress -->
+<div class="progress-overlay hidden" id="progressOverlay" style="display:none">
+  <div class="progress-card">
+    <h3 class="progress-title" id="progressTitle">Generating report</h3>
+    <p class="progress-text" id="progressText">Preparing layout…</p>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-meta"><span id="progressLabel">0%</span><span id="progressHint">Please keep this page open</span></div>
+  </div>
+</div>
+
+<div id="pdfRenderRoot"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+/* ── THEME ── */
+const THEME_KEY='fsr_theme';
+let currentTheme=localStorage.getItem(THEME_KEY)||'light';
+function applyTheme(t){
+  currentTheme=t;
+  document.documentElement.setAttribute('data-theme',t);
+  const btn=document.getElementById('themeToggleBtn');
+  if(btn)btn.textContent=t==='dark'?'☀️ Light Mode':'🌙 Dark Mode';
+  try{localStorage.setItem(THEME_KEY,t);}catch(e){}
+}
+function toggleTheme(){applyTheme(currentTheme==='dark'?'light':'dark');}
+applyTheme(currentTheme);
+
+
+
+/* ── PANEL TOGGLE ── */
+function togglePanel(){
+  if(window.innerWidth<=1050)return;
+  const p=document.getElementById('sidePanel');
+  const b=document.getElementById('panelBackdrop');
+  const open=p.classList.toggle('open');
+  b.classList.toggle('active',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closePanel(){
+  if(window.innerWidth<=1050)return;
+  document.getElementById('sidePanel').classList.remove('open');
+  document.getElementById('panelBackdrop').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+const BASE_SECTIONS=[
+  {name:"Storage",items:["Chiller / Freezer / Hot Cabinet temperature are accurate and monitored regularly","Food arranged properly to prevent cross contamination","Dry store and storage shelves are clean; temperature and humidity controlled","No cardboard / wooden boxes in chillers and preparation areas","No dented or damaged goods are present"]},
+  {name:"Preparation and Cooking",items:["Colour coded chopping boards and knives are being used","No raw egg is being used in food cooked below 75°C","High risk foods are cooked above 75°C and randomly monitored","Colleagues are aware of allergen management","Ingredients are clearly mentioned on bottle / packet in English / Arabic","Allergen orders are handled only by the outlet / kitchen in-charge"]},
+  {name:"Cleaning",items:["Chiller, freezer and storage racks are clean, including rubber seal, rack and door handle; no ice formation in freezer","Food and hand contact surfaces are clean and disinfected","Pot wash sink is clean and well stocked with detergent and disinfectant","Dish washing machine is clean and rinse temperature reaches more than 82°C","Garbage bin is pedal operated, clean, bagged and not overfilled","Food handlers hair is protected by hair restraint, wounds are covered if any, and company grooming standard is followed","Hand wash station is well stocked with water, soap and tissue paper, not blocked, and hands are washed frequently"]},
+  {name:"Maintenance",items:["Machines, walls, floors, light fixtures and equipment are in good repair","Calibrated probe thermometer is available in the outlet"]},
+  {name:"Documents",items:["Documents are up to date, including chiller, freezer, cooling, cooking, EFST, grooming and first aid kit records"]},
+  {name:"Pest Control",items:["Fly killers are clean and not placed directly above food preparation area","Pest sighting log is up to date and no pest activity is noted"]},
+  {name:"Service - Food and Beverage",items:["Ice machines and ice scoop are clean and in good condition","Coffee machine is clean and cleaning record is available","Milk for coffee machine is refrigerated, or changed regularly at maximum 4-hour interval","Take away sticker is available and service staff are aware of take away policy","Colleagues are aware of allergen management","Bar and service area are clean with no pest infestation","Mixers and blenders are clean","Menu contains allergen disclaimer","Chiller / Freezer temperature are accurate and monitored regularly","No storage containers are reused from original intended use","Cold holding temperature is maintained while storing high risk beverages such as milk and juice"]},
+  {name:"Critical Criteria",items:["No expired food is present and foods are labelled appropriately for Culinary","No expired food or beverage is present and foods are labelled appropriately for Service","FIFO system is followed","Items are covered and labelled","Alcohol is segregated from non-alcohols for Service"]}
+];
+const BASE_REPORT_NOTES=["All food should be stored at least 15 cm off the floor. Main dry store must have a humidity meter. Cartons are allowed inside freezer to avoid freezer burn. Glassware and china should be stored away from preparation areas.","Auditor should observe the hand washing habits of colleagues.","All food and hand contact surfaces, equipment, floor, wall and ceiling to be checked. Notice boards to be away from food preparation. Containers shall be stored upside down after cleaning.","Observe colleagues about their hand washing practice. Disposable spoons should be used for tasting. Gloves should be used while preparing ready-to-eat food. No eating or drinking allowed in kitchen.","Corrective actions shall be completed and filed within three working days after receiving the audit report."];
+
+let SECTIONS=JSON.parse(JSON.stringify(BASE_SECTIONS));
+let REPORT_NOTES=BASE_REPORT_NOTES.slice();
+const STATUS=[
+  {value:"achieved",label:"Achieved",score:100,bg:"#dcfce7",color:"#15803d",cls:"tag-good"},
+  {value:"partial",label:"Partial",score:50,bg:"#fef3c7",color:"#b45309",cls:"tag-warn"},
+  {value:"not_achieved",label:"Not Achieved",score:0,bg:"#fee2e2",color:"#b91c1c",cls:"tag-bad"},
+  {value:"na",label:"N/A",score:null,bg:"#eceff3",color:"#475467",cls:"tag-na"}
+];
+const STATUS_FULL={achieved:"Achieved",partial:"Partially Achieved",not_achieved:"Did Not Achieve",na:"Not Applicable"};
+
+let photoCtr=0;
+let appSettings={propertyName:"",outlets:[],departments:["Culinary","Food & Beverage"],checklistSections:JSON.parse(JSON.stringify(BASE_SECTIONS)),reportNotes:BASE_REPORT_NOTES.slice()};
+const DEFAULT_SETTINGS={propertyName:"Conrad Abu Dhabi Etihad Towers",outlets:["All Day Dining"],departments:["Culinary","Food & Beverage"],checklistSections:JSON.parse(JSON.stringify(BASE_SECTIONS)),reportNotes:BASE_REPORT_NOTES.slice()};
+
+function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+function gv(id){const e=document.getElementById(id);return e?e.value.trim():""}
+function sv(id,v){const e=document.getElementById(id);if(e)e.value=v||""}
+function chunkArray(arr,sz){const o=[];for(let i=0;i<arr.length;i+=sz)o.push(arr.slice(i,i+sz));return o}
+function safeFormatDateTime(v){try{const d=new Date(v);if(isNaN(d.getTime()))return v||"—";return d.toLocaleString("en-GB",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});}catch{return v||"—";}}
+function normalizeList(items){return Array.from(new Set((items||[]).map(v=>String(v||"").trim()).filter(Boolean)))}
+function normalizeSections(items){return(Array.isArray(items)?items:[]).map(s=>({name:String(s&&s.name||"").trim(),items:(s.items||[]).map(v=>String(v||"").trim()).filter(Boolean)})).filter(s=>s.name&&s.items.length)}
+function normalizeNotes(items){return(items||[]).map(v=>String(v||"").trim()).filter(Boolean)}
+
+function gradeOf(pct,rated){
+  if(!rated)return{label:"Not Rated",cls:"tag-na",bg:"#eceff3",color:"#475467",text:"Start rating checklist items to calculate the overall inspection score."};
+  if(pct>=85)return{label:"Good",cls:"tag-good",bg:"#dcfce7",color:"#15803d",text:"Inspection performance is strong with high compliance across rated items."};
+  if(pct>=70)return{label:"Attention",cls:"tag-warn",bg:"#fef3c7",color:"#b45309",text:"Inspection performance is acceptable but several items need follow-up action."};
+  return{label:"Critical",cls:"tag-bad",bg:"#fee2e2",color:"#b91c1c",text:"Inspection performance is low and urgent corrective action is required."};
+}
+function sectionScore(sIdx){
+  let rated=0,sum=0;
+  SECTIONS[sIdx].items.forEach((_,iIdx)=>{
+    const c=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
+    if(!c)return;
+    if(c.value==="achieved"){rated++;sum+=100}
+    else if(c.value==="partial"){rated++;sum+=50}
+    else if(c.value==="not_achieved"){rated++}
+  });
+  return{rated,pct:rated?Math.round(sum/rated):0};
+}
+function overallScore(){
+  let rated=0,sum=0,achieved=0,partial=0,failed=0;
+  SECTIONS.forEach((sec,sIdx)=>{
+    sec.items.forEach((_,iIdx)=>{
+      const c=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
+      if(!c)return;
+      if(c.value==="achieved"){rated++;sum+=100;achieved++}
+      else if(c.value==="partial"){rated++;sum+=50;partial++}
+      else if(c.value==="not_achieved"){rated++;failed++}
+    });
+  });
+  return{rated,pct:rated?Math.round(sum/rated):0,achieved,partial,failed};
+}
+function getIssueDetails(){
+  const partial=[],failed=[];
+  SECTIONS.forEach((sec,sIdx)=>{
+    sec.items.forEach((title,iIdx)=>{
+      const c=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
+      if(!c)return;
+      if(c.value==="partial")partial.push(`${sec.name}: ${title}`);
+      else if(c.value==="not_achieved")failed.push(`${sec.name}: ${title}`);
+    });
+  });
+  return{partial,failed};
+}
+function renderIssueList(items,emptyText,listCls,emptyCls){
+  if(!items.length)return`<div class="${emptyCls}">${esc(emptyText)}</div>`;
+  return`<ol class="${listCls}">${items.map(i=>`<li>${esc(i)}</li>`).join("")}</ol>`;
+}
+
+function buildChecklist(){
+  const root=document.getElementById("checklistRoot");
+  root.innerHTML="";
+  SECTIONS.forEach((sec,sIdx)=>{
+    const wrap=document.createElement("div");
+    wrap.className="check-section";
+    wrap.innerHTML=`
+      <div class="check-sec-head">
+        <h4>${esc(sec.name)}</h4>
+        <div class="sec-pill tag-na" id="pill_${sIdx}">Not Rated</div>
+      </div>
+      <div class="check-items" id="ci_${sIdx}"></div>`;
+    root.appendChild(wrap);
+    const ci=document.getElementById(`ci_${sIdx}`);
+    sec.items.forEach((item,iIdx)=>{
+      const row=document.createElement("div");
+      row.className="check-row";
+      row.innerHTML=`
+        <div class="check-title">${iIdx+1}. ${esc(item)}</div>
+        <div class="rating-group">
+          ${STATUS.map(o=>`
+            <label class="status-opt">
+              <input type="radio" name="r_${sIdx}_${iIdx}" value="${o.value}" onchange="updatePills();updateSelectedStyles()">
+              <span class="status-chip" data-value="${o.value}">${o.label}</span>
+            </label>`).join("")}
+        </div>
+        <div class="checklist-comment-field">
+          <label>Comment</label>
+          <textarea id="cmt_${sIdx}_${iIdx}" class="auto-expand-text" rows="1" placeholder="Add comment…" oninput="autoResizeComment(this)"></textarea>
+        </div>`;
+      ci.appendChild(row);
+    });
+  });
+  updatePills();updateSelectedStyles();resizeAllAutoComments();
+}
+
+function updateSelectedStyles(){
+  document.querySelectorAll('.status-opt').forEach(opt=>{
+    const r=opt.querySelector('input');
+    opt.classList.toggle('is-selected',!!(r&&r.checked));
+  });
+}
+
+function updateOverallScoreUI(){
+  const s=overallScore(),g=gradeOf(s.pct,s.rated);
+  document.getElementById("overallScorePct").textContent=`${s.pct}%`;
+  document.getElementById("overallScoreTitle").textContent=g.label;
+  document.getElementById("overallScoreText").textContent=g.text;
+  const gradeEl=document.getElementById("overallScoreGrade");
+  gradeEl.textContent=g.label;gradeEl.className=`score-grade ${g.cls}`;
+  const deg=Math.round((s.pct/100)*360);
+  document.getElementById("overallScoreCircle").style.background=`conic-gradient(var(--brand) 0deg,var(--brand) ${deg}deg,#e5e7eb ${deg}deg 360deg)`;
+  ["ratedItemsVal","achievedItemsVal","partialItemsVal","failedItemsVal"].forEach((id,i)=>
+    document.getElementById(id).textContent=[s.rated,s.achieved,s.partial,s.failed][i]);
+  document.getElementById("partialItemsSummaryVal").textContent=s.partial;
+  document.getElementById("failedItemsSummaryVal").textContent=s.failed;
+  const issues=getIssueDetails();
+  document.getElementById("partialIssueDetails").innerHTML=issues.partial.length
+    ?`<ol class="issue-list">${issues.partial.map(i=>`<li>${esc(i)}</li>`).join("")}</ol>`
+    :`<div class="issue-empty">No partially achieved items.</div>`;
+  document.getElementById("failedIssueDetails").innerHTML=issues.failed.length
+    ?`<ol class="issue-list">${issues.failed.map(i=>`<li>${esc(i)}</li>`).join("")}</ol>`
+    :`<div class="issue-empty">No failed items.</div>`;
+}
+
+function updatePills(){
+  SECTIONS.forEach((_,sIdx)=>{
+    const m=sectionScore(sIdx),g=gradeOf(m.pct,m.rated),pill=document.getElementById(`pill_${sIdx}`);
+    if(pill){pill.className=`sec-pill ${g.cls}`;pill.textContent=m.rated?`${m.pct}% · ${g.label}`:"Not Rated";}
+  });
+  updateOverallScoreUI();
+  const msg=document.getElementById("noPhotoMsg");
+  if(msg)msg.style.display=document.querySelectorAll(".photo-card").length?"none":"block";
+}
+
+function refreshNotesList(){
+  const el=document.getElementById("notesList");
+  if(el)el.innerHTML=(REPORT_NOTES||[]).map(n=>`<li>${esc(n)}</li>`).join("");
+}
+function applyFormSelections(id,items,placeholder){
+  const el=document.getElementById(id);if(!el)return;
+  const listId=el.getAttribute("list");
+  const listEl=listId?document.getElementById(listId):null;
+  if(listEl){listEl.innerHTML="";items.forEach(item=>{const o=document.createElement("option");o.value=item;listEl.appendChild(o)});}
+  el.placeholder=placeholder;
+}
+function applySettingsToForm(){
+  const s=appSettings;
+  SECTIONS=JSON.parse(JSON.stringify(s.checklistSections));
+  REPORT_NOTES=s.reportNotes.slice();
+  applyFormSelections("locationOutlet",s.outlets,"Select or type outlet");
+  applyFormSelections("departmentName",s.departments,"Select or type department");
+  refreshNotesList();
+  if(!gv("hotelName"))sv("hotelName",s.propertyName||"");
+}
+
+function getFilenameBase(){
+  const outlet=(gv("locationOutlet")||gv("hotelName")||"Inspection").replace(/[\/:*?"<>|]+/g,"-").trim();
+  const dt=document.getElementById("inspectionDateTime").value;
+  let ds="";
+  if(dt){try{const d=new Date(dt);if(!isNaN(d.getTime()))ds=`-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;}catch(e){}}
+  return`${outlet}${ds}`;
+}
+function getFilename(){return`${getFilenameBase()}-FoodSafetyReport.pdf`;}
+function formatNowForFileName(d=new Date()){
+  const yyyy=d.getFullYear(),mm=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");
+  const hh=String(d.getHours()).padStart(2,"0"),mi=String(d.getMinutes()).padStart(2,"0"),ss=String(d.getSeconds()).padStart(2,"0");
+  return`${yyyy}${mm}${dd}-${hh}${mi}${ss}`;
+}
+function getAutosaveFilename(){
+  const outlet=(gv("locationOutlet")||gv("hotelName")||"Inspection").replace(/[\/:*?"<>|]+/g,"-").trim()||"Inspection";
+  return`${outlet}-${formatNowForFileName()}.json`;
+}
+function autoResizeComment(el){
+  if(!el)return;
+  el.style.height="auto";
+  const minHeight=window.innerWidth<=540?38:32;
+  el.style.height=Math.max(el.scrollHeight,minHeight)+"px";
+}
+function resizeAllAutoComments(){document.querySelectorAll(".auto-expand-text").forEach(autoResizeComment);}
+
+function setProgress(pct,text){
+  const overlay=document.getElementById("progressOverlay");
+  overlay.classList.remove("hidden");overlay.style.display="flex";
+  document.getElementById("progressFill").style.width=`${Math.max(0,Math.min(100,pct))}%`;
+  document.getElementById("progressLabel").textContent=`${Math.round(pct)}%`;
+  if(text)document.getElementById("progressText").textContent=text;
+}
+function hideProgress(){const o=document.getElementById("progressOverlay");o.classList.add("hidden");o.style.display="none";}
+function setProgressTitle(t,h){
+  const te=document.getElementById("progressTitle"),he=document.getElementById("progressHint");
+  if(te)te.textContent=t;if(he)he.textContent=h;
+}
+function waitForPaint(){return new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}
+
+/* ── IMAGE COMPRESSION ── */
+function compressImage(dataUrl,maxW=1200,quality=0.72){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      if(w>maxW){h=Math.round(h*(maxW/w));w=maxW;}
+      const canvas=document.createElement('canvas');
+      canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      resolve(canvas.toDataURL('image/jpeg',quality));
+    };
+    img.onerror=()=>resolve(dataUrl);
+    img.src=dataUrl;
+  });
+}
+async function compressAllPhotoSrcs(photos){
+  return Promise.all(photos.map(async p=>{
+    if(!p.src||p.src.startsWith('data:image/jpeg'))return p;
+    const compressed=await compressImage(p.src);
+    return{...p,src:compressed};
+  }));
+}
+
+function getCurrentData(){
+  return{
+    info:{hotelName:gv("hotelName"),locationOutlet:gv("locationOutlet"),inspectionDateTime:document.getElementById("inspectionDateTime").value,personOnDuty:gv("personOnDuty"),departmentName:gv("departmentName"),auditorName:gv("auditorName"),generalObservation:gv("generalObservation"),correctiveAction:gv("correctiveAction")},
+    score:overallScore(),
+    sections:SECTIONS.map((sec,sIdx)=>({
+      name:sec.name,
+      items:sec.items.map((title,iIdx)=>{
+        const c=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
+        const st=STATUS.find(x=>x.value===(c?.value||""))||null;
+        const fullLabel=c?STATUS_FULL[c.value]:"Not Rated";
+        return{title,status:fullLabel,value:c?.value||"",comment:gv(`cmt_${sIdx}_${iIdx}`),bg:st?st.bg:"#eceff3",color:st?st.color:"#475467"};
+      })
+    })),
+    issueDetails:getIssueDetails(),
+    photos:Array.from(document.querySelectorAll(".photo-card")).map((c,i)=>({number:i+1,rot:parseInt(c.dataset.rot||0),src:c.querySelector(".photo-img").src,desc:c.querySelector("textarea")?.value||""}))
+  };
+}
+
+function buildPdfDom(){
+  const data=getCurrentData();
+  const g=gradeOf(data.score.pct,data.score.rated);
+  const root=document.getElementById("pdfRenderRoot");
+  root.innerHTML="";
+  const report=document.createElement("div");
+  report.className="pdf-report";
+  let pageNumber=1;
+
+  const p1=document.createElement("div");p1.className="pdf-page";
+  p1.innerHTML=`
+    <div class="pdf-confidential">Private &amp; Confidential</div>
+    <div class="pdf-hero"><h1>Food Safety Inspection Report</h1><p>Professional inspection report with clear information cards, executive score summary and criteria guide.</p></div>
+    <div class="pdf-confidential">Private &amp; Confidential</div>
+    <div class="pdf-section">
+      <div class="pdf-sec-head"><h3>Report Information</h3></div>
+      <div class="pdf-sec-body">
+        <div class="pdf-info-grid">
+          ${[["Hotel / Property Name",data.info.hotelName||"—"],["Location / Outlet",data.info.locationOutlet||"—"],["Inspection Date & Time",data.info.inspectionDateTime?safeFormatDateTime(data.info.inspectionDateTime):"—"],["Person on Duty",data.info.personOnDuty||"—"],["Department",data.info.departmentName||"—"],["Inspection Done By",data.info.auditorName||"—"]].map(([l,v])=>`<div class="pdf-info-card"><div class="l">${esc(l)}</div><div class="v">${esc(v)}</div></div>`).join("")}
+        </div>
+      </div>
+    </div>
+    <div class="pdf-section">
+      <div class="pdf-sec-head"><h3>Overall Score</h3><span class="pdf-sec-note">Calculated automatically</span></div>
+      <div class="pdf-sec-body">
+        <div class="pdf-score-banner">
+          <div class="pdf-score-circle">${data.score.pct}%<small>Overall Score</small></div>
+          <div class="pdf-score-summary"><h4>${esc(g.label)}</h4><p>${esc(g.text)}</p><span class="pdf-grade" style="background:${g.bg};color:${g.color}">${esc(g.label)}</span></div>
+        </div>
+        <div class="pdf-mini-grid">
+          <div class="pdf-mini"><div class="l">Rated Items</div><div class="v">${data.score.rated}</div></div>
+          <div class="pdf-mini"><div class="l">Achieved</div><div class="v">${data.score.achieved}</div></div>
+          <div class="pdf-mini"><div class="l">Partial</div><div class="v">${data.score.partial}</div></div>
+          <div class="pdf-mini"><div class="l">Did Not Achieve</div><div class="v">${data.score.failed}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-section">
+      <div class="pdf-sec-head"><h3>Issues Requiring Attention</h3><span class="pdf-sec-note">Quick view</span></div>
+      <div class="pdf-sec-body">
+        <div class="pdf-issue-summary">
+          <div class="pdf-issue-box warn"><div class="k">Partially Achieved</div><div class="n">${data.score.partial}</div>${renderIssueList(data.issueDetails.partial,"No partially achieved items.","pdf-issue-list","pdf-issue-empty")}</div>
+          <div class="pdf-issue-box bad"><div class="k">Did Not Achieve</div><div class="n">${data.score.failed}</div>${renderIssueList(data.issueDetails.failed,"No failed items.","pdf-issue-list","pdf-issue-empty")}</div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-page-footer">Page ${pageNumber}</div>`;
+  report.appendChild(p1);
+
+  const rows=flattenChecklistRows(data.sections);
+  const pages=paginateChecklistRows(rows);
+  pages.forEach(pageRows=>{
+    pageNumber++;
+    const p=document.createElement("div");p.className="pdf-page";
+    const rowsHtml=pageRows.map(row=>{
+      if(row.type==="section")return`<div class="pdf-check-section"><div class="pdf-check-head"><h4>${esc(row.name)}</h4><span class="pdf-check-pill" style="background:${row.bg};color:${row.color}">${esc(row.pill)}</span></div><div class="pdf-check-items">`;
+      if(row.type==="section_end")return`</div></div>`;
+      const stCls=row.value==="achieved"?"good":row.value==="partial"?"warn":row.value==="not_achieved"?"bad":"na";
+      return`<div class="pdf-check-row">
+        <div class="pdf-check-title">${row.index}. ${esc(row.title)}</div>
+        <div><span class="pdf-check-status ${stCls}">${esc(row.status)}</span></div>
+        <div class="pdf-check-comment">${esc(row.comment||"—")}</div>
+      </div>`;
+    }).join("");
+    p.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div><div class="pdf-section"><div class="pdf-sec-head"><h3>Inspection Check Lists</h3><span class="pdf-sec-note">Continued</span></div><div class="pdf-sec-body">${rowsHtml}</div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
+    report.appendChild(p);
+  });
+
+  pageNumber++;
+  const sumPage=document.createElement("div");sumPage.className="pdf-page";
+  sumPage.innerHTML=`
+    <div class="pdf-confidential">Private &amp; Confidential</div>
+    <div class="pdf-section">
+      <div class="pdf-sec-head"><h3>General Observation &amp; Corrective Action</h3></div>
+      <div class="pdf-sec-body">
+        <div class="pdf-info-grid" style="grid-template-columns:1fr 1fr">
+          <div class="pdf-info-card"><div class="l">General Observation</div><div class="v normal-text">${esc(data.info.generalObservation||"—")}</div></div>
+          <div class="pdf-info-card"><div class="l">Corrective Action Taken</div><div class="v normal-text">${esc(data.info.correctiveAction||"—")}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pdf-section">
+      <div class="pdf-sec-head"><h3>Notes &amp; Guidance</h3></div>
+      <div class="pdf-sec-body"><ol class="pdf-notes-list">${REPORT_NOTES.map(n=>`<li>${esc(n)}</li>`).join("")}</ol></div>
+    </div>
+    <div class="pdf-page-footer">Page ${pageNumber}</div>`;
+  report.appendChild(sumPage);
+
+  if(data.photos.length){
+    chunkArray(data.photos,4).forEach((chunk,ci)=>{
+      pageNumber++;
+      const pp=document.createElement("div");pp.className="pdf-page";
+      pp.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div><div class="pdf-section"><div class="pdf-sec-head"><h3>Photo Evidence</h3><span class="pdf-sec-note">Photos ${ci*4+1}–${ci*4+chunk.length}</span></div><div class="pdf-sec-body"><div class="pdf-photo-grid">${chunk.map(ph=>`<div class="pdf-photo-card"><div class="pdf-photo-title">Photo ${ph.number}</div><div class="pdf-photo-box"><img src="${ph.src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;transform:rotate(${ph.rot||0}deg)"></div><div class="pdf-photo-desc">${esc(ph.desc||"—")}</div></div>`).join("")}</div></div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
+      report.appendChild(pp);
+    });
+  }
+
+  root.appendChild(report);
+  return report;
+}
+
+function flattenChecklistRows(sections){
+  const rows=[];
+  sections.forEach(section=>{
+    const rated=section.items.filter(i=>i.value&&i.value!=="na");
+    const pct=rated.length?Math.round(rated.reduce((a,b)=>a+(b.value==="achieved"?100:b.value==="partial"?50:0),0)/rated.length):0;
+    const gg=gradeOf(pct,rated.length);
+    rows.push({type:"section",name:section.name,pill:rated.length?`${pct}% · ${gg.label}`:"Not Rated",bg:gg.bg,color:gg.color});
+    section.items.forEach((item,i)=>rows.push({type:"item",index:i+1,title:item.title,status:item.status,value:item.value,comment:item.comment,bg:item.bg,color:item.color}));
+    rows.push({type:"section_end"});
+  });
+  return rows;
+}
+function paginateChecklistRows(rows){
+  const pages=[];let current=[];let units=0;const max=26;
+  for(const row of rows){
+    let u=row.type==="section"?2.4:row.type==="section_end"?0.1:Math.max(1,0.7+Math.ceil(((row.title||"").length+(row.comment||"").length)/160)*0.5);
+    if(current.length&&units+u>max){pages.push(current);current=[];units=0;}
+    current.push(row);units+=u;
+  }
+  if(current.length)pages.push(current);
+  return pages;
+}
+
+async function domToPdfBlob(node,filename,onProgress){
+  if(!window.jspdf||!window.html2canvas)throw new Error("PDF libraries not loaded.");
+  const{jsPDF}=window.jspdf;
+  const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+  const pages=Array.from(node.querySelectorAll(".pdf-page"));
+  for(let i=0;i<pages.length;i++){
+    const canvas=await html2canvas(pages[i],{scale:4,useCORS:true,backgroundColor:"#ffffff",logging:false,imageTimeout:0,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
+    const imgData=canvas.toDataURL("image/png");
+    if(i>0)pdf.addPage();
+    pdf.addImage(imgData,"PNG",0,0,210,297,undefined,"SLOW");
+    if(typeof onProgress==="function")onProgress(((i+1)/pages.length)*100);
+  }
+  return pdf.output("blob");
+}
+
+async function generatePdfReport(){
+  closePanel();
+  const btn=document.querySelector(".btn-primary");
+  const orig=btn.textContent;btn.textContent="Generating…";btn.disabled=true;
+  try{
+    setProgressTitle("Generating report","Please keep this page open");
+    setProgress(8,"Preparing layout…");await waitForPaint();
+    const dom=buildPdfDom();
+    setProgress(20,"Finalizing structure…");await waitForPaint();
+    await document.fonts?.ready;
+    const filename=getFilename();
+    setProgress(35,"Rendering pages…");await waitForPaint();
+    const blob=await domToPdfBlob(dom,filename,async pct=>{setProgress(35+Math.round(pct*.55),`Rendering… ${Math.round(pct)}%`);await waitForPaint();});
+    setProgress(94,"Finalizing…");await waitForPaint();
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+    setProgress(100,"Report ready.");await waitForPaint();
+  }catch(err){console.error(err);hideProgress();alert("PDF generation failed.");throw err;}
+  finally{setTimeout(hideProgress,700);btn.textContent=orig;btn.disabled=false;}
+}
+
+/* PHOTOS */
+let photoInputBusy=false;
+function triggerPhoto(){
+  closePanel();
+  if(photoInputBusy)return;
+  const input=document.getElementById("photoInput");
+  try{input.value="";}catch(e){}
+  setTimeout(()=>{try{input.click();}catch(e){}},20);
+}
+document.getElementById("photoInput").addEventListener("change",async e=>{
+  if(photoInputBusy)return;
+  photoInputBusy=true;e.target.disabled=true;
+  const files=Array.from(e.target.files||[]).filter(f=>f.type.startsWith("image/"));
+  try{
+    if(!files.length)return;
+    setProgressTitle("Importing photos","");setProgress(0,"Importing photos…");await waitForPaint();
+    for(let i=0;i<files.length;i++){
+      const f=files[i];const n=++photoCtr;
+      await new Promise((res,rej)=>{
+        const r=new FileReader();
+        r.onload=async ev=>{
+          const compressed=await compressImage(ev.target.result);
+          addPhotoCard({number:n,src:compressed,desc:"",rot:0});
+          setProgress(((i+1)/files.length)*100,`Importing… ${i+1} of ${files.length}`);
+          res();
+        };
+        r.onerror=()=>rej();
+        r.readAsDataURL(f);
+      });
+      await waitForPaint();
+    }
+    updatePills();setProgress(100,"Done.");await waitForPaint();
+  }finally{photoInputBusy=false;e.target.disabled=false;try{e.target.value="";}catch(er){}hideProgress();}
+});
+
+function addPhotoCard(p){
+  const g=document.getElementById("photoGrid");
+  const d=document.createElement("div");d.className="photo-card";d.dataset.n=p.number;d.dataset.rot=p.rot||0;
+  d.innerHTML=`<div class="photo-head"><div class="photo-num">Photo ${p.number}</div><div class="photo-tools"><button class="mini-btn" onclick="rotP(this,-90)">↺</button><button class="mini-btn" onclick="rotP(this,90)">↻</button><button class="mini-btn mini-btn-danger" onclick="deletePhotoCard(this)">✕</button></div></div><div class="photo-wrap"><img class="photo-img" src="${p.src}" style="transform:rotate(${p.rot||0}deg)"></div><div class="photo-body"><div class="field"><label>Description</label><textarea placeholder="Photo description…">${esc(p.desc||"")}</textarea></div></div>`;
+  g.appendChild(d);applyPhotoRot(d);
+}
+function applyPhotoRot(card){
+  const img=card.querySelector(".photo-img");
+  const rot=((parseInt(card.dataset.rot||0)%360)+360)%360;
+  const qtr=rot===90||rot===270;
+  img.style.transform=`rotate(${rot}deg)`;img.style.width=qtr?"155px":"100%";img.style.height=qtr?"100%":"155px";img.style.maxHeight="155px";
+}
+function rotP(btn,d){const c=btn.closest(".photo-card");c.dataset.rot=parseInt(c.dataset.rot||0)+d;applyPhotoRot(c);scheduleSilentAutosave();}
+function deletePhotoCard(btn){const c=btn.closest(".photo-card");if(c)c.remove();renumber();updatePills();scheduleSilentAutosave();}
+function renumber(){document.querySelectorAll(".photo-card").forEach((c,i)=>{c.dataset.n=i+1;c.querySelector(".photo-num").textContent=`Photo ${i+1}`;});photoCtr=document.querySelectorAll(".photo-card").length;}
+
+/* EMAIL MODAL */
+function openSendModal(){
+  closePanel();
+  const outlet=gv("locationOutlet")||gv("hotelName")||"";
+  const dt=document.getElementById("inspectionDateTime").value;
+  const dtStr=dt?safeFormatDateTime(dt):"";
+  sv("emailSubject",`Food Safety Inspection Report${outlet?" – "+outlet:""}`);
+  sv("emailBody",`Dear Team,\n\nPlease find attached the Food Safety Inspection Report${outlet?" for "+outlet:""}${dtStr?" conducted on "+dtStr:""}.\n\nReport file: ${getFilename()}\n\nKindly review and ensure corrective actions are completed within three working days.\n\nRegards,\n${gv("auditorName")||"Auditor"}`);
+  const m=document.getElementById("sendModal");m.style.display="flex";
+}
+function closeSendModal(){document.getElementById("sendModal").style.display="none";}
+document.getElementById("sendModal").addEventListener("click",e=>{if(e.target.id==="sendModal")closeSendModal();});
+async function doSendFlow(){
+  const to=document.getElementById("emailTo").value.trim();
+  const cc=document.getElementById("emailCc").value.trim();
+  const subject=document.getElementById("emailSubject").value.trim();
+  const body=document.getElementById("emailBody").value.trim();
+  const qs=[];
+  if(cc)qs.push(`cc=${encodeURIComponent(cc)}`);
+  if(subject)qs.push(`subject=${encodeURIComponent(subject)}`);
+  if(body)qs.push(`body=${encodeURIComponent(body)}`);
+  window.location.href=`mailto:${encodeURIComponent(to)}?${qs.join("&")}`;
+  closeSendModal();
+}
+
+/* SETTINGS MODAL */
+function openSettingsModal(){
+  closePanel();
+  document.getElementById("settingPropertyName").value=appSettings.propertyName||"";
+  renderAllSettings();
+  const m=document.getElementById("settingsModal");m.style.display="flex";
+}
+function closeSettingsModal(){document.getElementById("settingsModal").style.display="none";}
+document.getElementById("settingsModal").addEventListener("click",e=>{if(e.target.id==="settingsModal")closeSettingsModal();});
+
+function renderSimpleList(type,containerId){
+  const wrap=document.getElementById(containerId);if(!wrap)return;
+  const items=appSettings[type]||[];
+  wrap.innerHTML=items.length?items.map((item,idx)=>`<div class="setting-row"><span class="order-badge">${idx+1}</span><input value="${esc(item)}" oninput="updateSettingItem('${type}',${idx},this.value)"><div class="setting-actions"><button class="mini-btn" onclick="moveSettingItem('${type}',${idx},-1)">↑</button><button class="mini-btn" onclick="moveSettingItem('${type}',${idx},1)">↓</button><button class="mini-btn mini-btn-danger" onclick="removeSettingItem('${type}',${idx})">✕</button></div></div>`).join(""):`<div class="note-card">No values yet.</div>`;
+}
+function renderChecklistGroups(){
+  const wrap=document.getElementById("settingsChecklistGroups");if(!wrap)return;
+  const groups=appSettings.checklistSections||[];
+  wrap.innerHTML=groups.length?groups.map((group,gIdx)=>`
+    <div class="settings-block" style="margin-bottom:8px">
+      <div class="setting-row">
+        <input class="order-input" type="number" min="1" value="${gIdx+1}" onchange="setChecklistGroupOrder(${gIdx},this.value)">
+        <input value="${esc(group.name)}" oninput="updateChecklistGroupName(${gIdx},this.value)" placeholder="Group name">
+        <div class="setting-actions">
+          <button class="mini-btn" onclick="moveChecklistGroup(${gIdx},-1)">↑</button>
+          <button class="mini-btn" onclick="moveChecklistGroup(${gIdx},1)">↓</button>
+          <button class="mini-btn mini-btn-danger" onclick="deleteChecklistGroup(${gIdx})">✕</button>
+        </div>
+      </div>
+      <div class="criteria-editor">
+        ${(group.items||[]).map((item,cIdx)=>`<div class="criteria-item"><span class="order-badge">${cIdx+1}</span><input value="${esc(item)}" oninput="updateChecklistCriterion(${gIdx},${cIdx},this.value)"><div class="setting-actions"><button class="mini-btn" onclick="moveChecklistCriterion(${gIdx},${cIdx},-1)">↑</button><button class="mini-btn" onclick="moveChecklistCriterion(${gIdx},${cIdx},1)">↓</button><button class="mini-btn mini-btn-danger" onclick="deleteChecklistCriterion(${gIdx},${cIdx})">✕</button></div></div>`).join("")}
+        <div class="inline-row"><div class="field" style="margin:0;flex:1"><input id="newCriterion_${gIdx}" placeholder="Add new criterion"></div><button class="mini-btn" onclick="addChecklistCriterion(${gIdx})">+ Add</button></div>
+      </div>
+    </div>`).join(""):`<div class="note-card">No groups yet.</div>`;
+}
+function renderNotesList(){
+  const wrap=document.getElementById("settingsNotesList");if(!wrap)return;
+  const items=appSettings.reportNotes||[];
+  wrap.innerHTML=items.length?items.map((item,idx)=>`<div class="settings-block" style="margin-bottom:7px;padding:9px 10px"><div class="setting-row" style="margin-bottom:6px"><input class="order-input" type="number" min="1" value="${idx+1}" onchange="setReportNoteOrder(${idx},this.value)"><div style="font-size:12px;font-weight:700;color:#667085">Note ${idx+1}</div><div class="setting-actions"><button class="mini-btn mini-btn-danger" onclick="deleteReportNote(${idx})">✕</button></div></div><div class="field" style="margin:0"><textarea oninput="updateReportNote(${idx},this.value)" style="min-height:70px">${esc(item)}</textarea></div></div>`).join(""):`<div class="note-card">No notes yet.</div>`;
+}
+function renderAllSettings(){renderSimpleList("outlets","settingsOutletList");renderSimpleList("departments","settingsDepartmentList");renderChecklistGroups();renderNotesList();}
+function addSettingItem(type){
+  const id=type==="outlets"?"newOutletName":"newDepartmentName";
+  const input=document.getElementById(id);const v=(input.value||"").trim();if(!v)return;
+  appSettings[type]=normalizeList([...(appSettings[type]||[]),v]);input.value="";
+  renderSimpleList(type,type==="outlets"?"settingsOutletList":"settingsDepartmentList");
+}
+function updateSettingItem(type,idx,v){if(!Array.isArray(appSettings[type]))appSettings[type]=[];appSettings[type][idx]=String(v||"");}
+function moveSettingItem(type,idx,d){const items=[...(appSettings[type]||[])];const n=idx+d;if(n<0||n>=items.length)return;[items[idx],items[n]]=[items[n],items[idx]];appSettings[type]=items;renderSimpleList(type,type==="outlets"?"settingsOutletList":"settingsDepartmentList");}
+function removeSettingItem(type,idx){appSettings[type]=(appSettings[type]||[]).filter((_,i)=>i!==idx);renderSimpleList(type,type==="outlets"?"settingsOutletList":"settingsDepartmentList");}
+function addChecklistGroup(){const input=document.getElementById("newChecklistGroupName");const name=(input.value||"").trim();if(!name)return;appSettings.checklistSections.push({name,items:["New criterion"]});input.value="";renderChecklistGroups();}
+function updateChecklistGroupName(idx,v){if(appSettings.checklistSections[idx])appSettings.checklistSections[idx].name=String(v||"");}
+function moveChecklistGroup(idx,d){const groups=[...(appSettings.checklistSections||[])];const n=idx+d;if(n<0||n>=groups.length)return;[groups[idx],groups[n]]=[groups[n],groups[idx]];appSettings.checklistSections=groups;renderChecklistGroups();}
+function setChecklistGroupOrder(idx,v){const groups=[...(appSettings.checklistSections||[])];let p=parseInt(v,10);if(!Number.isFinite(p)){renderChecklistGroups();return;}p=Math.max(1,Math.min(groups.length,p));const[m]=groups.splice(idx,1);groups.splice(p-1,0,m);appSettings.checklistSections=groups;renderChecklistGroups();}
+function deleteChecklistGroup(idx){appSettings.checklistSections=(appSettings.checklistSections||[]).filter((_,i)=>i!==idx);renderChecklistGroups();}
+function updateChecklistCriterion(gIdx,cIdx,v){if(appSettings.checklistSections[gIdx])appSettings.checklistSections[gIdx].items[cIdx]=String(v||"").trim();}
+function addChecklistCriterion(gIdx){const input=document.getElementById(`newCriterion_${gIdx}`);const v=(input.value||"").trim();if(!v)return;appSettings.checklistSections[gIdx].items.push(v);input.value="";renderChecklistGroups();}
+function deleteChecklistCriterion(gIdx,cIdx){if(appSettings.checklistSections[gIdx])appSettings.checklistSections[gIdx].items=appSettings.checklistSections[gIdx].items.filter((_,i)=>i!==cIdx);renderChecklistGroups();}
+function moveChecklistCriterion(gIdx,cIdx,d){const g=appSettings.checklistSections[gIdx];if(!g)return;const items=[...g.items];const n=cIdx+d;if(n<0||n>=items.length)return;[items[cIdx],items[n]]=[items[n],items[cIdx]];g.items=items;renderChecklistGroups();}
+function addReportNote(){const input=document.getElementById("newReportNote");const v=(input.value||"").trim();if(!v)return;appSettings.reportNotes.push(v);input.value="";renderNotesList();}
+function updateReportNote(idx,v){if(!Array.isArray(appSettings.reportNotes))appSettings.reportNotes=[];appSettings.reportNotes[idx]=String(v||"");}
+function setReportNoteOrder(idx,v){const items=[...(appSettings.reportNotes||[])];let p=parseInt(v,10);if(!Number.isFinite(p)){renderNotesList();return;}p=Math.max(1,Math.min(items.length,p));const[m]=items.splice(idx,1);items.splice(p-1,0,m);appSettings.reportNotes=items;renderNotesList();}
+function deleteReportNote(idx){appSettings.reportNotes=(appSettings.reportNotes||[]).filter((_,i)=>i!==idx);renderNotesList();}
+
+function saveSettings(){
+  appSettings.propertyName=(document.getElementById("settingPropertyName").value||"").trim()||DEFAULT_SETTINGS.propertyName;
+  appSettings.outlets=normalizeList(appSettings.outlets);appSettings.departments=normalizeList(appSettings.departments);
+  appSettings.checklistSections=normalizeSections(appSettings.checklistSections);appSettings.reportNotes=normalizeNotes(appSettings.reportNotes);
+  if(!appSettings.checklistSections.length)appSettings.checklistSections=JSON.parse(JSON.stringify(DEFAULT_SETTINGS.checklistSections));
+  if(!appSettings.reportNotes.length)appSettings.reportNotes=DEFAULT_SETTINGS.reportNotes.slice();
+  try{localStorage.setItem("fsr_settings",JSON.stringify(appSettings));}catch(e){}
+  const currentData=collectData();applySettingsToForm();buildChecklist();applyData(currentData);
+  exportSettingsJson();scheduleSilentAutosave();closeSettingsModal();
+}
+function exportSettingsJson(){
+  const payload={propertyName:appSettings.propertyName,outlets:normalizeList(appSettings.outlets),departments:normalizeList(appSettings.departments),checklistSections:normalizeSections(appSettings.checklistSections),reportNotes:normalizeNotes(appSettings.reportNotes)};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="InspectionSetting.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+/* FILE SYSTEM */
+const AUTOSAVE_HANDLE_DB="fsr_autosave_db",AUTOSAVE_HANDLE_STORE="handles",AUTOSAVE_HANDLE_KEY="report-json";
+let autoSaveFileHandle=null;
+function openAutoSaveDb(){
+  return new Promise((resolve,reject)=>{
+    if(!window.indexedDB){resolve(null);return;}
+    const req=indexedDB.open(AUTOSAVE_HANDLE_DB,1);
+    req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AUTOSAVE_HANDLE_STORE))db.createObjectStore(AUTOSAVE_HANDLE_STORE);};
+    req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+  });
+}
+async function persistAutoSaveHandle(handle){if(!handle)return;const db=await openAutoSaveDb();if(!db)return;await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_HANDLE_STORE,'readwrite');tx.objectStore(AUTOSAVE_HANDLE_STORE).put(handle,AUTOSAVE_HANDLE_KEY);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}
+async function loadPersistedAutoSaveHandle(){const db=await openAutoSaveDb();if(!db)return null;return await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_HANDLE_STORE,'readonly');const req=tx.objectStore(AUTOSAVE_HANDLE_STORE).get(AUTOSAVE_HANDLE_KEY);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);});}
+async function clearPersistedAutoSaveHandle(){autoSaveFileHandle=null;const db=await openAutoSaveDb();if(!db)return;await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_HANDLE_STORE,'readwrite');tx.objectStore(AUTOSAVE_HANDLE_STORE).delete(AUTOSAVE_HANDLE_KEY);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});}
+async function ensureAutoSavePermission(handle,withPrompt=false){if(!handle)return false;try{if(handle.queryPermission){const current=await handle.queryPermission({mode:'readwrite'});if(current==='granted')return true;if(current==='prompt'&&withPrompt&&handle.requestPermission){const requested=await handle.requestPermission({mode:'readwrite'});return requested==='granted';}return false;}return true;}catch(e){return false;}}
+async function writeAutosaveFile(data,{promptForPermission=false}={}){if(!window.showSaveFilePicker)return false;if(!autoSaveFileHandle)autoSaveFileHandle=await loadPersistedAutoSaveHandle();if(!autoSaveFileHandle)return false;const ok=await ensureAutoSavePermission(autoSaveFileHandle,promptForPermission);if(!ok)return false;try{const writable=await autoSaveFileHandle.createWritable();await writable.write(JSON.stringify(data,null,2));await writable.close();return true;}catch(e){console.error('Auto file write failed',e);return false;}}
+async function chooseAutoSaveFile(data){if(!window.showSaveFilePicker)throw new Error('Not supported.');const handle=await window.showSaveFilePicker({suggestedName:(data.meta&&data.meta.fileName)||getAutosaveFilename(),types:[{description:'JSON Files',accept:{'application/json':['.json']}}]});autoSaveFileHandle=handle;await persistAutoSaveHandle(handle);await writeAutosaveFile(data,{promptForPermission:true});return true;}
+
+/* DATA */
+function collectData(){
+  return{
+    info:{hotelName:gv("hotelName"),locationOutlet:gv("locationOutlet"),inspectionDateTime:document.getElementById("inspectionDateTime").value,personOnDuty:gv("personOnDuty"),departmentName:gv("departmentName"),auditorName:gv("auditorName"),generalObservation:gv("generalObservation"),correctiveAction:gv("correctiveAction")},
+    sections:SECTIONS.map((_,sIdx)=>({items:SECTIONS[sIdx].items.map((__,iIdx)=>({status:document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`)?.value||"",comment:gv(`cmt_${sIdx}_${iIdx}`)}))})),
+    photos:Array.from(document.querySelectorAll(".photo-card")).map(c=>({number:parseInt(c.dataset.n),rot:parseInt(c.dataset.rot||0),src:c.querySelector(".photo-img").src,desc:c.querySelector("textarea")?.value||""})),
+    settings:appSettings
+  };
+}
+
+/* Save with compressed photos */
+async function collectDataWithPhotos(){
+  const base=collectData();
+  const photos=Array.from(document.querySelectorAll(".photo-card")).map(c=>({
+    number:parseInt(c.dataset.n),rot:parseInt(c.dataset.rot||0),
+    src:c.querySelector(".photo-img").src,
+    desc:c.querySelector("textarea")?.value||""
+  }));
+  const compressed=await compressAllPhotoSrcs(photos);
+  return{...base,photos:compressed};
+}
+
+async function saveData(){
+  closePanel();
+  setProgressTitle("Saving data","");setProgress(10,"Compressing photos…");await waitForPaint();
+  const base=await collectDataWithPhotos();
+  const data={meta:{fileName:getAutosaveFilename(),savedAt:new Date().toISOString(),includesPhotos:true},...base};
+  setProgress(60,"Writing file…");await waitForPaint();
+  try{localStorage.setItem("fsr_ultra",JSON.stringify(data));localStorage.setItem("fsr_ultra_autosave",JSON.stringify(data));}catch(e){}
+  try{
+    const wrote=await writeAutosaveFile(data,{promptForPermission:true});
+    if(wrote){setProgress(100,"Saved.");setTimeout(hideProgress,600);return;}
+    await chooseAutoSaveFile(data);
+    setProgress(100,"Saved.");setTimeout(hideProgress,600);return;
+  }catch(e){console.warn('FS save not available',e);}
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=data.meta.fileName;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  setProgress(100,"Saved.");setTimeout(hideProgress,600);
+}
+
+document.getElementById("loadInput").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{try{applyData(JSON.parse(ev.target.result));alert("Report loaded.");}catch{alert("Invalid file.");}finally{e.target.value="";}};r.readAsText(f);
+});
+document.getElementById("settingsLoadInput").addEventListener("change",e=>{
+  const f=e.target.files&&e.target.files[0];if(!f)return;
+  const r=new FileReader();r.onload=ev=>{
+    try{
+      const loaded=JSON.parse(ev.target.result);
+      const currentData=collectData();
+      appSettings={propertyName:String(loaded.propertyName||"").trim()||DEFAULT_SETTINGS.propertyName,outlets:normalizeList(loaded.outlets||[]),departments:normalizeList(loaded.departments||[]),checklistSections:normalizeSections(loaded.checklistSections||[]),reportNotes:normalizeNotes(loaded.reportNotes||[])};
+      if(!appSettings.outlets.length)appSettings.outlets=DEFAULT_SETTINGS.outlets.slice();
+      if(!appSettings.departments.length)appSettings.departments=DEFAULT_SETTINGS.departments.slice();
+      if(!appSettings.checklistSections.length)appSettings.checklistSections=JSON.parse(JSON.stringify(DEFAULT_SETTINGS.checklistSections));
+      if(!appSettings.reportNotes.length)appSettings.reportNotes=DEFAULT_SETTINGS.reportNotes.slice();
+      try{localStorage.setItem("fsr_settings",JSON.stringify(appSettings));}catch(er){}
+      applySettingsToForm();buildChecklist();applyData({...currentData,settings:appSettings});alert("Settings loaded.");
+    }catch{alert("Invalid settings file.");}finally{e.target.value="";}
+  };r.readAsText(f);
+});
+
+function applyData(data){
+  if(data.settings){
+    appSettings={propertyName:String(data.settings.propertyName||"").trim()||DEFAULT_SETTINGS.propertyName,outlets:normalizeList(data.settings.outlets||[]),departments:normalizeList(data.settings.departments||[]),checklistSections:normalizeSections(data.settings.checklistSections||[]),reportNotes:normalizeNotes(data.settings.reportNotes||[])};
+    if(!appSettings.outlets.length)appSettings.outlets=DEFAULT_SETTINGS.outlets.slice();
+    if(!appSettings.departments.length)appSettings.departments=DEFAULT_SETTINGS.departments.slice();
+    if(!appSettings.checklistSections.length)appSettings.checklistSections=JSON.parse(JSON.stringify(DEFAULT_SETTINGS.checklistSections));
+    if(!appSettings.reportNotes.length)appSettings.reportNotes=DEFAULT_SETTINGS.reportNotes.slice();
+    try{localStorage.setItem("fsr_settings",JSON.stringify(appSettings));}catch(e){}
+    applySettingsToForm();buildChecklist();
+  }
+  const i=data.info||{};
+  ["hotelName","locationOutlet","inspectionDateTime","personOnDuty","departmentName","auditorName","generalObservation","correctiveAction"].forEach(id=>sv(id,i[id]||""));
+  document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
+  document.querySelectorAll("#checklistRoot textarea").forEach(e=>{e.value="";autoResizeComment(e);});
+  (data.sections||[]).forEach((sec,sIdx)=>{
+    (sec.items||[]).forEach((item,iIdx)=>{
+      const r=document.querySelector(`input[name="r_${sIdx}_${iIdx}"][value="${item.status}"]`);if(r)r.checked=true;
+      sv(`cmt_${sIdx}_${iIdx}`,item.comment||"");
+    });
+  });
+  document.getElementById("photoGrid").innerHTML="";photoCtr=0;
+  (data.photos||[]).forEach(p=>{addPhotoCard(p);photoCtr=Math.max(photoCtr,p.number||0);});
+  renumber();updatePills();scheduleSilentAutosave();updateSelectedStyles();resizeAllAutoComments();
+}
+
+function clearAll(){
+  if(!confirm("Clear everything?"))return;
+  ["hotelName","locationOutlet","inspectionDateTime","personOnDuty","departmentName","auditorName","generalObservation","correctiveAction"].forEach(id=>sv(id,""));
+  document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
+  document.querySelectorAll("textarea").forEach(e=>{e.value="";if(e.classList.contains("auto-expand-text"))autoResizeComment(e);});
+  document.getElementById("photoGrid").innerHTML="";document.getElementById("photoInput").value="";
+  try{localStorage.removeItem("fsr_ultra");localStorage.removeItem("fsr_ultra_autosave");}catch(e){}
+  photoCtr=0;updatePills();updateSelectedStyles();scheduleSilentAutosave();closePanel();
+}
+
+let silentSaveTimer=null;
+async function saveSilentState(){
+  try{
+    const data=collectData();
+    const payload={meta:{fileName:getAutosaveFilename(),savedAt:new Date().toISOString()},...data};
+    localStorage.setItem("fsr_ultra_autosave",JSON.stringify(payload));
+    localStorage.setItem("fsr_ultra_autosave_filename",payload.meta.fileName);
+    localStorage.setItem("fsr_ultra_autosave_savedAt",payload.meta.savedAt);
+    await writeAutosaveFile(payload);
+  }catch(e){}
+}
+function scheduleSilentAutosave(){clearTimeout(silentSaveTimer);silentSaveTimer=setTimeout(()=>{saveSilentState();},250);}
+function bindSilentAutosave(){
+  document.addEventListener("input",e=>{const t=e.target;if(!t)return;if(t.matches(".auto-expand-text"))autoResizeComment(t);if(t.matches("input, textarea, select"))scheduleSilentAutosave();});
+  document.addEventListener("change",e=>{const t=e.target;if(!t)return;if(t.matches("input, textarea, select"))scheduleSilentAutosave();});
+  window.addEventListener("beforeunload",saveSilentState);
+}
+
+function loadSettings(){
+  try{
+    const raw=localStorage.getItem("fsr_settings");
+    const parsed=raw?JSON.parse(raw):{};
+    appSettings={propertyName:parsed.propertyName||DEFAULT_SETTINGS.propertyName,outlets:normalizeList(parsed.outlets?.length?parsed.outlets:DEFAULT_SETTINGS.outlets),departments:normalizeList(parsed.departments?.length?parsed.departments:DEFAULT_SETTINGS.departments),checklistSections:normalizeSections(parsed.checklistSections?.length?parsed.checklistSections:DEFAULT_SETTINGS.checklistSections),reportNotes:normalizeNotes(parsed.reportNotes?.length?parsed.reportNotes:DEFAULT_SETTINGS.reportNotes)};
+  }catch(e){appSettings={...DEFAULT_SETTINGS,checklistSections:JSON.parse(JSON.stringify(DEFAULT_SETTINGS.checklistSections)),reportNotes:DEFAULT_SETTINGS.reportNotes.slice()};}
+}
+
+/* INIT */
+buildChecklist();
+loadSettings();
+bindSilentAutosave();
+(async()=>{
+  applySettingsToForm();
+  try{const raw=localStorage.getItem("fsr_ultra_autosave")||localStorage.getItem("fsr_ultra");if(raw)applyData(JSON.parse(raw));}catch(e){}
+  if(!gv("hotelName"))sv("hotelName",appSettings.propertyName||DEFAULT_SETTINGS.propertyName);
+  updateOverallScoreUI();refreshNotesList();resizeAllAutoComments();
+  saveSilentState();
+})();
+</script>
+</body>
+</html>
