@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Security Investigation Written Statement</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap');
+:root {
+  --bg: #eaf1f8;
+  --bg-accent: radial-gradient(circle at top right, rgba(11, 87, 208, 0.10), transparent 36%), radial-gradient(circle at top left, rgba(15, 118, 110, 0.08), transparent 30%), #eaf1f8;
+  --surface: #f7fbff;
+  --surface-2: #edf4fb;
+  --card: rgba(255,255,255,0.98);
+  --card2: #f2f7fc;
+  --border: rgba(58, 90, 130, 0.14);
+  --border2: rgba(44, 86, 154, 0.24);
+  --primary: #0b57d0;
+  --primary-2: #174ea6;
+  --primary-3: #6d9eff;
+  --accent: #0f766e;
+  --accent-2: #0d9488;
+  --warn: #b45309;
+  --red: #dc2626;
+  --text: #10233d;
+  --text2: #425b79;
+  --text3: #6c819c;
+  --shadow: 0 18px 45px -24px rgba(16,35,61,0.28);
+  --glow: 0 0 0 1px rgba(23,78,166,0.05), 0 12px 30px -22px rgba(11,87,208,0.22);
+  --table-head: #e7f0fb;
+}
+body.dark {
+  --bg: #0b1320;
+  --bg-accent: radial-gradient(circle at top right, rgba(11, 87, 208, 0.20), transparent 36%), radial-gradient(circle at top left, rgba(13, 148, 136, 0.12), transparent 30%), #0b1320;
+  --surface: #101a2b;
+  --surface-2: #162338;
+  --card: rgba(18, 29, 46, 0.96);
+  --card2: #1a2a43;
+  --border: rgba(114, 149, 207, 0.18);
+  --border2: rgba(132, 173, 240, 0.28);
+  --text: #eef4ff;
+  --text2: #b4c5dd;
+  --text3: #7d92b2;
+  --shadow: 0 24px 55px -28px rgba(0,0,0,0.7);
+  --glow: 0 0 0 1px rgba(109,158,255,0.08), 0 12px 30px -20px rgba(11,87,208,0.36);
+  --table-head: #152845;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+body {
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  background: var(--bg-accent);
+  color: var(--text);
+  transition: background 0.25s, color 0.25s;
+  padding: 20px 14px;
+}
+body.rtl { direction: rtl; text-align: right; }
+.page { max-width: 1180px; margin: 0 auto; }
+.hdr {
+  background: linear-gradient(135deg, #10315c 0%, #0b57d0 62%, #0f766e 140%);
+  border-radius: 24px 24px 18px 18px;
+  padding: 1.4rem 1.6rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+body.dark .hdr {
+  background: linear-gradient(135deg, #0c1930 0%, #10315c 55%, #0b57d0 110%);
+}
+.hdr-flex { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.hdr-kicker { font-size: 0.95rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.96; }
+.hdr h1 { font-size: 1.85rem; font-weight: 800; margin-top: 6px; letter-spacing: -0.02em; }
+.hdr p { margin-top: 8px; color: rgba(255,255,255,0.88); font-size: 0.95rem; }
+.toolbar { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.toolbar select, .toolbar button {
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.20);
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+  padding: 0 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.toolbar select option { color: #10233d; }
+.toolbar button:hover, .toolbar select:hover { background: rgba(255,255,255,0.16); }
+.shell {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 22px 22px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.content { padding: 18px 22px; display:grid; gap:18px; }
+.panel {
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.panel:hover { box-shadow: var(--glow); }
+.panel-hdr {
+  background: var(--card2);
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent-2);
+}
+.panel-body { padding: 18px; }
+.grid { display:grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.f { grid-column: span 12; display:flex; flex-direction:column; gap:7px; }
+.f6 { grid-column: span 6; }
+.f4 { grid-column: span 4; }
+.f8 { grid-column: span 8; }
+label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text2); text-align:left; }
+label.req::after { content: " *"; color: var(--red); }
+input, select, textarea {
+  width: 100%;
+  background: #fff;
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 0.94rem;
+  transition: 0.2s;
+  font-family: inherit;
+  text-align: left;
+}
+input[type=checkbox] { text-align: initial; }
+body.dark input, body.dark select, body.dark textarea { background: #0f1b2e; }
+textarea { min-height: 146px; resize: vertical; line-height: 1.55; }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(11,87,208,0.15);
+}
+.split-input { display:flex; gap:10px; align-items:center; }
+.btn-sm, .btn-primary, .btn-secondary {
+  min-height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border2);
+  padding: 0 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor:pointer;
+}
+.btn-sm, .btn-secondary { background: var(--card2); color: var(--text); }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-2)); color: #fff; border: none; }
+.btn-gold { background: linear-gradient(135deg, var(--accent), var(--primary)); color: #fff; border:none; min-height: 42px; padding: 0 16px; border-radius: 12px; font-weight: 800; cursor:pointer; }
+.aid-bar, .phrase-lib { display:flex; flex-wrap:wrap; gap:8px; }
+.aid-bar { margin: 10px 0 6px; }
+.aid-chip, .phrase {
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor:pointer;
+}
+.aid-chip { background: rgba(11,87,208,0.10); border:1px solid rgba(11,87,208,0.22); color: var(--primary); }
+.phrase { background: rgba(15,118,110,0.10); border:1px solid rgba(15,118,110,0.22); color: var(--accent); }
+body.dark .aid-chip { color: #cfe0ff; }
+body.dark .phrase { color: #b8f1ea; }
+.translated-wrap { display:grid; gap:8px; margin-top:12px; }
+.translated-wrap[hidden] { display:none !important; }
+.translate-controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.dual-note { font-size: 0.76rem; color: var(--text3); text-align:center; margin-top: 4px; }
+.translate-panel { background: var(--card2); border:1px solid var(--border); border-radius: 16px; padding: 14px; margin-top: 14px; }
+.translate-panel-title { font-size: 0.78rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--text2); text-align:center; margin-bottom: 10px; }
+.translate-controls { justify-content:center; }
+.translate-controls select, .translate-controls button { min-height: 40px; }
+.text-en { text-align: left !important; direction: ltr !important; }
+.text-ar { text-align: right !important; direction: rtl !important; }
+.text-center-force { text-align: center !important; direction: ltr; }
+.report-table td { word-break: break-word; }
+.translate-controls select {
+  max-width: 240px;
+  min-width: 240px;
+  width: 240px;
+  padding-right: 38px;
+  color: #10233d !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(44, 86, 154, 0.24) !important;
+  text-align: left !important;
+  direction: ltr !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+  -moz-appearance: menulist !important;
+}
+.translate-controls select option {
+  color: #10233d !important;
+  background: #ffffff !important;
+}
+body.dark .translate-controls select {
+  background: #0f1b2e !important;
+  color: #eef4ff !important;
+}
+body.dark .translate-controls select option {
+  background: #0f1b2e !important;
+  color: #eef4ff !important;
+}
+
+body.form-lang-en label,
+body.form-lang-en .panel-hdr,
+body.form-lang-en .translate-panel-title,
+body.form-lang-en .dual-note,
+body.form-lang-en .affirm-text,
+body.form-lang-en .status { text-align: left; direction: ltr; }
+body.form-lang-ar label,
+body.form-lang-ar .panel-hdr,
+body.form-lang-ar .translate-panel-title,
+body.form-lang-ar .dual-note,
+body.form-lang-ar .affirm-text,
+body.form-lang-ar .status { text-align: right; direction: rtl; }
+.aid-bar, .aid-hint, .phrase-label, .phrase-lib { display: none !important; }
+.report-header { text-align:center !important; }
+.report-header .dept, .report-header .title { text-align:center !important; }
+.report-card { border:1px solid #c9d6e4; border-radius: 10px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05); }
+.report-card h3 { background: linear-gradient(180deg, #eef4fa, #e5edf7); color:#173b6c; font-size: 11px; letter-spacing: 0.08em; padding: 8px 10px; }
+.report-table th, .report-table td { padding: 7px 9px; font-size: 11.2px; }
+.report-table th { background:#f3f7fb; color:#203a5f; }
+.report-text { background:#fff; border-top: 1px solid #d4deea; min-height: 74px; }
+.print-report { border: 1px solid #d8e2ee; border-radius: 12px; box-shadow: 0 14px 40px rgba(15,23,42,.08); }
+
+.progress-overlay { position:fixed; inset:0; background: rgba(9,18,31,0.38); display:none; align-items:center; justify-content:center; z-index:9999; padding:20px; }
+.progress-overlay.show { display:flex; }
+.progress-card { width:min(420px,100%); background: var(--card); border:1px solid var(--border); border-radius:18px; padding:22px; box-shadow: var(--shadow); text-align:center; }
+.progress-title { font-size:1rem; font-weight:800; color:var(--text); margin-bottom:14px; }
+.progress-bar { height:12px; background: var(--surface-2); border-radius:999px; overflow:hidden; border:1px solid var(--border); }
+.progress-fill { height:100%; width:0%; background: linear-gradient(135deg, var(--primary), var(--accent)); transition:width .18s ease; }
+.progress-note { margin-top:10px; color:var(--text2); font-size:.84rem; }
+.aid-hint {
+  padding: 10px 12px;
+  background: rgba(11,87,208,0.06);
+  border: 1px solid rgba(11,87,208,0.12);
+  border-radius: 12px;
+  font-size: 0.77rem;
+  color: var(--text3);
+}
+.char-row { display:flex; justify-content:space-between; gap:10px; align-items:center; }
+.affirm {
+  display:flex; gap:12px; align-items:flex-start;
+  background: var(--card2);
+  padding: 16px; border-radius: 16px;
+}
+.affirm input { width: 22px; height: 22px; accent-color: var(--accent); margin-top: 2px; }
+.sig-box { border:2px dashed var(--border2); border-radius: 18px; background: var(--surface-2); padding: 8px; }
+canvas { width:100%; height:160px; display:block; border-radius: 12px; background: var(--card); }
+.sig-badge {
+  display:inline-flex; align-items:center; min-height:38px; padding: 0 14px;
+  border-radius: 999px; background: rgba(11,87,208,0.08); border:1px solid rgba(11,87,208,0.18);
+  font-size:0.82rem; font-weight:800; color:var(--text2);
+}
+.footer {
+  background: var(--card2); padding: 16px 18px; border-radius: 0 0 18px 18px;
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+}
+.status { font-weight:800; color: var(--accent); }
+.translate-row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px; }
+.print-report {
+  display:none; background:#fff; color:#111827; width: 794px; max-width: 794px; margin: 0 auto;
+  padding: 24px 22px; box-sizing: border-box; border: 1px solid #d6e0ea; border-radius: 14px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.10); font-family: Inter, 'Segoe UI', Arial, sans-serif;
+}
+.report-header {
+  text-align:center;
+  padding: 0 0 14px;
+  border-bottom: 3px solid #123a6b;
+  margin-bottom: 14px;
+}
+.report-header .dept {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:#123a6b;
+}
+.report-header .title {
+  margin-top: 5px;
+  font-size: 22px;
+  font-weight: 800;
+  color:#0f172a;
+}
+.report-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.report-card {
+  border:1px solid #c6d3e0;
+  border-radius: 10px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+.report-card.full { grid-column: 1 / -1; }
+.report-card h3 {
+  background: linear-gradient(180deg, #f4f8fc 0%, #eaf1f8 100%);
+  color:#173b6c;
+  font-size: 11.4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-align:center !important;
+  padding: 8px 10px;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  border-bottom:1px solid #d2deea;
+}
+.report-table {
+  width:100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.report-table th, .report-table td {
+  border:1px solid #d8e1eb;
+  padding: 7px 9px;
+  font-size: 11.4px;
+  line-height: 1.4;
+  vertical-align: middle;
+  text-align:center !important;
+}
+.report-table th {
+  width: 34%;
+  background: #f7fafc;
+  color:#31465f;
+  font-weight:800;
+}
+.report-text {
+  font-size: 12.6px;
+  line-height: 1.7;
+  color:#111827;
+  white-space: pre-wrap;
+  min-height: 56px;
+  unicode-bidi: plaintext;
+  padding: 14px;
+  text-align:left;
+  direction:ltr;
+  word-break: break-word;
+}
+.print-report.rtl .report-text { text-align:right; direction:rtl; }
+body.form-lang-ar, body.form-lang-ar *:not(canvas) {
+  font-family: Tahoma, Arial, "Segoe UI", sans-serif;
+}
+#printReport.rtl, #printReport.rtl *:not(canvas) {
+  font-family: Tahoma, Arial, "Segoe UI", sans-serif !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-kerning: normal;
+}
+#printReport.rtl {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+}
+#printReport.rtl .report-text,
+#printReport.rtl .sig-field-print,
+#printReport.rtl .sig-status-print,
+#printReport.rtl .report-affirmation .aff-ar,
+#printReport.rtl .report-table th,
+#printReport.rtl .report-table td {
+  direction: rtl !important;
+  unicode-bidi: plaintext;
+  text-align: right !important;
+}
+body.form-lang-ar .report-header .dept,
+body.form-lang-ar .report-header .title,
+body.form-lang-ar .report-card h3,
+#printReport.rtl .report-header .dept,
+#printReport.rtl .report-header .title,
+#printReport.rtl .report-card h3 {
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  word-spacing: 0.02em;
+}
+#printReport.rtl .report-header .dept,
+#printReport.rtl .report-header .title {
+  direction: rtl !important;
+  text-align: center !important;
+}
+#printReport:not(.rtl) .report-header .dept,
+#printReport:not(.rtl) .report-header .title {
+  direction: ltr !important;
+  text-align: center !important;
+}
+.signature-layout-print {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  width: 100%;
+}
+.signature-left-print,
+.signature-right-print {
+  min-width: 0;
+}
+.signature-left-print {
+  width: 220px;
+}
+.sig-label-print {
+  font-size: 11.2px;
+  font-weight: 800;
+  color: #31465f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 7px;
+}
+.sig-label-print .req {
+  color: #dc2626;
+}
+.signature-box-print {
+  width: 220px;
+  min-height: 102px;
+  height: 102px;
+  border: 2px dashed #bfd0e6;
+  border-radius: 16px;
+  background: #f8fafc;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.signature-box-print img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+  display: block;
+}
+.signature-right-print {
+  display: grid;
+  gap: 10px;
+}
+.sig-field-print {
+  border: 1px solid #c6d3e0;
+  border-radius: 12px;
+  background: #f8fafc;
+  min-height: 45px;
+  padding: 11px 14px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+}
+.sig-field-print.empty {
+  color: #64748b;
+}
+.sig-status-print {
+  border-radius: 999px;
+  min-height: 38px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 11.5px;
+  font-weight: 800;
+  border: 1px solid #bfd0e6;
+  background: #eef3fb;
+  color: #3b5677;
+}
+.person-grid-two-col {
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.person-grid-two-col .report-table {
+  margin: 0;
+}
+.print-footer-note { margin-top: 8px; font-size: 10px; color:#64748b; text-align:center; }
+.signature-card {
+  padding-top: 10px;
+}
+.signature-card h3 {
+  margin-bottom: 10px;
+}
+.report-affirmation {
+  grid-column: 1 / -1;
+  border: 1px solid #c9d6e4;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f8fbff, #eef4fa);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  padding: 12px 14px;
+  margin-top: -2px;
+}
+.report-affirmation .aff-en,
+.report-affirmation .aff-ar {
+  font-size: 11.5px;
+  line-height: 1.7;
+  margin: 0;
+}
+.report-affirmation .aff-en {
+  direction: ltr;
+  text-align: left;
+  color: #0f172a;
+}
+.report-affirmation .aff-ar {
+  direction: rtl;
+  text-align: right;
+  color: #0f172a;
+  margin-top: 8px;
+  font-family: "Noto Naskh Arabic", Tahoma, Arial, sans-serif;
+}
+#printReport.rtl .report-affirmation .aff-en { text-align: left; direction: ltr; }
+#printReport.rtl .report-affirmation .aff-ar { text-align: right; direction: rtl; }
+@media print {
+  .report-affirmation {
+    break-inside: avoid;
+    box-shadow: none;
+    background: #f7f9fc !important;
+  }
+}
+@media (max-width: 900px) {
+  .report-grid, .person-grid-two-col, .signature-layout-print { grid-template-columns: 1fr; }
+  .signature-left-print { width: 100%; }
+  .signature-box-print { width: 100%; height: 102px; min-height: 102px; }
+}
+@media (max-width: 900px) {
+  .f6, .f4, .f8 { grid-column: span 12; }
+  .content { padding: 16px; }
+  .panel-body { padding: 16px; }
+  .toolbar { width: 100%; }
+  .toolbar select, .toolbar button { flex: 1 1 170px; }
+  .translate-controls { flex-direction:column; align-items:stretch; }
+}
+@media (max-width: 640px) {
+  body { padding: 10px 8px; }
+  .hdr { padding: 1rem; border-radius: 18px 18px 14px 14px; }
+  .hdr h1 { font-size: 1.32rem; }
+  .hdr-kicker { font-size: 0.82rem; }
+  .hdr p { font-size: 0.84rem; }
+  .content { padding: 12px; gap: 12px; }
+  .panel-body { padding: 12px; }
+  .toolbar, .foot-actions, .translate-controls, .split-input, .char-row { flex-direction: column; align-items: stretch; }
+  .toolbar select, .toolbar button, .foot-actions button, .translate-controls select, .translate-controls button, .split-input > * { width: 100%; }
+  .aid-bar, .phrase-lib { gap: 6px; }
+  canvas { height: 140px; }
+}
+
+body.form-lang-en,
+body.form-lang-en .grid,
+body.form-lang-en .split-input,
+body.form-lang-en .toolbar,
+body.form-lang-en .footer,
+body.form-lang-en .panel-body { direction:ltr; }
+body.form-lang-ar,
+body.form-lang-ar .grid,
+body.form-lang-ar .split-input,
+body.form-lang-ar .toolbar,
+body.form-lang-ar .footer,
+body.form-lang-ar .panel-body { direction:rtl; }
+
+body.form-lang-en input:not([type="datetime-local"]):not([type="date"]):not([type="time"]),
+body.form-lang-en select,
+body.form-lang-en textarea,
+body.form-lang-en label,
+body.form-lang-en .panel-hdr,
+body.form-lang-en .affirm-text,
+body.form-lang-en .status,
+body.form-lang-en .translate-panel-title,
+body.form-lang-en .dual-note { text-align:left !important; direction:ltr !important; }
+
+body.form-lang-ar input:not([type="datetime-local"]):not([type="date"]):not([type="time"]),
+body.form-lang-ar select,
+body.form-lang-ar textarea,
+body.form-lang-ar label,
+body.form-lang-ar .panel-hdr,
+body.form-lang-ar .affirm-text,
+body.form-lang-ar .status,
+body.form-lang-ar .translate-panel-title,
+body.form-lang-ar .dual-note { text-align:right !important; direction:rtl !important; }
+
+body.form-lang-en .report-table th,
+body.form-lang-en .report-table td,
+body.form-lang-en .report-text,
+body.form-lang-en .signature-box-print,
+body.form-lang-en .signature-meta { text-align:left !important; direction:ltr !important; }
+
+body.form-lang-ar .report-table th,
+body.form-lang-ar .report-table td,
+body.form-lang-ar .report-text,
+body.form-lang-ar .signature-box-print,
+body.form-lang-ar .signature-meta { text-align:right !important; direction:rtl !important; }
+
+.report-header, .report-header .dept, .report-header .title,
+body.form-lang-en .report-header, body.form-lang-en .report-header .dept, body.form-lang-en .report-header .title { text-align:center !important; direction:ltr !important; }
+body.form-lang-ar .report-header, body.form-lang-ar .report-header .dept, body.form-lang-ar .report-header .title { text-align:center !important; direction:rtl !important; }
+
+@media print {
+  body, body.dark, body.rtl { background:#fff !important; color:#111 !important; padding:0; }
+  .hdr, .shell, .page > *:not(.print-report) { display:none !important; }
+  .print-report { display:block !important; width: 190mm !important; max-width: 190mm !important; padding: 7mm 6mm !important; }
+  .report-grid { gap: 8px; }
+  .report-card, .signature-meta, .signature-box-print { break-inside: avoid; }
+  .report-text { font-size: 11.5px; }
+  @page { size: A4; margin: 9mm; }
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+</head>
+<body>
+<div class="page">
+  <header class="hdr">
+    <div class="hdr-flex">
+      <div>
+        <div class="hdr-kicker" id="hdrDept">Security Department</div>
+        <h1 id="hdrTitle">Investigation Written Statement</h1>
+        <p id="hdrSub">Professional written statement form with bilingual interface and compact print layout</p>
+      </div>
+      <div class="toolbar">
+        <select id="languageSelect" aria-label="Form Language">
+          <option value="en">English</option>
+          <option value="ar">العربية</option>
+        </select>
+        <button class="btn-secondary" id="themeBtn" type="button">Dark Theme</button>
+      </div>
+    </div>
+  </header>
+  <div class="shell">
+    <div class="content">
+      <form id="sf" novalidate>
+        <div class="panel">
+          <div class="panel-hdr" data-i18n="panelInfo">Statement Information</div>
+          <div class="panel-body">
+            <div class="grid">
+              <div class="f f6"><label class="req" data-i18n="labelProperty">Property Name</label><input id="propertyName" required></div>
+              <div class="f f6"><label class="req" data-i18n="labelDateTime">Date & Time Written</label><input id="statementDateTime" type="datetime-local" required></div>
+              <div class="f f6"><label class="req" data-i18n="labelSubject">Subject</label><select id="subject" required></select></div>
+              <div class="f f6" id="customSubjectWrap" style="display:none"><label data-i18n="labelCustomSubject">Custom Subject</label><input id="customSubject" placeholder="Type subject"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hdr" data-i18n="panelEmployee">Person Information</div>
+          <div class="panel-body">
+            <div class="grid">
+              <div class="f f6"><label class="req" data-i18n="labelEmployeeName">Person Name</label><input id="employeeName" required></div>
+              <div class="f f6"><label class="req" data-i18n="labelEmployeeId">Emirates ID/Passport Number</label><input id="employeeId" required></div>
+              <div class="f f6"><label class="req" data-i18n="labelCompanyName">Company Name</label><input id="companyName" required></div>
+              <div class="f f6" id="deptSelectWrap"><label class="req" data-i18n="labelDepartment">Host Department</label><div class="split-input"><select id="deptSelect" required></select><button class="btn-sm" id="useCustomDept" type="button" data-i18n="btnType">Type</button></div></div>
+              <div class="f f6" id="deptCustomWrap" style="display:none"><label data-i18n="labelDepartment">Host Department</label><div class="split-input"><input id="deptCustom" placeholder="Host department name"><button class="btn-sm" id="useSelectDept" type="button" data-i18n="btnSelect">Select</button></div></div>
+              <div class="f f6"><label class="req" data-i18n="labelNationality">Nationality</label><select id="nationality" required></select></div>
+              <div class="f f6"><label data-i18n="labelLocation">Incident Location</label><input id="incidentLocation" placeholder="e.g., Lobby, Pool area"></div>
+                          </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hdr" data-i18n="panelNarrative">Statement Narrative</div>
+          <div class="panel-body">
+            <div class="f">
+              <div class="char-row"><label class="req" data-i18n="labelDetails">Full Details (what, when, who, actions)</label><span class="char-count" id="charCount">0 characters</span></div>
+              <div id="aidBar" class="aid-bar"></div>
+              <div id="aidHint" class="aid-hint">Start typing and click a prediction to insert it directly into the statement field.</div>
+              <textarea id="statementDetails" rows="7" required placeholder="Describe the incident with full detail, timeline, persons involved, actions taken..."></textarea>
+              <div class="phrase-label" id="phraseLabel" style="font-size:11px; margin-top:12px; font-weight:800; color:var(--text2);">Quick Phrase Library</div>
+              <div class="phrase-lib" id="phraseLib"></div>
+              <div class="translate-panel">
+                <div class="translate-panel-title" data-i18n="translatePanelTitle">Translation</div>
+                <div class="translate-controls">
+                  <select id="translateTarget" aria-label="Translate To">
+                  <option value="ar">Arabic</option>
+                  <option value="en">English</option>
+                  <option value="fr">French</option>
+                  <option value="es">Spanish</option>
+                  <option value="de">German</option>
+                  <option value="it">Italian</option>
+                  <option value="pt">Portuguese</option>
+                  <option value="ru">Russian</option>
+                  <option value="tr">Turkish</option>
+                  <option value="hi">Hindi</option>
+                  <option value="ur">Urdu</option>
+                  <option value="zh">Chinese</option>
+                  <option value="ja">Japanese</option>
+                  <option value="ko">Korean</option>
+                  <option value="fa">Persian</option>
+                  <option value="tl">Tagalog</option>
+                </select>
+                  <button class="btn-secondary" id="translateStatementBtn" type="button">Translate Statement</button>
+                  <button class="btn-secondary" id="clearTranslateBtn" type="button">Clear Translation</button>
+                </div>
+                <div class="translated-wrap" id="translatedWrap" hidden>
+                  <label id="translatedLabel" data-i18n="translatedLabel">Translated Statement</label>
+                  <textarea id="translatedStatement" rows="5"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-hdr" data-i18n="panelAck">Acknowledgment & Signature</div>
+          <div class="panel-body">
+            <div class="grid">
+              <div class="f"><div class="affirm"><input type="checkbox" id="affirmation"><div class="affirm-text" id="affirmText">I affirm that this statement was made voluntarily, without threat or coercion, and all information provided is truthful and correct to the best of my knowledge.</div></div></div>
+              <div class="f f8"><label class="req" data-i18n="labelSignature">Employee Signature (draw below)</label>
+                <div class="sig-box"><canvas id="sigCanvas" width="500" height="160" style="width:100%; height:160px;"></canvas></div>
+                <div style="display:flex; gap:8px; margin-top:8px;"><button class="btn-sm" type="button" id="clearSig">Clear</button><button class="btn-sm" type="button" id="undoSig">Undo</button></div>
+                <input type="hidden" id="sigData">
+              </div>
+              <div class="f f4"><label class="req" data-i18n="labelSignedBy">Signed By (Print Name)</label><input id="sigName" placeholder="Full legal name" required>
+                <div class="sig-meta" style="margin-top:12px; display:grid; gap:10px;">
+                  <div class="sig-badge" id="sigBadge">Not signed</div>
+                  <div>
+                    <label data-i18n="labelSignedAt">Signed Date & Time</label>
+                    <input id="sigAt" readonly placeholder="Will auto-fill after signature">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="status" id="statusMsg"></div>
+          <div class="foot-actions" style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn-gold" type="button" id="printBtn">Generate PDF Report</button>
+            <button class="btn-sm" type="reset" id="resetBtn">Reset Form</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <section class="print-report" id="printReport">
+    <div class="report-header">
+      <div class="dept" id="printDept">Security Department</div>
+      <div class="title" id="printTitle">Investigation Written Statement</div>
+    </div>
+    <div class="report-grid">
+      <div class="report-card">
+        <h3 id="printInfoHdr">Statement Information</h3>
+        <table class="report-table">
+          <tr><th id="thProperty">Property Name</th><td id="rProperty"></td></tr>
+          <tr><th id="thDate">Date & Time Written</th><td id="rDate"></td></tr>
+          <tr><th id="thSubject">Subject</th><td id="rSubject"></td></tr>
+                  </table>
+      </div>
+      <div class="report-card">
+        <h3 id="printEmpHdr">Person Information</h3>
+        
+<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+
+  <div class="report-card">
+    <table class="report-table">
+      <tr><th id="thEmployeeName">Person Name</th><td id="rEmployeeName"></td></tr>
+      <tr><th id="thEmployeeId">Emirates ID/Passport Number</th><td id="rEmployeeId"></td></tr>
+      <tr><th id="thNationality">Nationality</th><td id="rNationality"></td></tr>
+    </table>
+  </div>
+
+  <div class="report-card">
+    <table class="report-table">
+      <tr><th id="thCompanyName">Company Name</th><td id="rCompanyName"></td></tr>
+      <tr><th id="thDepartment">Host Department</th><td id="rDepartment"></td></tr>
+      <tr><th id="thLocation">Incident Location</th><td id="rLocation"></td></tr>
+    </table>
+  </div>
+
+</div>
+
+      </div>
+      <div class="report-card full">
+        <h3 id="printNarrativeHdr">Statement Details</h3>
+        <div class="report-text" id="rDetails"></div>
+      </div>
+      <div class="report-card full" id="translatedReportCard" style="display:none;">
+        <h3 id="printTranslatedHdr">Translated Statement</h3>
+        <div class="report-text" id="rTranslatedDetails"></div>
+      </div>
+
+      <div class="report-affirmation" id="reportAffirmationBlock">
+        <p class="aff-en" id="reportAffirmationEn">I affirm that this statement was made voluntarily, without threat or coercion, and all information provided is truthful and correct to the best of my knowledge.</p>
+        <p class="aff-ar" id="reportAffirmationAr">أقر بأن هذه الإفادة كُتبت بمحض إرادتي دون تهديد أو إكراه، وأن جميع المعلومات الواردة صحيحة حسب أفضل ما لدي من معرفة.</p>
+      </div>
+      <div class="report-card full signature-card">
+        <h3 id="printSigHdr">Acknowledgment & Signature</h3>
+        <div class="panel-body" style="padding:14px;">
+          <div class="signature-layout-print">
+            <div class="signature-left-print">
+              <div class="sig-label-print" id="printSignatureLabel">Signature (Draw Below) <span class="req">*</span></div>
+              <div class="signature-box-print" id="signaturePreview"></div>
+            </div>
+            <div class="signature-right-print">
+              <div>
+                <div class="sig-label-print" id="thSignedBy">Signed By (Print Name) <span class="req">*</span></div>
+                <div class="sig-field-print" id="rSignedBy"></div>
+              </div>
+              <div class="sig-status-print" id="rAffirmation"></div>
+              <div>
+                <div class="sig-label-print" id="thSignedAt2">Signed Date &amp; Time</div>
+                <div class="sig-field-print" id="rSignedAt"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="print-footer-note" id="printFooterNote">Generated from the digital statement form.</div>
+  </section>
+</div>
+<div class="progress-overlay" id="progressOverlay" aria-hidden="true">
+  <div class="progress-card">
+    <div class="progress-title" id="progressTitle">Generating report...</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-note" id="progressNote">Please wait</div>
+  </div>
+</div>
+<script>
+(function() {
+  const dictionaries = {
+    en: {
+      dir: 'ltr', lang: 'en',
+      pageTitle: 'Security Investigation Written Statement',
+      hdrDept: 'Security Department', hdrTitle: 'Investigation Written Statement', hdrSub: 'Professional written statement form with bilingual interface and compact print layout',
+      panelInfo: 'Statement Information', panelEmployee: 'Person Information', panelNarrative: 'Statement Narrative', panelAck: 'Acknowledgment & Signature',
+      labelProperty: 'Property Name', labelDateTime: 'Date & Time Written', labelSubject: 'Subject', labelCustomSubject: 'Custom Subject', labelEmployeeName: 'Person Name', labelEmployeeId: 'Emirates ID/Passport Number', labelCompanyName: 'Company Name', labelDepartment: 'Host Department', labelNationality: 'Nationality', labelLocation: 'Incident Location', labelDetails: 'Full Details (what, when, who, actions)', labelSignature: 'Signature (draw below)', labelSignedBy: 'Signed By (Print Name)', labelSignedAt: 'Signed Date & Time',
+      btnType: 'Type', btnSelect: 'Select', btnClearTranslate: 'Clear Translation', btnTranslateStatement: 'Translate Statement', translatePanelTitle: 'Translation', btnThemeDark: 'Dark Theme', btnThemeLight: 'Light Theme', btnPrint: 'Generate PDF Report', btnReset: 'Reset Form', btnClear: 'Clear', btnUndo: 'Undo', translateTo: 'Translate To', translatedLabel: 'Translated Statement', progressTitle: 'Generating PDF report', progressNote: 'Preparing enterprise report layout and exporting PDF file',
+      hint: 'Start typing and click a prediction to insert it directly into the statement field.',
+      phraseLabel: 'Quick Phrase Library',
+      affirmation: 'I affirm that this statement was made voluntarily, without threat or coercion, and all information provided is truthful and correct to the best of my knowledge.',
+      subjects: ['Select Subject','Theft','Guest Complaint','Employee Misconduct','Lost & Found','Access Violation','Safety Incident','Damage to Property','Other'],
+      departments: ['Select Host Department','Security','Front Office','Housekeeping','Food & Beverage','Engineering','HR','Other'],
+      nationalities: ["Select Nationality", "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Antiguan and Barbudan", "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian and Herzegovinian", "Botswanan", "Brazilian", "British", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cambodian", "Cameroonian", "Canadian", "Cape Verdean", "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comorian", "Congolese", "Costa Rican", "Croatian", "Cuban", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican", "Dutch", "East Timorese", "Ecuadorean", "Egyptian", "Emirati", "Equatorial Guinean", "Eritrean", "Estonian", "Eswatini", "Ethiopian", "Fijian", "Filipino", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian", "Greek", "Grenadian", "Guatemalan", "Guinean", "Guyanese", "Haitian", "Honduran", "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakh", "Kenyan", "Kittitian and Nevisian", "Kuwaiti", "Kyrgyz", "Laotian", "Latvian", "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourger", "Malagasy", "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian", "Montenegrin", "Moroccan", "Mozambican", "Namibian", "Nauruan", "Nepali", "New Zealander", "Nicaraguan", "Nigerian", "Nigerien", "North Korean", "North Macedonian", "Norwegian", "Omani", "Pakistani", "Palauan", "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan", "Saint Lucian", "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi", "Senegalese", "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish", "Sri Lankan", "Sudanese", "Surinamese", "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajik", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian and Tobagonian", "Tunisian", "Turkish", "Turkmen", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbek", "Vanuatuan", "Venezuelan", "Vietnamese", "Yemeni", "Zambian", "Zimbabwean", "Other"],
+      placeholders: {
+        customSubject: 'Type subject', deptCustom: 'Host department name', incidentLocation: 'e.g., Lobby, Pool area', statementDetails: 'Describe the incident with full detail, timeline, persons involved, actions taken...', sigName: 'Full legal name', sigAt: 'Will auto-fill after signature'
+      },
+      phrases: [
+        ['At approximately [TIME] on [DATE], I was on duty at [LOCATION] when ','At approx…'],
+        ['I observed the individual proceed to ','I observed…'],
+        ['CCTV footage was reviewed and confirmed that ','CCTV confirmed…'],
+        ['The person involved was described as ','Person desc…'],
+        ['Immediate action was taken by notifying ','Action taken…'],
+        ['Relevant authorities were contacted and responded at ','Authority contact…']
+      ],
+      charSuffix: 'characters',
+      statusReady: 'Ready — bilingual mode and compact print layout enabled',
+      statusNeedAck: 'Please check the acknowledgment checkbox.',
+      statusNeedSig: 'Signature required before printing.',
+      statusNeedFields: 'Fill all required fields.',
+      statusPreparing: 'Preparing compact report layout...',
+      statusTranslated: 'Content translated to selected language.',
+      statusTranslateError: 'Translation service is unavailable right now.',
+      statusReset: 'Form reset.',
+      sigNotSigned: 'Not signed', sigSigned: 'Signed', sigRecorded: 'Signature recorded', canvasHint: 'Sign here',
+      printInfo: 'Statement Information', printEmp: 'Person Information', printNarrative: 'Statement Details', printTranslated: 'Translated Statement', printSig: 'Acknowledgment & Signature', printFooter: 'Generated from the digital statement form.',
+      ackYes: 'Confirmed', ackNo: 'Not confirmed', notProvided: 'Not provided'
+    },
+    ar: {
+      dir: 'rtl', lang: 'ar',
+      pageTitle: 'إفادة تحقيق خطية للأمن',
+      hdrDept: 'قسم الأمن', hdrTitle: 'إفادة تحقيق خطية', hdrSub: 'نموذج إفادة احترافي بواجهة ثنائية اللغة وتنسيق طباعة مضغوط',
+      panelInfo: 'معلومات الإفادة', panelEmployee: 'بيانات الشخص', panelNarrative: 'تفاصيل الإفادة', panelAck: 'الإقرار والتوقيع',
+      labelProperty: 'اسم المنشأة', labelDateTime: 'تاريخ ووقت التحرير', labelSubject: 'الموضوع', labelCustomSubject: 'موضوع مخصص', labelEmployeeName: 'اسم الشخص', labelEmployeeId: 'رقم الهوية الإماراتية/جواز السفر', labelCompanyName: 'اسم الشركة', labelDepartment: 'القسم المستضيف', labelNationality: 'الجنسية', labelLocation: 'موقع الحادث', labelDetails: 'التفاصيل الكاملة (ماذا، متى، من، الإجراءات)', labelSignature: 'التوقيع (يرجى التوقيع أدناه)', labelSignedBy: 'الاسم المطبوع', labelSignedAt: 'تاريخ ووقت التوقيع',
+      btnType: 'كتابة', btnSelect: 'اختيار', btnClearTranslate: 'مسح الترجمة', btnTranslateStatement: 'ترجمة الإفادة', translatePanelTitle: 'الترجمة', btnThemeDark: 'الوضع الداكن', btnThemeLight: 'الوضع الفاتح', btnPrint: 'إنشاء تقرير PDF', btnReset: 'إعادة تعيين', btnClear: 'مسح', btnUndo: 'تراجع', translateTo: 'الترجمة إلى', translatedLabel: 'الإفادة المترجمة', progressTitle: 'جارٍ إنشاء تقرير PDF', progressNote: 'يتم تجهيز تقرير احترافي وتصدير ملف PDF',
+      hint: 'ابدأ بالكتابة ثم اضغط على التوقع لإدراجه مباشرة داخل حقل الإفادة.',
+      phraseLabel: 'مكتبة العبارات السريعة',
+      affirmation: 'أقر بأن هذه الإفادة كُتبت بمحض إرادتي دون تهديد أو إكراه، وأن جميع المعلومات الواردة صحيحة حسب أفضل ما لدي من معرفة.',
+      subjects: ['اختر الموضوع','سرقة','شكوى نزيل','سوء سلوك موظف','مفقودات ومعثورات','مخالفة دخول','حادث سلامة','أضرار بالممتلكات','أخرى'],
+      departments: ['اختر القسم المستضيف','الأمن','الاستقبال','التدبير المنزلي','الأغذية والمشروبات','الهندسة','الموارد البشرية','أخرى'],
+      nationalities: ["اختر الجنسية", "أفغاني", "ألباني", "جزائري", "أمريكي", "أندوري", "أنغولي", "أنتيغوي وبربودي", "أرجنتيني", "أرميني", "أسترالي", "نمساوي", "أذربيجاني", "باهامي", "بحريني", "بنغلاديشي", "بربادوسي", "بيلاروسي", "بلجيكي", "بليزي", "بنيني", "بوتاني", "بوليفي", "بوسني وهرسكي", "بوتسواني", "برازيلي", "بريطاني", "بروناي", "بلغاري", "بوركيني", "بورمي", "بوروندي", "كمبودي", "كاميروني", "كندي", "رأس أخضري", "أفريقي أوسطي", "تشادي", "تشيلي", "صيني", "كولومبي", "قمري", "كونغولي", "كوستاريكي", "كرواتي", "كوبي", "قبرصي", "تشيكي", "دنماركي", "جيبوتي", "دومينيكي", "هولندي", "تيموري شرقي", "إكوادوري", "مصري", "إماراتي", "غيني استوائي", "إريتري", "إستوني", "سوازي", "إثيوبي", "فيجي", "فلبيني", "فنلندي", "فرنسي", "غابوني", "غامبي", "جورجي", "ألماني", "غاني", "يوناني", "غرينادي", "غواتيمالي", "غيني", "غياني", "هايتي", "هندوراسي", "مجري", "آيسلندي", "هندي", "إندونيسي", "إيراني", "عراقي", "إيرلندي", "إسرائيلي", "إيطالي", "إيفواري", "جامايكي", "ياباني", "أردني", "كازاخستاني", "كيني", "سانت كيتس ونيفيسي", "كويتي", "قرغيزي", "لاوسي", "لاتفي", "لبناني", "ليبيري", "ليبي", "ليختنشتايني", "ليتواني", "لوكسمبورغي", "مدغشقري", "مالاوي", "ماليزي", "مالديفي", "مالي", "مالطي", "مارشالي", "موريتاني", "موريشيوسي", "مكسيكي", "ميكرونيزي", "مولدوفي", "موناكي", "منغولي", "مونتينيغري", "مغربي", "موزمبيقي", "ناميبي", "ناوروي", "نيبالي", "نيوزيلندي", "نيكاراغوي", "نيجيري", "نيجري", "كوري شمالي", "مقدوني شمالي", "نرويجي", "عماني", "باكستاني", "بالاوي", "بنمي", "بابوا غينيا الجديدة", "باراغواي", "بيروفي", "بولندي", "برتغالي", "قطري", "روماني", "روسي", "رواندي", "سانت لوسي", "سلفادوري", "سامواي", "سان ماريني", "ساو تومي وبرينسيبي", "سعودي", "سنغالي", "صربي", "سيشيلي", "سيراليوني", "سنغافوري", "سلوفاكي", "سلوفيني", "من جزر سليمان", "صومالي", "جنوب أفريقي", "كوري جنوبي", "جنوب سوداني", "إسباني", "سريلانكي", "سوداني", "سورينامي", "سويدي", "سويسري", "سوري", "تايواني", "طاجيكستاني", "تنزاني", "تايلندي", "توغولي", "تونغي", "ترينيدادي وتوباغوني", "تونسي", "تركي", "تركماني", "توفالي", "أوغندي", "أوكراني", "أوروغواياني", "أوزبكي", "فانواتي", "فنزويلي", "فيتنامي", "يمني", "زامبي", "زيمبابوي", "أخرى"],
+      placeholders: {
+        customSubject: 'اكتب الموضوع', deptCustom: 'اسم القسم المستضيف', incidentLocation: 'مثال: اللوبي، المسبح', statementDetails: 'اكتب وصفاً كاملاً للحادث والتسلسل الزمني والأشخاص المعنيين والإجراءات المتخذة...', sigName: 'الاسم الكامل', sigAt: 'سيتم التعبئة تلقائياً بعد التوقيع'
+      },
+      phrases: [
+        ['في حوالي الساعة [TIME] بتاريخ [DATE] كنت على رأس العمل في [LOCATION] عندما ','في حوالي…'],
+        ['لاحظت أن الشخص توجه إلى ','لاحظت أن…'],
+        ['تمت مراجعة كاميرات المراقبة وتبين أن ','الكاميرات أكدت…'],
+        ['تم وصف الشخص المعني بأنه ','وصف الشخص…'],
+        ['تم اتخاذ إجراء فوري من خلال إبلاغ ','تم اتخاذ إجراء…'],
+        ['تم التواصل مع الجهات المختصة ووصلت عند ','تم الاتصال بالجهات…']
+      ],
+      charSuffix: 'حرف',
+      statusReady: 'جاهز — تم تفعيل الوضع الثنائي وتنسيق الطباعة المضغوط',
+      statusNeedAck: 'يرجى تحديد خانة الإقرار.',
+      statusNeedSig: 'التوقيع مطلوب قبل الطباعة.',
+      statusNeedFields: 'يرجى تعبئة جميع الحقول المطلوبة.',
+      statusPreparing: 'جارٍ تجهيز التقرير بالتنسيق المضغوط...',
+      statusTranslated: 'تمت ترجمة المحتوى إلى اللغة المحددة.',
+      statusTranslateError: 'خدمة الترجمة غير متاحة حالياً.',
+      statusReset: 'تمت إعادة تعيين النموذج.',
+      sigNotSigned: 'غير موقّع', sigSigned: 'موقّع', sigRecorded: 'تم حفظ التوقيع', canvasHint: 'وقّع هنا',
+      printInfo: 'معلومات الإفادة', printEmp: 'بيانات الشخص', printNarrative: 'تفاصيل الإفادة', printTranslated: 'الإفادة المترجمة', printSig: 'الإقرار والتوقيع', printFooter: 'تم إنشاء هذا التقرير من النموذج الرقمي.',
+      ackYes: 'تم الإقرار', ackNo: 'لم يتم الإقرار', notProvided: 'غير متوفر'
+    }
+  };
+
+  const subjectValues = ['','Theft','Guest Complaint','Employee Misconduct','Lost & Found','Access Violation','Safety Incident','Damage to Property','Other'];
+  const departmentValues = ['','Security','Front Office','Housekeeping','Food & Beverage','Engineering','HR','Other'];
+  const nationalityValues = ["", "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Antiguan and Barbudan", "Argentine", "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian and Herzegovinian", "Botswanan", "Brazilian", "British", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cambodian", "Cameroonian", "Canadian", "Cape Verdean", "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comorian", "Congolese", "Costa Rican", "Croatian", "Cuban", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican", "Dutch", "East Timorese", "Ecuadorean", "Egyptian", "Emirati", "Equatorial Guinean", "Eritrean", "Estonian", "Eswatini", "Ethiopian", "Fijian", "Filipino", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian", "Greek", "Grenadian", "Guatemalan", "Guinean", "Guyanese", "Haitian", "Honduran", "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakh", "Kenyan", "Kittitian and Nevisian", "Kuwaiti", "Kyrgyz", "Laotian", "Latvian", "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourger", "Malagasy", "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese", "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian", "Montenegrin", "Moroccan", "Mozambican", "Namibian", "Nauruan", "Nepali", "New Zealander", "Nicaraguan", "Nigerian", "Nigerien", "North Korean", "North Macedonian", "Norwegian", "Omani", "Pakistani", "Palauan", "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan", "Saint Lucian", "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi", "Senegalese", "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish", "Sri Lankan", "Sudanese", "Surinamese", "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajik", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian and Tobagonian", "Tunisian", "Turkish", "Turkmen", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbek", "Vanuatuan", "Venezuelan", "Vietnamese", "Yemeni", "Zambian", "Zimbabwean", "Other"];
+  const themeBtn = document.getElementById('themeBtn');
+  const languageSelect = document.getElementById('languageSelect');
+  const translateStatementBtn = document.getElementById('translateStatementBtn');
+  const clearTranslateBtn = document.getElementById('clearTranslateBtn');
+  const translateTarget = document.getElementById('translateTarget');
+  const translatedWrap = document.getElementById('translatedWrap');
+  const translatedStatement = document.getElementById('translatedStatement');
+  const progressOverlay = document.getElementById('progressOverlay');
+  const progressFill = document.getElementById('progressFill');
+  const progressTitle = document.getElementById('progressTitle');
+  const progressNote = document.getElementById('progressNote');
+  const textareaMain = document.getElementById('statementDetails');
+  const subjectSel = document.getElementById('subject');
+  const deptSelect = document.getElementById('deptSelect');
+  const nationalitySelect = document.getElementById('nationality');
+  const statusMsg = document.getElementById('statusMsg');
+  const sigBadge = document.getElementById('sigBadge');
+  const sigAtInput = document.getElementById('sigAt');
+  const sigData = document.getElementById('sigData');
+  let currentLang = 'en';
+  let isDark = false;
+
+  document.body.classList.remove('dark');
+  function pad(n){ return String(n).padStart(2,'0'); }
+  const now = new Date();
+  document.getElementById('statementDateTime').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+  function setStatus(msg, type='ok') {
+    statusMsg.textContent = msg;
+    statusMsg.style.color = type === 'error' ? 'var(--red)' : type === 'muted' ? 'var(--text3)' : 'var(--accent)';
+  }
+
+  function isArabicText(value) {
+    return /[؀-ۿݐ-ݿࢠ-ࣿ]/.test(String(value || ''));
+  }
+
+  function applyTextDirection(el, value) {
+    if (!el) return;
+    el.classList.remove('text-en','text-ar','text-center-force');
+    if (el.type === 'datetime-local' || el.type === 'date' || el.type === 'time') {
+      el.classList.add('text-center-force');
+      return;
+    }
+    const textValue = String(value ?? el.value ?? el.textContent ?? '').trim();
+    el.classList.add(isArabicText(textValue) ? 'text-ar' : 'text-en');
+  }
+
+  function applyReportTextDirection(el) {
+    if (!el) return;
+    applyTextDirection(el, el.textContent);
+  }
+
+  function refreshAllTextDirections() {
+    document.querySelectorAll('input, textarea').forEach(el => applyTextDirection(el, el.value));
+    document.querySelectorAll('select').forEach(el => {
+      el.classList.remove('text-en','text-ar','text-center-force');
+      const optionText = el.options?.[el.selectedIndex]?.text || '';
+      if (el.id === 'languageSelect') {
+        el.classList.add(currentLang === 'ar' ? 'text-ar' : 'text-en');
+      } else {
+        el.classList.add(isArabicText(optionText) ? 'text-ar' : 'text-en');
+      }
+    });
+    applyNarrativeAlignment(textareaMain);
+    applyNarrativeAlignment(translatedStatement);
+  }
+
+  function fillSelect(selectEl, options, values, selectedValue='') {
+    selectEl.innerHTML = options.map((label, i) => `<option value="${values[i] || ''}">${label}</option>`).join('');
+    selectEl.value = selectedValue;
+  }
+  function updateCharCount() {
+    const t = dictionaries[currentLang];
+    document.getElementById('charCount').textContent = `${textareaMain.value.length} ${t.charSuffix}`;
+  }
+
+
+  function populateTranslateTargets() {
+    const options = [
+      { value: 'ar', label: currentLang === 'ar' ? 'العربية' : 'Arabic' },
+      { value: 'en', label: currentLang === 'ar' ? 'الإنجليزية' : 'English' },
+      { value: 'fr', label: currentLang === 'ar' ? 'الفرنسية' : 'French' },
+      { value: 'es', label: currentLang === 'ar' ? 'الإسبانية' : 'Spanish' },
+      { value: 'de', label: currentLang === 'ar' ? 'الألمانية' : 'German' },
+      { value: 'it', label: currentLang === 'ar' ? 'الإيطالية' : 'Italian' },
+      { value: 'pt', label: currentLang === 'ar' ? 'البرتغالية' : 'Portuguese' },
+      { value: 'ru', label: currentLang === 'ar' ? 'الروسية' : 'Russian' },
+      { value: 'tr', label: currentLang === 'ar' ? 'التركية' : 'Turkish' },
+      { value: 'hi', label: currentLang === 'ar' ? 'الهندية' : 'Hindi' },
+      { value: 'ur', label: currentLang === 'ar' ? 'الأردية' : 'Urdu' },
+      { value: 'zh', label: currentLang === 'ar' ? 'الصينية' : 'Chinese' },
+      { value: 'ja', label: currentLang === 'ar' ? 'اليابانية' : 'Japanese' },
+      { value: 'ko', label: currentLang === 'ar' ? 'الكورية' : 'Korean' },
+      { value: 'fa', label: currentLang === 'ar' ? 'الفارسية' : 'Persian' },
+      { value: 'tl', label: currentLang === 'ar' ? 'التاغالوغ' : 'Tagalog' }
+    ];
+    const previous = translateTarget.value || (currentLang === 'en' ? 'ar' : 'en');
+    translateTarget.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+    translateTarget.value = previous === currentLang ? (currentLang === 'en' ? 'ar' : 'en') : previous;
+  }
+
+  function formatDateForFilename(raw) {
+    if (!raw) return new Date().toISOString().slice(0,10);
+    return raw.slice(0,16).replace('T','_').replace(/:/g,'-');
+  }
+
+  function makeSafeFilenamePart(value) {
+    return String(value || 'Employee').trim().replace(/[\\/:*?"<>|]+/g,'').replace(/\s+/g,'_') || 'Employee';
+  }
+
+  function updateProgress(percent, title, note) {
+    progressFill.style.width = `${percent}%`;
+    if (title) progressTitle.textContent = title;
+    if (note) progressNote.textContent = note;
+  }
+
+  function showProgress() {
+    progressOverlay.classList.add('show');
+    progressOverlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function hideProgress() {
+    progressOverlay.classList.remove('show');
+    progressOverlay.setAttribute('aria-hidden', 'true');
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang;
+    const t = dictionaries[lang];
+    document.documentElement.lang = t.lang;
+    document.body.classList.remove('form-lang-en','form-lang-ar');
+    document.body.classList.add(`form-lang-${lang}`);
+    document.body.classList.toggle('rtl', t.dir === 'rtl');
+    document.getElementById('hdrDept').textContent = t.hdrDept;
+    document.getElementById('hdrTitle').textContent = t.hdrTitle;
+    document.getElementById('hdrSub').textContent = t.hdrSub;
+    document.title = t.pageTitle;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (t[key]) el.textContent = t[key];
+    });
+    document.getElementById('translateStatementBtn').textContent = t.btnTranslateStatement;
+    document.getElementById('clearTranslateBtn').textContent = t.btnClearTranslate;
+    const tp = document.querySelector('[data-i18n="translatePanelTitle"]'); if (tp) tp.textContent = t.translatePanelTitle;
+    document.getElementById('printBtn').textContent = t.btnPrint;
+    document.getElementById('resetBtn').textContent = t.btnReset;
+    document.getElementById('clearSig').textContent = t.btnClear;
+    document.getElementById('undoSig').textContent = t.btnUndo;
+    themeBtn.textContent = isDark ? t.btnThemeLight : t.btnThemeDark;
+    translatedWrap.querySelector('#translatedLabel').textContent = t.translatedLabel;
+    progressTitle.textContent = t.progressTitle;
+    progressNote.textContent = t.progressNote;
+    document.getElementById('affirmText').textContent = t.affirmation;
+    document.getElementById('customSubject').placeholder = t.placeholders.customSubject;
+    document.getElementById('deptCustom').placeholder = t.placeholders.deptCustom;
+    document.getElementById('incidentLocation').placeholder = t.placeholders.incidentLocation;
+    document.getElementById('statementDetails').placeholder = t.placeholders.statementDetails;
+    document.getElementById('sigName').placeholder = t.placeholders.sigName;
+    document.getElementById('sigAt').placeholder = t.placeholders.sigAt;
+    const currentSubject = subjectSel.value;
+    const currentDept = deptSelect.value;
+    const currentNationality = nationalitySelect.value;
+    fillSelect(subjectSel, t.subjects, subjectValues, currentSubject);
+    fillSelect(deptSelect, t.departments, departmentValues, currentDept);
+    fillSelect(nationalitySelect, t.nationalities, nationalityValues, currentNationality);
+    document.getElementById('printDept').textContent = t.hdrDept;
+    document.getElementById('printTitle').textContent = t.hdrTitle;
+    document.getElementById('printInfoHdr').textContent = t.printInfo;
+    document.getElementById('printEmpHdr').textContent = t.printEmp;
+    document.getElementById('printNarrativeHdr').textContent = t.printNarrative;
+    document.getElementById('printSigHdr').textContent = t.printSig;
+    document.getElementById('printSignatureLabel').innerHTML = `${t.labelSignature} <span class="req">*</span>`;
+    document.getElementById('printTranslatedHdr').textContent = t.printTranslated;
+    document.getElementById('printFooterNote').textContent = t.printFooter;
+    document.getElementById('thProperty').textContent = t.labelProperty;
+    document.getElementById('thDate').textContent = t.labelDateTime;
+    document.getElementById('thSubject').textContent = t.labelSubject;
+    const setTxt=(id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+    setTxt('thEmployeeName', t.labelEmployeeName);
+    setTxt('thEmployeeId', t.labelEmployeeId);
+    setTxt('thDepartment', t.labelDepartment);
+    setTxt('thCompanyName', t.labelCompanyName);
+    setTxt('thNationality', t.labelNationality);
+    setTxt('thLocation', t.labelLocation);
+    document.getElementById('thSignedBy').textContent = t.labelSignedBy.replace(' (Print Name)','');
+    document.getElementById('thSignedAt2').textContent = t.labelSignedAt;
+    if (!sigData.value) sigBadge.textContent = t.sigNotSigned;
+    populateTranslateTargets();
+    [document.querySelectorAll('input, select, textarea')].flat().forEach(() => {});
+    updateCharCount();
+    redrawStrokes();
+    refreshAllTextDirections();
+    setStatus(t.statusReady);
+  }
+
+  const customSubjectWrap = document.getElementById('customSubjectWrap');
+  subjectSel.addEventListener('change', () => {
+    customSubjectWrap.style.display = subjectSel.value === 'Other' ? 'flex' : 'none';
+    if (subjectSel.value !== 'Other') document.getElementById('customSubject').value = '';
+  });
+
+  const deptSelectWrap = document.getElementById('deptSelectWrap');
+  const deptCustomWrap = document.getElementById('deptCustomWrap');
+  document.getElementById('useCustomDept').addEventListener('click', () => {
+    deptSelectWrap.style.display = 'none'; deptCustomWrap.style.display = 'flex';
+    deptSelect.required = false; document.getElementById('deptCustom').required = true;
+  });
+  document.getElementById('useSelectDept').addEventListener('click', () => {
+    deptCustomWrap.style.display = 'none'; deptSelectWrap.style.display = 'flex';
+    document.getElementById('deptCustom').required = false; deptSelect.required = true;
+  });
+
+  async function translateText(text, targetLang) {
+    const source = 'auto';
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${source}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return Array.isArray(data?.[0]) ? data[0].map(part => part[0]).join('') : text;
+  }
+
+  clearTranslateBtn.addEventListener('click', () => {
+    translatedStatement.value = '';
+    translatedWrap.hidden = true;
+    document.getElementById('translatedReportCard').style.display = 'none';
+    setStatus(currentLang === 'ar' ? 'تم مسح الترجمة.' : 'Translation cleared.');
+  });
+  translateStatementBtn.addEventListener('click', async () => {
+    const t = dictionaries[currentLang];
+    if (!textareaMain.value.trim()) return;
+    try {
+      translatedStatement.value = await translateText(textareaMain.value.trim(), translateTarget.value);
+      translatedWrap.hidden = false;
+      applyNarrativeAlignment(translatedStatement);
+      setStatus(t.statusTranslated);
+    } catch (e) {
+      setStatus(t.statusTranslateError, 'error');
+    }
+  });
+
+  themeBtn.addEventListener('click', () => {
+    isDark = !isDark;
+    document.body.classList.toggle('dark', isDark);
+    themeBtn.textContent = isDark ? dictionaries[currentLang].btnThemeLight : dictionaries[currentLang].btnThemeDark;
+    redrawStrokes();
+  });
+  languageSelect.addEventListener('change', () => applyLanguage(languageSelect.value));
+
+  const canvas = document.getElementById('sigCanvas');
+  const ctx = canvas.getContext('2d');
+  let drawing = false, hasSig = false, strokes = [], currentStroke = [];
+
+  function resizeCanvasDraw() {
+    const container = canvas.parentElement;
+    canvas.width = container.clientWidth;
+    canvas.height = 160;
+    redrawStrokes();
+  }
+  function redrawStrokes() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.save();
+    ctx.strokeStyle = isDark ? '#dbe8ff' : '#173b6c';
+    ctx.lineWidth = 2.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    strokes.forEach(stroke => {
+      if (!stroke.length) return;
+      ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
+      stroke.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.stroke();
+    });
+    if (!hasSig && !strokes.length) {
+      ctx.fillStyle = isDark ? '#7d92b2' : '#6c819c';
+      ctx.font = '14px Segoe UI';
+      ctx.fillText(dictionaries[currentLang].canvasHint, 16, 36);
+    }
+    ctx.restore();
+  }
+  function getCanvasCoords(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+  function startDraw(e){ e.preventDefault(); drawing = true; const p = getCanvasCoords(e); currentStroke = [p]; ctx.beginPath(); ctx.moveTo(p.x,p.y); }
+  function draw(e){ if (!drawing) return; e.preventDefault(); const p = getCanvasCoords(e); currentStroke.push(p); ctx.lineTo(p.x,p.y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(p.x,p.y); if (!hasSig && currentStroke.length > 2) { hasSig = true; sigAtInput.value = new Date().toLocaleString(); sigBadge.textContent = dictionaries[currentLang].sigSigned; } }
+  function endDraw(){ if (!drawing) return; drawing = false; if (currentStroke.length) strokes.push([...currentStroke]); currentStroke = []; if (hasSig || strokes.length) { hasSig = true; sigData.value = canvas.toDataURL(); sigBadge.textContent = dictionaries[currentLang].sigRecorded; } else redrawStrokes(); }
+  canvas.addEventListener('mousedown', startDraw); window.addEventListener('mousemove', draw); window.addEventListener('mouseup', endDraw);
+  canvas.addEventListener('touchstart', startDraw, { passive:false }); canvas.addEventListener('touchmove', draw, { passive:false }); canvas.addEventListener('touchend', endDraw);
+  document.getElementById('clearSig').addEventListener('click', () => { strokes = []; hasSig = false; sigData.value = ''; sigAtInput.value = ''; sigBadge.textContent = dictionaries[currentLang].sigNotSigned; redrawStrokes(); });
+  document.getElementById('undoSig').addEventListener('click', () => { strokes.pop(); if (!strokes.length) { hasSig = false; sigData.value = ''; sigAtInput.value = ''; sigBadge.textContent = dictionaries[currentLang].sigNotSigned; } else { sigData.value = canvas.toDataURL(); sigBadge.textContent = dictionaries[currentLang].sigSigned; } redrawStrokes(); });
+  window.addEventListener('resize', resizeCanvasDraw);
+
+  function applyNarrativeAlignment(sourceEl, targetEl = sourceEl) {
+    if (!targetEl) return;
+    const sourceValue = String(sourceEl?.value ?? sourceEl?.textContent ?? '').trim();
+    targetEl.classList.remove('text-en','text-ar','text-center-force');
+    targetEl.classList.add(isArabicText(sourceValue) ? 'text-ar' : 'text-en');
+  }
+
+  function formatDateTime(val) {
+    return val ? val.replace('T', ' ') : dictionaries[currentLang].notProvided;
+  }
+
+  function getSelectedSubjectLabel() {
+    if (subjectSel.value === 'Other') return document.getElementById('customSubject').value.trim() || dictionaries[currentLang].notProvided;
+    return subjectSel.options[subjectSel.selectedIndex]?.text || dictionaries[currentLang].notProvided;
+  }
+  function getDepartmentLabel() {
+    if (deptCustomWrap.style.display !== 'none') return document.getElementById('deptCustom').value.trim() || dictionaries[currentLang].notProvided;
+    return deptSelect.options[deptSelect.selectedIndex]?.text || dictionaries[currentLang].notProvided;
+  }
+
+  function buildPrintReport() {
+    document.getElementById('rProperty').textContent = document.getElementById('propertyName').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rDate').textContent = formatDateTime(document.getElementById('statementDateTime').value);
+    document.getElementById('rSubject').textContent = getSelectedSubjectLabel();
+    document.getElementById('rEmployeeName').textContent = document.getElementById('employeeName').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rEmployeeId').textContent = document.getElementById('employeeId').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rDepartment').textContent = getDepartmentLabel();
+    document.getElementById('rCompanyName').textContent = document.getElementById('companyName').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rNationality').textContent = nationalitySelect.options[nationalitySelect.selectedIndex]?.text || dictionaries[currentLang].notProvided;
+    document.getElementById('rLocation').textContent = document.getElementById('incidentLocation').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rDetails').textContent = textareaMain.value || dictionaries[currentLang].notProvided;
+    applyNarrativeAlignment(textareaMain, document.getElementById('rDetails'));
+    const translatedValue = translatedStatement.value.trim();
+    document.getElementById('rTranslatedDetails').textContent = translatedValue || dictionaries[currentLang].notProvided;
+    applyNarrativeAlignment(translatedStatement, document.getElementById('rTranslatedDetails'));
+    document.getElementById('translatedReportCard').style.display = translatedValue ? 'block' : 'none';
+    document.getElementById('rSignedBy').textContent = document.getElementById('sigName').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rSignedAt').textContent = document.getElementById('sigAt').value || dictionaries[currentLang].notProvided;
+    document.getElementById('rAffirmation').textContent = document.getElementById('affirmation').checked ? (sigData.value ? dictionaries[currentLang].sigSigned : dictionaries[currentLang].ackYes) : dictionaries[currentLang].ackNo;
+    document.getElementById('rSignedBy').classList.toggle('empty', !document.getElementById('sigName').value.trim());
+    document.getElementById('rSignedAt').classList.toggle('empty', !document.getElementById('sigAt').value.trim());
+    document.getElementById('signaturePreview').innerHTML = sigData.value ? `<img src="${sigData.value}" alt="signature">` : ``;
+    document.getElementById('printReport').classList.toggle('rtl', currentLang === 'ar');
+    document.getElementById('printReport').style.direction = currentLang === 'ar' ? 'rtl' : 'ltr';
+    const reportCells = ['rProperty','rDate','rSubject','rEmployeeName','rEmployeeId','rDepartment','rCompanyName','rNationality','rLocation','rSignedBy','rSignedAt','rAffirmation'];
+    reportCells.forEach(id => applyReportTextDirection(document.getElementById(id)));
+    applyNarrativeAlignment(textareaMain, document.getElementById('rDetails'));
+    applyNarrativeAlignment(translatedStatement, document.getElementById('rTranslatedDetails'));
+  }
+
+  document.getElementById('printBtn').addEventListener('click', async () => {
+    const t = dictionaries[currentLang];
+    try {
+      if (!document.getElementById('affirmation').checked) {
+        setStatus(t.statusNeedAck, 'error');
+        alert(t.statusNeedAck);
+        return;
+      }
+      if (!sigData.value && !strokes.length) {
+        setStatus(t.statusNeedSig, 'error');
+        alert(t.statusNeedSig);
+        return;
+      }
+      const reqs = document.querySelectorAll('#sf [required]');
+      for (const r of reqs) {
+        if (r.offsetParent !== null && !String(r.value || '').trim() && r.type !== 'checkbox') {
+          setStatus(t.statusNeedFields, 'error');
+          alert(t.statusNeedFields);
+          r.focus();
+          return;
+        }
+      }
+      if (!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+        const msg = currentLang === 'ar' ? 'مكتبة إنشاء PDF غير متاحة حالياً.' : 'PDF library is unavailable right now.';
+        setStatus(msg, 'error');
+        alert(msg);
+        return;
+      }
+      buildPrintReport();
+      setStatus(t.statusPreparing);
+      showProgress();
+      updateProgress(12, t.progressTitle, t.progressNote);
+      await new Promise(resolve => setTimeout(resolve, 120));
+      const reportEl = document.getElementById('printReport');
+      const prevDisplay = reportEl.style.display;
+      const prevVisibility = reportEl.style.visibility;
+      const prevPosition = reportEl.style.position;
+      const prevLeft = reportEl.style.left;
+      const prevTop = reportEl.style.top;
+      const prevWidth = reportEl.style.width;
+      const prevMaxWidth = reportEl.style.maxWidth;
+      reportEl.style.display = 'block';
+      reportEl.style.visibility = 'visible';
+      reportEl.style.position = 'fixed';
+      reportEl.style.left = '-10000px';
+      reportEl.style.top = '0';
+      updateProgress(38, t.progressTitle, t.progressNote);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      reportEl.style.width = '794px';
+      reportEl.style.maxWidth = '794px';
+      const canvasReport = await html2canvas(reportEl, { scale: 3, useCORS: true, backgroundColor: '#ffffff', scrollY: 0, scrollX: 0, windowWidth: 794 });
+      updateProgress(72, t.progressTitle, t.progressNote);
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 7;
+      const imgWidth = pageWidth - (margin * 2);
+      const imgHeight = canvasReport.height * imgWidth / canvasReport.width;
+      let heightLeft = imgHeight;
+      let position = margin;
+      const imgData = canvasReport.toDataURL('image/png');
+      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+      heightLeft -= (pageHeight - margin * 2);
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + margin;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight, undefined, 'FAST');
+        heightLeft -= (pageHeight - margin * 2);
+      }
+      updateProgress(92, t.progressTitle, t.progressNote);
+      const fileName = `${formatDateForFilename(document.getElementById('statementDateTime').value)}_${makeSafeFilenamePart(document.getElementById('employeeName').value)}.pdf`;
+      pdf.save(fileName);
+      reportEl.style.display = prevDisplay;
+      reportEl.style.visibility = prevVisibility;
+      reportEl.style.position = prevPosition;
+      reportEl.style.left = prevLeft;
+      reportEl.style.top = prevTop;
+      reportEl.style.width = prevWidth;
+      reportEl.style.maxWidth = prevMaxWidth;
+      updateProgress(100, t.progressTitle, t.progressNote);
+      setTimeout(() => hideProgress(), 350);
+      setStatus(currentLang === 'ar' ? 'تم إنشاء ملف PDF بنجاح.' : 'PDF report generated successfully.');
+    } catch (error) {
+      console.error(error);
+      hideProgress();
+      const msg = (currentLang === 'ar' ? 'تعذر إنشاء التقرير. ' : 'Could not generate the report. ') + (error && error.message ? error.message : '');
+      setStatus(msg, 'error');
+      alert(msg);
+    }
+  });
+
+
+  function setBilingualDirection(el) {
+    if (!el || el.tagName === 'SELECT') return;
+    const val = 'value' in el ? el.value : el.textContent;
+    el.classList.remove('text-en','text-ar');
+    el.classList.add(isArabicText(val) ? 'text-ar' : 'text-en');
+  }
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    setTimeout(() => {
+      document.getElementById('affirmation').checked = false;
+      document.getElementById('customSubjectWrap').style.display = 'none';
+      deptCustomWrap.style.display = 'none'; deptSelectWrap.style.display = 'flex';
+      document.getElementById('deptCustom').required = false; deptSelect.required = true;
+      strokes = []; hasSig = false; sigData.value = ''; sigAtInput.value = ''; sigBadge.textContent = dictionaries[currentLang].sigNotSigned; redrawStrokes();
+      translatedStatement.value = '';
+      translatedWrap.hidden = true;
+      document.getElementById('translatedReportCard').style.display = 'none';
+      updateCharCount();
+      setStatus(dictionaries[currentLang].statusReset, 'muted');
+    }, 10);
+  });
+
+
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    const applyBoth = () => {
+      applyTextDirection(el, el.value);
+      setBilingualDirection(el);
+      if (el === textareaMain || el === translatedStatement) applyNarrativeAlignment(el);
+    };
+    applyBoth();
+    el.addEventListener('input', applyBoth);
+    el.addEventListener('change', applyBoth);
+  });
+
+  resizeCanvasDraw();
+  applyLanguage('en');
+  refreshAllTextDirections();
+})();
+</script>
+</body>
+</html>
