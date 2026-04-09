@@ -345,41 +345,19 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 }
 
 
-/* ===== FINAL MOBILE CAMERA FIX ===== */
+/* ===== FINAL MOBILE CAMERA BUTTON (BRAND STYLE) ===== */
 @media(max-width:540px){
-
-  .check-row{
-    position:relative;
-    padding-bottom:60px;
-  }
-
-  .item-photo-tools{
-    position:absolute;
-    bottom:10px;
-    right:10px;
-    z-index:10;
-  }
-
+  .check-row{ position:relative; padding-bottom:60px; }
+  .item-photo-tools{ position:absolute; bottom:10px; right:10px; z-index:10; }
   .item-photo-tools button{
-    width:90px;
-    height:38px;
-    border-radius:10px;
-    border:none;
-    background:#ef4444;
-    color:#fff;
-    font-size:13px;
-    font-weight:700;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:6px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.25);
-    cursor:pointer;
+    width:auto; height:38px; padding:0 12px;
+    border-radius:10px; border:none;
+    background:linear-gradient(135deg,var(--brand),var(--accent));
+    color:#fff; font-size:13px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.25); cursor:pointer;
   }
-
-  .item-photo-tools button:active{
-    transform:scale(0.95);
-  }
+  .item-photo-tools button:active{ transform:scale(0.95); }
 }
 
 </style>
@@ -410,7 +388,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
       <div class="stack" id="actionStack">
         <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF Report</button>
         <button class="btn btn-send" id="btnEmail" onclick="openSendModal()">✉️ Email Draft</button>
-        <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()">📷 Add Photos</button>
+        <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()"><span>📷</span><span>Photo</span>s</button>
         <input class="hidden" type="file" id="photoInput" multiple accept="image/*">
         <input class="hidden" type="file" id="itemPhotoInput" multiple accept="image/*">
         <input class="hidden" type="file" id="loadInput" accept=".json,application/json">
@@ -536,7 +514,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
         <div class="sec-head"><h3>Additional Photo Evidence</h3></div>
         <div class="photo-add-bar">
           <span>Add general photographic evidence</span>
-          <button class="btn-photo-quick" onclick="triggerPhoto()">📷 Add Photos</button>
+          <button class="btn-photo-quick" onclick="triggerPhoto()"><span>📷</span><span>Photo</span>s</button>
         </div>
         <div class="sec-body">
           <div class="photos-grid" id="photoGrid"></div>
@@ -906,7 +884,7 @@ function buildChecklist(){
           <textarea id="cmt_${sIdx}_${iIdx}" class="auto-expand-text" rows="1" placeholder="Add comment…" oninput="autoResizeComment(this);scheduleSilentAutosave()"></textarea>
         </div>
         <div class="item-photo-tools">
-          <button class="mini-btn" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})">📷 Add Photo</button>
+          <button class="mini-btn" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})"><span>📷</span><span>Photo</span></button>
         </div>
         <div class="item-photo-grid" id="${itemPhotoGridId(sIdx,iIdx)}"></div>`;
       ci.appendChild(row);
