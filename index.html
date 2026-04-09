@@ -884,7 +884,7 @@ function buildChecklist(){
           <textarea id="cmt_${sIdx}_${iIdx}" class="auto-expand-text" rows="1" placeholder="Add comment…" oninput="autoResizeComment(this);scheduleSilentAutosave()"></textarea>
         </div>
         <div class="item-photo-tools">
-          <button class="mini-btn" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})"><span>📷</span><span>Photo</span></button>
+          <button class="mini-btn" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})"><span>📷</span><span>Add Photo</span></button>
         </div>
         <div class="item-photo-grid" id="${itemPhotoGridId(sIdx,iIdx)}"></div>`;
       ci.appendChild(row);
