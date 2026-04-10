@@ -127,34 +127,162 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .check-sec-head h4{margin:0;font-size:13px;color:var(--brand);font-weight:800}
 .sec-pill{display:inline-flex;align-items:center;justify-content:center;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:800;white-space:nowrap;min-width:80px;height:26px}
 .check-items{display:grid;gap:7px;padding:9px}
-.check-row{border:1px solid var(--line);border-radius:10px;padding:9px 10px;background:var(--check-row-bg);display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto auto;gap:6px 10px;align-items:start;transition:background .2s}
+
+/* ── CHECK ROW ── */
+.check-row{
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:9px 10px 10px;
+  background:var(--check-row-bg);
+  display:grid;
+  /* col 1 = content, col 2 = floating add-photo btn */
+  grid-template-columns:1fr auto;
+  grid-template-rows:auto auto auto;
+  gap:6px 10px;
+  align-items:start;
+  transition:background .2s;
+}
 .check-row:hover{border-color:#bfd0e1}
 .check-row.row-unrated{border-color:#fca5a5;background:rgba(254,226,226,.18)}
-.check-title{font-size:13px;font-weight:700;line-height:1.45;grid-column:1;grid-row:1;color:var(--text)}
-.rating-group{grid-column:2;grid-row:1;display:flex;flex-direction:row;gap:4px;align-items:center;flex-wrap:nowrap}
-.status-opt{border:1.5px solid var(--line);border-radius:18px;background:transparent;padding:0;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center}
-.status-opt input{display:none}
-.status-chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:18px;font-size:10px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--info-card-bg);transition:.15s}
-.status-opt:hover .status-chip{background:var(--line)}
-.status-opt.is-selected{border-color:transparent}
-.status-opt.is-selected .status-chip[data-value="achieved"]{background:#22c55e;color:#14532d}
-.status-opt.is-selected .status-chip[data-value="partial"]{background:#f59e0b;color:#78350f}
-.status-opt.is-selected .status-chip[data-value="not_achieved"]{background:#ef4444;color:#7f1d1d}
-.status-opt.is-selected .status-chip[data-value="na"]{background:#9ca3af;color:#1f2937}
-.checklist-comment-field{grid-column:1 / -1;grid-row:2;display:flex;align-items:center;gap:8px}
-.checklist-comment-field label{font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;flex:none}
-.checklist-comment-field textarea{flex:1;border:1px solid var(--field-border);border-radius:7px;padding:6px 9px;font-size:12px;color:var(--field-text);background:var(--field-bg);outline:none;font-family:inherit;min-height:32px;height:32px;line-height:1.45;resize:none;overflow:hidden;transition:background .2s}
+
+/* title: left col, row 1 */
+.check-title{
+  font-size:13px;font-weight:700;line-height:1.45;
+  grid-column:1;grid-row:1;
+  color:var(--text);
+  padding-right:4px;
+}
+
+/* rating pills: left col, row 2 */
+.rating-group{
+  grid-column:1;grid-row:2;
+  display:flex;flex-direction:row;gap:4px;
+  align-items:center;flex-wrap:wrap;
+}
+
+/* comment: left col, row 3 */
+.checklist-comment-field{
+  grid-column:1;grid-row:3;
+  display:flex;align-items:flex-start;gap:8px;
+}
+.checklist-comment-field label{
+  font-size:10px;font-weight:700;color:var(--muted);
+  white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;
+  flex:none;padding-top:8px;
+}
+.checklist-comment-field textarea{
+  flex:1;border:1px solid var(--field-border);border-radius:7px;
+  padding:6px 9px;font-size:12px;color:var(--field-text);
+  background:var(--field-bg);outline:none;font-family:inherit;
+  min-height:32px;height:32px;line-height:1.45;resize:none;overflow:hidden;
+  transition:background .2s;
+}
 .checklist-comment-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(14,165,164,.10)}
-/* item photo tools row */
-.item-photo-tools{grid-column:1 / -1;grid-row:3;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-/* item photo grid inline under item */
-.item-photo-grid{grid-column:1 / -1;grid-row:4;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:2px}
-.item-photo-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card)}
-.item-photo-card .photo-head{display:flex;align-items:center;justify-content:space-between;gap:4px;padding:5px 8px;background:var(--check-head-bg);border-bottom:1px solid var(--line)}
+
+/* ── FLOATING ADD PHOTO BUTTON ── */
+/* right col, spans all rows — sits flush top-right */
+.item-add-photo-btn{
+  grid-column:2;
+  grid-row:1 / 4;          /* span all content rows */
+  align-self:start;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding-top:2px;
+}
+.btn-add-item-photo{
+  background:linear-gradient(135deg,var(--brand),var(--accent));
+  color:#fff;border:none;border-radius:10px;
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
+  box-shadow:0 3px 10px rgba(14,165,164,.35);
+  transition:.15s;
+  flex:none;
+}
+.btn-add-item-photo:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 5px 14px rgba(14,165,164,.45)}
+.btn-add-item-photo:active{transform:translateY(0)}
+/* tooltip label under icon */
+.btn-add-item-photo-label{
+  font-size:9px;font-weight:800;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;
+  margin-top:4px;text-align:center;line-height:1.2;
+  white-space:nowrap;
+}
+
+/* ── ITEM PHOTO GRID ── */
+/* full width, below ALL columns */
+.item-photo-grid{
+  grid-column:1 / -1;
+  grid-row:4;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:8px;
+  margin-top:4px;
+}
+
+/* ── ITEM PHOTO CARD ── */
+.item-photo-card{
+  border:1px solid var(--line);border-radius:10px;
+  overflow:hidden;background:var(--card);
+  display:flex;flex-direction:column;
+}
+.item-photo-card .photo-head{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:4px;padding:5px 8px;
+  background:var(--check-head-bg);border-bottom:1px solid var(--line);
+  flex:none;
+}
 .item-photo-card .photo-num{font-size:11px;font-weight:800;color:var(--brand)}
 .item-photo-card .photo-tools{display:flex;gap:3px}
-.item-photo-card .photo-wrap{padding:5px;background:repeating-conic-gradient(var(--info-card-bg) 0% 25%,transparent 0% 50%) 0 0/10px 10px;display:flex;justify-content:center;align-items:center;min-height:90px}
-.item-photo-card .photo-img{width:100%;height:80px;max-height:80px;object-fit:contain;border:1px solid var(--line);border-radius:6px;display:block;transform-origin:center}
+
+/* photo wrapper — fixed height, overflow hidden, object-cover for fill */
+.item-photo-card .photo-wrap{
+  flex:1;
+  position:relative;
+  overflow:hidden;
+  height:130px;          /* enough to see detail */
+  background:#1a1a2e;
+  display:flex;align-items:center;justify-content:center;
+}
+.item-photo-card .photo-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;      /* fills card, slight crop = zoomed look */
+  object-position:center;
+  display:block;
+  transform-origin:center;
+  transition:transform .2s;
+  cursor:zoom-in;
+}
+/* subtle zoom on hover so user knows it's tappable */
+.item-photo-card .photo-wrap:hover .photo-img{transform:scale(1.04)}
+
+/* ── LIGHTBOX ── */
+.lightbox{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.88);z-index:2000;
+  align-items:center;justify-content:center;
+  padding:16px;
+}
+.lightbox.open{display:flex}
+.lightbox-inner{position:relative;max-width:92vw;max-height:92vh;display:flex;align-items:center;justify-content:center}
+.lightbox-img{
+  max-width:88vw;max-height:88vh;
+  object-fit:contain;border-radius:10px;
+  box-shadow:0 10px 60px rgba(0,0,0,.7);
+  display:block;
+}
+.lightbox-close{
+  position:fixed;top:16px;right:20px;
+  background:rgba(255,255,255,.15);border:none;
+  color:#fff;font-size:24px;border-radius:50%;
+  width:40px;height:40px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;
+  transition:.15s;z-index:2001;
+}
+.lightbox-close:hover{background:rgba(255,255,255,.28)}
 
 /* Photo Evidence Summary Section */
 .photo-evidence-summary{display:grid;gap:14px}
@@ -166,10 +294,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pes-item-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:6px}
 .pes-item-comment{font-size:11px;color:var(--muted);margin-bottom:7px;font-style:italic}
 .pes-photos-row{display:flex;flex-wrap:wrap;gap:8px}
-.pes-photo-thumb{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card);width:260px}
+.pes-photo-thumb{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card);width:200px}
 .pes-photo-thumb .pt-head{padding:4px 7px;font-size:10px;font-weight:800;color:var(--brand);background:var(--check-head-bg);border-bottom:1px solid var(--line)}
-.pes-photo-thumb .pt-img-wrap{padding:6px;background:repeating-conic-gradient(var(--info-card-bg) 0% 25%,transparent 0% 50%) 0 0/10px 10px;display:flex;justify-content:center;align-items:center;height:200px}
-.pes-photo-thumb img{max-width:100%;max-height:190px;object-fit:contain;display:block;margin:auto}
+.pes-photo-thumb .pt-img-wrap{height:160px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center}
+.pes-photo-thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .pes-empty{padding:12px;font-size:13px;color:var(--muted);text-align:center}
 
 /* General photo section */
@@ -196,7 +324,6 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:999;align-items:center;justify-content:center;padding:16px}
 .modal{background:var(--card);border-radius:16px;padding:20px;width:90%;max-width:500px;box-shadow:0 20px 60px rgba(0,0,0,.28);max-height:90vh;overflow-y:auto}
 .modal h3{font-size:16px;margin:0 0 12px;font-weight:800;color:var(--text)}
-/* Validation modal */
 .val-modal{max-width:520px}
 .val-section-title{font-size:12px;font-weight:800;color:var(--brand);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 5px}
 .val-list{list-style:none;padding:0;display:grid;gap:4px}
@@ -230,6 +357,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .progress-fill{height:100%;width:0%;border-radius:999px;background:linear-gradient(90deg,var(--brand),var(--accent));transition:width .25s}
 .progress-meta{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;color:var(--muted);font-weight:700}
 #pdfRenderRoot{position:fixed;left:-100000px;top:0;width:210mm;background:#fff;z-index:-1;pointer-events:none}
+
 /* PDF */
 .pdf-report{width:210mm;min-height:297mm;background:#fff;color:#0f172a;font-family:"Segoe UI",Inter,Arial,sans-serif}
 .pdf-page{width:210mm;min-height:297mm;padding:10mm 9mm;background:#fff;page-break-after:always;break-after:page;overflow:hidden}
@@ -250,7 +378,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-info-card:before{content:"";position:absolute;left:10px;top:0;width:14mm;height:.9mm;border-radius:999px;background:linear-gradient(90deg,#38bdf8,#14b8a6)}
 .pdf-info-card .l{font-size:8.5px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin:0 0 5px}
 .pdf-info-card .v{font-size:11.5px;font-weight:800;color:#0f172a;line-height:1.45;min-height:28px;white-space:pre-wrap;word-break:break-word}
-.pdf-info-card .v.normal-text{font-weight:500!important;font-size:10.5px!important;line-height:1.6;color:#334155}
+.pdf-info-card .v.normal-text{font-weight:500!important;font-size:10.8px!important;line-height:1.65;color:#334155;white-space:pre-wrap;word-break:break-word}
 .pdf-score-banner{display:grid;grid-template-columns:42mm 1fr;gap:10px;align-items:center;padding:10px;border:1px solid #dbe7f0;border-radius:13px;background:#f5f9ff;margin-bottom:8px}
 .pdf-score-circle{width:36mm;height:36mm;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:auto;border:3.5mm solid #0f4c81;background:#fff;font-weight:900;font-size:17px;color:#0f4c81;text-align:center;line-height:1.1}
 .pdf-score-circle small{display:block;font-size:7.5px;color:#64748b;font-weight:800;margin-top:2px}
@@ -289,106 +417,104 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-item-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:4px}
 .pdf-item-photo-card{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;background:#fff}
 .pdf-item-photo-label{padding:3px 5px;font-size:8px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef}
-.pdf-item-photo-box{padding:3px;height:22mm;display:flex;align-items:center;justify-content:center;background:#fafbfc}
-.pdf-item-photo-box img{max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto}
-/* PDF Photo Evidence Summary */
+.pdf-item-photo-box{height:22mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.pdf-item-photo-box img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .pdf-pes-group{border:1px solid #dbe5ef;border-radius:11px;overflow:hidden;margin-bottom:7px;background:#fff}
 .pdf-pes-head{padding:7px 10px;background:linear-gradient(135deg,#ebf7ff,#eafbf5);border-bottom:1px solid #dbe5ef;display:flex;justify-content:space-between;align-items:center}
 .pdf-pes-head h4{margin:0;font-size:12px;color:#0b4f64;font-weight:900}
 .pdf-pes-item{padding:7px 10px;border-bottom:1px solid #edf2f8}
 .pdf-pes-item:last-child{border-bottom:none}
-.pdf-pes-item-label{font-size:10px;font-weight:800;color:#0f172a;margin-bottom:2px}
-.pdf-pes-item-comment{font-size:9px;color:#64748b;font-style:italic;margin-bottom:5px}
+.pdf-pes-item-label{font-size:11.5px;font-weight:800;color:#0f172a;margin-bottom:4px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.pdf-pes-item-comment{font-size:10px;color:#475569;font-style:italic;margin-bottom:6px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
 .pdf-pes-photos{display:flex;flex-wrap:wrap;gap:5px}
 .pdf-pes-photo{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;width:68.8mm}
-.pdf-pes-photo-label{padding:2px 5px;font-size:8px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef}
-.pdf-pes-photo-box{padding:3px;height:52.9mm;display:flex;align-items:center;justify-content:center;background:#fafbfc}
-.pdf-pes-photo-box img{max-width:100%;max-height:100%;object-fit:contain}
-.pdf-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.pdf-photo-card{border:1px solid #dbe4ee;border-radius:11px;padding:8px;background:#fff;page-break-inside:avoid;break-inside:avoid}
-.pdf-photo-title{font-size:10px;font-weight:900;color:#0b4f64;margin-bottom:6px}
-.pdf-photo-box{border:1px solid #dfe7ef;border-radius:9px;padding:3px;height:56mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fafbfc}
+.pdf-pes-photo-label{padding:3px 6px;font-size:9px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef;line-height:1.35}
+.pdf-pes-photo-box{height:52.9mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.pdf-pes-photo-box img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.pdf-photo-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.pdf-photo-card{border:1px solid #dbe4ee;border-radius:12px;padding:9px;background:#fff;page-break-inside:avoid;break-inside:avoid;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.pdf-photo-title{font-size:11px;font-weight:900;color:#0b4f64;margin-bottom:7px}
+.pdf-photo-box{border:1px solid #dfe7ef;border-radius:10px;padding:4px;height:118mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fafbfc}
 .pdf-photo-desc{margin-top:6px;font-size:9.5px;line-height:1.45;color:#334155;white-space:pre-wrap;word-break:break-word}
-.pdf-notes-list{margin:0;padding-left:16px;display:grid;gap:5px;font-size:10px;line-height:1.55;color:#334155}
+.pdf-notes-list{margin:0;padding-left:16px;display:grid;gap:5px;font-size:10.5px;line-height:1.6;color:#334155}
 .pdf-page-footer{text-align:center;font-size:9px;color:#64748b;margin-top:7px;font-weight:700}
-@media(max-width:1050px){.app{grid-template-columns:1fr}.mobile-topbar{display:flex}.hamburger{display:none}.panel-backdrop{display:none!important}.panel{position:relative;top:0;left:0;height:auto;overflow:visible;z-index:1;width:auto;border-radius:16px;border-top:4px solid var(--brand);border-left:1px solid var(--line);transition:none;margin-bottom:12px;padding:14px;}.panel.open{left:0}.panel .brand{padding-bottom:10px;margin-bottom:2px;}.panel .tool-group:first-of-type{margin-top:10px;}.panel .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.panel .btn{min-height:42px;font-size:12px;padding:10px 8px;}}
-@media(max-width:768px){body{padding:8px}.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}.criteria-grid{grid-template-columns:1fr 1fr}.score-banner{grid-template-columns:120px 1fr;gap:10px}.score-circle{width:110px;height:110px}.score-circle-inner strong{font-size:22px}.hero h2{font-size:18px}.hero p{font-size:11px}.content{padding:10px;gap:10px}.sec-body{padding:10px}.issue-summary{grid-template-columns:1fr 1fr}}
-@media(max-width:540px){body{padding:6px}.grid-3{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr 1fr}.grid-2{grid-template-columns:1fr}.criteria-grid{grid-template-columns:1fr 1fr}.score-banner{grid-template-columns:1fr;text-align:center}.score-circle{width:110px;height:110px}.issue-summary{grid-template-columns:1fr}.hero{padding:18px 14px 22px}.hero h2{font-size:16px}.content{padding:8px;gap:8px}.sec-body{padding:8px}.panel{padding:12px}.panel .brand{display:none}.panel .tool-group{margin-top:0}.panel .tool-title{margin-bottom:8px}.panel .stack{grid-template-columns:1fr 1fr}.panel .btn{font-size:11px;min-height:40px}.check-row{grid-template-columns:1fr}.check-title{grid-column:1;grid-row:1}.rating-group{grid-column:1;grid-row:2;flex-wrap:wrap;justify-content:flex-start}.checklist-comment-field{grid-column:1;grid-row:3;align-items:flex-start}.checklist-comment-field textarea{min-height:38px}.status-chip{font-size:10px;padding:5px 8px}.photos-grid{grid-template-columns:1fr}.photo-tools{gap:3px}.mini-btn{font-size:10px;padding:4px 7px}.modal{width:100%;max-width:100%;border-radius:14px 14px 0 0;position:fixed;bottom:0;left:0;right:0;border-radius:16px}.overlay{align-items:flex-end;padding:0}.settings-modal-shell{width:100%;max-width:100%;border-radius:14px 14px 0 0;max-height:92vh}.sec-head h3{font-size:13px}.mini-stat .val{font-size:20px}.mini-stat .lbl{font-size:9px}}
 
-.score-circle-svg-wrap{
-  position:relative;
-  width:160px;
-  height:160px;
-  margin:auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.score-ring{
-  width:160px;
-  height:160px;
-  transform:rotate(-90deg);
-}
-.score-ring-track{
-  fill:none;
-  stroke:#e5e7eb;
-  stroke-width:12;
-}
-.score-ring-progress{
-  fill:none;
-  stroke:var(--brand);
-  stroke-width:12;
-  stroke-linecap:round;
-  stroke-dasharray:364.4247;
-  stroke-dashoffset:364.4247;
-  transition:stroke-dashoffset 1s ease;
-}
+/* status radio styles */
+.status-opt{border:1.5px solid var(--line);border-radius:18px;background:transparent;padding:0;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center}
+.status-opt input{display:none}
+.status-chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:18px;font-size:10px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--info-card-bg);transition:.15s}
+.status-opt:hover .status-chip{background:var(--line)}
+.status-opt.is-selected{border-color:transparent}
+.status-opt.is-selected .status-chip[data-value="achieved"]{background:#22c55e;color:#14532d}
+.status-opt.is-selected .status-chip[data-value="partial"]{background:#f59e0b;color:#78350f}
+.status-opt.is-selected .status-chip[data-value="not_achieved"]{background:#ef4444;color:#7f1d1d}
+.status-opt.is-selected .status-chip[data-value="na"]{background:#9ca3af;color:#1f2937}
 
-
-/* ===== FINAL SMALL MOBILE BUTTON (ICON + TEXT) ===== */
+/* Responsive */
+@media(max-width:1050px){
+  .app{grid-template-columns:1fr}
+  .mobile-topbar{display:flex}
+  .panel{position:relative;top:0;border-radius:16px;border-top:4px solid var(--brand);margin-bottom:12px;padding:14px}
+  .panel .stack{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .panel .btn{min-height:42px;font-size:12px;padding:10px 8px}
+}
+@media(max-width:768px){
+  body{padding:8px}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .criteria-grid{grid-template-columns:1fr 1fr}
+  .score-banner{grid-template-columns:120px 1fr;gap:10px}
+  .score-circle{width:110px;height:110px}
+  .hero h2{font-size:18px}
+  .content{padding:10px;gap:10px}
+  .sec-body{padding:10px}
+  .issue-summary{grid-template-columns:1fr 1fr}
+  .item-photo-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+}
 @media(max-width:540px){
-
-  .check-row{
-    position:relative;
-    padding-bottom:48px;
-  }
-
-  .item-photo-tools{
-    position:absolute;
-    bottom:6px;
-    right:6px;
-    z-index:10;
-  }
-
-  .item-photo-tools button{
-    height:28px;
-    padding:0 8px;
-    border-radius:7px;
-    border:none;
-    background:linear-gradient(135deg,var(--brand),var(--accent));
-    color:#fff;
-    font-size:10px;
-    font-weight:600;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:4px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.2);
-    cursor:pointer;
-  }
-
-  .item-photo-tools button:active{
-    transform:scale(0.96);
-  }
-
-  .item-photo-tools button span:first-child{
-    font-size:11px;
-  }
+  body{padding:6px}
+  .grid-3{grid-template-columns:1fr}
+  .grid-4{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .criteria-grid{grid-template-columns:1fr 1fr}
+  .score-banner{grid-template-columns:1fr;text-align:center}
+  .issue-summary{grid-template-columns:1fr}
+  .hero{padding:18px 14px 22px}
+  .hero h2{font-size:16px}
+  .content{padding:8px;gap:8px}
+  .sec-body{padding:8px}
+  /* On small screens: stack rating below title, btn stays right */
+  .check-row{grid-template-columns:1fr auto}
+  .check-title{grid-column:1;grid-row:1}
+  .rating-group{grid-column:1;grid-row:2;flex-wrap:wrap;justify-content:flex-start}
+  .checklist-comment-field{grid-column:1;grid-row:3;align-items:flex-start}
+  .checklist-comment-field label{padding-top:8px}
+  .item-add-photo-btn{grid-column:2;grid-row:1/4}
+  .item-photo-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+  .item-photo-card .photo-wrap{height:100px}
+  .status-chip{font-size:10px;padding:5px 8px}
+  .photos-grid{grid-template-columns:1fr}
+  .modal{width:100%;max-width:100%;border-radius:14px 14px 0 0;position:fixed;bottom:0;left:0;right:0}
+  .overlay{align-items:flex-end;padding:0}
+  .settings-modal-shell{width:100%;max-width:100%;border-radius:14px 14px 0 0;max-height:92vh}
 }
 
+.score-circle-svg-wrap{position:relative;width:160px;height:160px;margin:auto;display:flex;align-items:center;justify-content:center}
+.score-ring{width:160px;height:160px;transform:rotate(-90deg)}
+.score-ring-track{fill:none;stroke:#e5e7eb;stroke-width:12}
+.score-ring-progress{fill:none;stroke:var(--brand);stroke-width:12;stroke-linecap:round;stroke-dasharray:364.4247;stroke-dashoffset:364.4247;transition:stroke-dashoffset 1s ease}
 </style>
 </head>
 <body>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner">
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Photo preview">
+  </div>
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+</div>
+
 <div class="mobile-topbar" id="mobileTopbar">
   <div style="display:flex;align-items:center;gap:10px">
     <div class="brand-mark">FS</div>
@@ -412,15 +538,15 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
     <div class="tool-group">
       <div class="tool-title">Actions</div>
       <div class="stack" id="actionStack">
-        <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF Report</button>
+        <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF</button>
         <button class="btn btn-send" id="btnEmail" onclick="openSendModal()">✉️ Email Draft</button>
-        <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()"><span>📷</span><span>Add Photo</span>s</button>
+        <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()">📷 Add Photos</button>
         <input class="hidden" type="file" id="photoInput" multiple accept="image/*">
         <input class="hidden" type="file" id="itemPhotoInput" multiple accept="image/*">
         <input class="hidden" type="file" id="loadInput" accept=".json,application/json">
         <input class="hidden" type="file" id="settingsLoadInput" accept=".json,application/json">
         <button class="btn btn-soft" id="btnSettings" onclick="openSettingsModal()">⚙️ Settings</button>
-        <button class="btn btn-soft" id="btnSave" onclick="saveData()">💾 Save Report</button>
+        <button class="btn btn-soft" id="btnSave" onclick="saveData()">💾 Auto File Save</button>
         <button class="btn btn-soft" id="btnLoad" onclick="document.getElementById('loadInput').click()">📂 Load Data</button>
         <button class="btn btn-soft" id="btnLoadSettings" onclick="document.getElementById('settingsLoadInput').click()">📥 Load Settings</button>
         <button class="btn btn-danger" id="btnClear" onclick="openClearAllModal()">🗑️ Clear All</button>
@@ -460,15 +586,15 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
           <div class="score-wrap">
             <div class="score-banner">
               <div class="score-circle-svg-wrap">
-  <svg class="score-ring" viewBox="0 0 160 160">
-    <circle class="score-ring-track" cx="80" cy="80" r="58"></circle>
-    <circle class="score-ring-progress" id="overallScoreRing" cx="80" cy="80" r="58"></circle>
-  </svg>
-  <div class="score-circle-inner">
-    <strong id="overallScorePct">0%</strong>
-    <span>Overall Score</span>
-  </div>
-</div>
+                <svg class="score-ring" viewBox="0 0 160 160">
+                  <circle class="score-ring-track" cx="80" cy="80" r="58"></circle>
+                  <circle class="score-ring-progress" id="overallScoreRing" cx="80" cy="80" r="58"></circle>
+                </svg>
+                <div class="score-circle-inner">
+                  <strong id="overallScorePct">0%</strong>
+                  <span>Overall Score</span>
+                </div>
+              </div>
               <div class="score-summary">
                 <h4 id="overallScoreTitle">Not Rated</h4>
                 <p id="overallScoreText">Start rating checklist items to calculate the overall inspection score.</p>
@@ -520,7 +646,6 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
         <div class="sec-body"><div id="checklistRoot"></div></div>
       </section>
 
-      <!-- Photo Evidence Summary -->
       <section class="section" id="photoEvidenceSummarySection">
         <div class="sec-head"><h3>Photo Evidence Summary</h3><span class="sec-note">All item photos grouped by section</span></div>
         <div class="sec-body"><div id="photoEvidenceSummaryRoot" class="photo-evidence-summary"><p class="pes-empty">No item photos added yet.</p></div></div>
@@ -538,14 +663,13 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 
       <section class="section">
         <div class="sec-head"><h3>Additional Photo Evidence</h3></div>
-    
-<div class="photo-add-bar"><span>Add general photographic evidence</span> <button class="btn-photo-quick" onclick="triggerPhoto()" style="color:#fff;">
-    <span style="color:#fff;">📷</span>
-    <span style="color:#fff;">Add Photo</span>
-  </button> </div>
-<div class="sec-body">
+        <div class="photo-add-bar">
+          <span>Add general photographic evidence</span>
+          <button class="btn-photo-quick" onclick="triggerPhoto()">📷 Add Photos</button>
+        </div>
+        <div class="sec-body">
           <div class="photos-grid" id="photoGrid"></div>
-          <p id="noPhotoMsg" style="font-size:13px;margin:4px 0 0"> No photos yet — click "Add Photos" above or in the action panel.</p>
+          <p id="noPhotoMsg" style="color:var(--muted);font-size:13px;margin:4px 0 0">No photos yet — click "Add Photos" above or in the action panel.</p>
         </div>
       </section>
 
@@ -579,13 +703,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   <div class="modal val-modal">
     <h3 id="valModalTitle" style="color:#b91c1c;display:flex;align-items:center;gap:8px">⚠️ Incomplete Report</h3>
     <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5" id="valModalSubtitle">Please complete the following fields and items before generating the PDF.</p>
-
     <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
       <button class="btn btn-primary" style="width:auto;padding:9px 18px" onclick="closeValidationModal()">OK, I'll Fix It</button>
     </div>
-
     <div id="valModalBody"></div>
-
     <div style="display:flex;justify-content:flex-end;margin-top:14px">
       <button class="btn btn-primary" style="width:auto;padding:9px 18px" onclick="closeValidationModal()">OK, I'll Fix It</button>
     </div>
@@ -641,16 +762,11 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   </div>
 </div>
 
-<!-- Progress -->
-
 <!-- Clear All Warning Modal -->
 <div class="overlay" id="clearAllModal" style="display:none">
   <div class="modal val-modal">
     <h3 style="color:#b91c1c;display:flex;align-items:center;gap:8px">⚠️ Clear All Data</h3>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">
-      This will remove all report information, checklist ratings, comments, item photos, general photos, and locally saved draft data.
-      This action cannot be undone.
-    </p>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.6">This will remove all report information, checklist ratings, comments, item photos, general photos, and locally saved draft data. This action cannot be undone.</p>
     <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap">
       <button class="btn btn-soft" style="width:auto;padding:9px 18px" onclick="closeClearAllModal()">Cancel</button>
       <button class="btn btn-danger" style="width:auto;padding:9px 18px" onclick="confirmClearAll()">Yes, Clear All</button>
@@ -672,6 +788,22 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+/* ── LIGHTBOX ── */
+function openLightbox(src,rot){
+  const lb=document.getElementById('lightbox');
+  const img=document.getElementById('lightboxImg');
+  img.src=src;
+  img.style.transform=`rotate(${rot||0}deg)`;
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(e){
+  if(e&&e.target!==document.getElementById('lightbox')&&!e.target.classList.contains('lightbox-close'))return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';});
+
 /* ── THEME ── */
 const THEME_KEY='fsr_theme';
 let currentTheme=localStorage.getItem(THEME_KEY)||'light';
@@ -706,7 +838,6 @@ const STATUS_FULL={achieved:"Achieved",partial:"Partially Achieved",not_achieved
 
 let photoCtr=0;
 let itemPhotoTarget=null;
-// Global photo counter across ALL items for unique numbering
 let globalItemPhotoCtr=0;
 
 function itemPhotoGridId(sIdx,iIdx){return`itemPhotoGrid_${sIdx}_${iIdx}`;}
@@ -844,8 +975,7 @@ document.getElementById("validationModal").addEventListener("click",e=>{if(e.tar
 function rebuildPhotoEvidenceSummary(){
   const root=document.getElementById("photoEvidenceSummaryRoot");
   if(!root)return;
-  let hasAny=false;
-  let html="";
+  let hasAny=false,html="";
   SECTIONS.forEach((sec,sIdx)=>{
     const itemsWithPhotos=[];
     sec.items.forEach((itemTitle,iIdx)=>{
@@ -871,12 +1001,12 @@ function rebuildPhotoEvidenceSummary(){
             ${esc(item.title)}
             <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;background:${stBg};color:${stColor}">${esc(stLabel)}</span>
           </div>`;
-        if(item.comment)html+=`<div class="pes-item-comment">💬 Comment:  ${esc(item.comment)}</div>`;
+        if(item.comment)html+=`<div class="pes-item-comment">💬 ${esc(item.comment)}</div>`;
         html+=`<div class="pes-photos-row">`;
         item.photos.forEach(ph=>{
           html+=`<div class="pes-photo-thumb">
             <div class="pt-head">Photo #${ph.number}</div>
-            <div class="pt-img-wrap"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg);max-width:100%;max-height:190px;object-fit:contain;display:block;margin:auto"></div>
+            <div class="pt-img-wrap"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg)" onclick="openLightbox('${ph.src}',${ph.rot||0})"></div>
           </div>`;
         });
         html+=`</div></div>`;
@@ -910,9 +1040,12 @@ function buildChecklist(){
           <label>Comment</label>
           <textarea id="cmt_${sIdx}_${iIdx}" class="auto-expand-text" rows="1" placeholder="Add comment…" oninput="autoResizeComment(this);scheduleSilentAutosave()"></textarea>
         </div>
-        <div class="item-photo-tools">
-          <button class="mini-btn" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})"><span>📷</span><span>Add Photo</span></button>
+        <!-- Floating add-photo button — right column, spans all rows -->
+        <div class="item-add-photo-btn">
+          <button class="btn-add-item-photo" type="button" onclick="openItemPhotoPicker(${sIdx},${iIdx})" title="Add photo">📷</button>
+          <span class="btn-add-item-photo-label">Add<br>Photo</span>
         </div>
+        <!-- Photo grid spans full width below all content -->
         <div class="item-photo-grid" id="${itemPhotoGridId(sIdx,iIdx)}"></div>`;
       ci.appendChild(row);
     });
@@ -934,7 +1067,6 @@ function addItemPhotoCard(sIdx,iIdx,p){
   const grid=document.getElementById(itemPhotoGridId(sIdx,iIdx));
   if(!grid)return;
   const globalNum=p.globalNum||p.number||++globalItemPhotoCtr;
-  const localNum=grid.children.length+1;
   const d=document.createElement("div");
   d.className="item-photo-card";
   d.dataset.rot=p.rot||0;
@@ -950,21 +1082,28 @@ function addItemPhotoCard(sIdx,iIdx,p){
         <button class="mini-btn mini-btn-danger" type="button" onclick="deleteItemPhoto(this)">✕</button>
       </div>
     </div>
-    <div class="photo-wrap"><img class="photo-img" src="${p.src}" style="transform:rotate(${p.rot||0}deg)"></div>`;
+    <div class="photo-wrap" onclick="itemPhotoLightbox(this)">
+      <img class="photo-img" src="${p.src}" style="transform:rotate(${p.rot||0}deg)">
+    </div>`;
   grid.appendChild(d);
   applyItemPhotoRot(d);
+  renumberItemPhotos();
   scheduleSilentAutosave();
   rebuildPhotoEvidenceSummary();
+}
+function itemPhotoLightbox(wrap){
+  const img=wrap.querySelector('.photo-img');
+  if(!img)return;
+  const card=wrap.closest('.item-photo-card');
+  const rot=parseInt(card?.dataset.rot||0);
+  openLightbox(img.src,rot);
 }
 function applyItemPhotoRot(card){
   const img=card.querySelector(".photo-img");
   if(!img)return;
   const rot=((parseInt(card.dataset.rot||0)%360)+360)%360;
-  const qtr=rot===90||rot===270;
   img.style.transform=`rotate(${rot}deg)`;
-  img.style.width=qtr?"80px":"100%";
-  img.style.height=qtr?"100%":"80px";
-  img.style.maxHeight="80px";
+  // For cover layout, rotation is purely visual — no dimension swap needed
 }
 function rotItemPhoto(btn,d){
   const c=btn.closest(".item-photo-card");
@@ -974,9 +1113,20 @@ function rotItemPhoto(btn,d){
   rebuildPhotoEvidenceSummary();
   scheduleSilentAutosave();
 }
+function renumberItemPhotos(){
+  const cards=Array.from(document.querySelectorAll(".item-photo-card"));
+  cards.forEach((card,idx)=>{
+    const num=idx+1;
+    card.dataset.globalNum=num;
+    const label=card.querySelector(".photo-num");
+    if(label)label.textContent=`Photo #${num}`;
+  });
+  globalItemPhotoCtr=cards.length;
+}
 function deleteItemPhoto(btn){
   const card=btn.closest(".item-photo-card");
   if(card)card.remove();
+  renumberItemPhotos();
   rebuildPhotoEvidenceSummary();
   scheduleSilentAutosave();
 }
@@ -1025,19 +1175,14 @@ function updateOverallScoreUI(){
     const circumference=2*Math.PI*radius;
     const progress=Math.max(0,Math.min(100,s.pct));
     const offset=circumference-(progress/100)*circumference;
-
-    // Dynamic color
-    let color = '#9ca3af'; // default (Not Rated)
-    if(progress >= 85) color = '#22c55e';      // Green
-    else if(progress >= 70) color = '#f59e0b'; // Orange
-    else if(progress > 0) color = '#ef4444';   // Red
-
-    ring.style.stroke = color;
-    ring.style.strokeDasharray = `${circumference}`;
-    ring.style.strokeDashoffset = `${offset}`;
+    let color='#9ca3af';
+    if(progress>=85)color='#22c55e';
+    else if(progress>=70)color='#f59e0b';
+    else if(progress>0)color='#ef4444';
+    ring.style.stroke=color;
+    ring.style.strokeDasharray=`${circumference}`;
+    ring.style.strokeDashoffset=`${offset}`;
   }
-  // old background removed
-  //`conic-gradient(var(--brand) 0deg,var(--brand) ${deg}deg,#e5e7eb ${deg}deg 360deg)`;
   ["ratedItemsVal","achievedItemsVal","partialItemsVal","failedItemsVal"].forEach((id,i)=>
     document.getElementById(id).textContent=[s.rated,s.achieved,s.partial,s.failed][i]);
   document.getElementById("partialItemsSummaryVal").textContent=s.partial;
@@ -1109,7 +1254,6 @@ function hideProgress(){const o=document.getElementById("progressOverlay");o.cla
 function setProgressTitle(t,h){const te=document.getElementById("progressTitle"),he=document.getElementById("progressHint");if(te)te.textContent=t;if(he)he.textContent=h;}
 function waitForPaint(){return new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}
 
-/* IMAGE COMPRESSION */
 function compressImage(dataUrl,maxW=1200,quality=0.72){
   return new Promise(resolve=>{
     const img=new Image();
@@ -1161,7 +1305,12 @@ function buildPdfDom(){
   report.className="pdf-report";
   let pageNumber=1;
 
-  // Page 1: Info + Score + Issues
+  function appendSectionsBeforeFooter(pageEl,sectionsHtml){
+    const footer=pageEl.querySelector(".pdf-page-footer");
+    if(footer)footer.insertAdjacentHTML("beforebegin",sectionsHtml);
+    else pageEl.insertAdjacentHTML("beforeend",sectionsHtml);
+  }
+
   const p1=document.createElement("div");p1.className="pdf-page";
   p1.innerHTML=`
     <div class="pdf-confidential">Private &amp; Confidential</div>
@@ -1201,7 +1350,6 @@ function buildPdfDom(){
     <div class="pdf-page-footer">Page ${pageNumber}</div>`;
   report.appendChild(p1);
 
-  // Checklist pages
   const rows=flattenChecklistRows(data.sections);
   const pages=paginateChecklistRows(rows);
   pages.forEach(pageRows=>{
@@ -1218,7 +1366,7 @@ function buildPdfDom(){
           <div class="pdf-check-title">${row.index}. ${esc(row.title)}</div>
           <span class="pdf-check-status ${stCls}">${esc(row.status)}</span>
         </div>
-        ${row.comment?`<div class="pdf-check-comment">💬 Comment:  ${esc(row.comment)}</div>`:""}
+        ${row.comment?`<div class="pdf-check-comment">💬 ${esc(row.comment)}</div>`:""}
         ${photosHtml}
       </div>`;
     }).join("");
@@ -1226,7 +1374,6 @@ function buildPdfDom(){
     report.appendChild(p);
   });
 
-  // Append General Observation + Notes directly under the last checklist group
   const lastChecklistPage=report.querySelector(".pdf-page:last-child");
   if(lastChecklistPage){
     const summaryInlineHtml=`
@@ -1243,9 +1390,9 @@ function buildPdfDom(){
         <div class="pdf-sec-head"><h3>Notes &amp; Guidance</h3></div>
         <div class="pdf-sec-body"><ol class="pdf-notes-list">${REPORT_NOTES.map(n=>`<li>${esc(n)}</li>`).join("")}</ol></div>
       </div>`;
-    lastChecklistPage.innerHTML=lastChecklistPage.innerHTML.replace(/<div class="pdf-page-footer">Page \$\{pageNumber\}<\/div>$/, summaryInlineHtml + `<div class="pdf-page-footer">Page ${pageNumber}</div>`);
+    appendSectionsBeforeFooter(lastChecklistPage,summaryInlineHtml);
   }
-// Photo Evidence Summary pages (by group)
+
   const groupsWithPhotos=data.sections.filter(sec=>sec.items.some(i=>i.photos&&i.photos.length));
   if(groupsWithPhotos.length){
     pageNumber++;
@@ -1257,14 +1404,14 @@ function buildPdfDom(){
     groupsWithPhotos.forEach(sec=>{
       const itemsWithPhotos=sec.items.filter(i=>i.photos&&i.photos.length);
       pesHtml+=`<div class="pdf-pes-group">
-        <div class="pdf-pes-head"><h4>${esc(sec.name)}</h4><span style="font-size:9px;color:#64748b">${itemsWithPhotos.reduce((a,i)=>a+i.photos.length,0)} photo(s)</span></div>`;
+        <div class="pdf-pes-head"><h4>${esc(sec.name)}</h4><span style="font-size:9.5px;color:#64748b">${itemsWithPhotos.reduce((a,i)=>a+i.photos.length,0)} photo(s)</span></div>`;
       itemsWithPhotos.forEach(item=>{
         const stLabel=item.value?STATUS_FULL[item.value]||item.status:"Not Rated";
         const st=STATUS.find(x=>x.value===item.value);
         const stBg=st?st.bg:"#eceff3";const stColor=st?st.color:"#475467";
         pesHtml+=`<div class="pdf-pes-item">
-          <div class="pdf-pes-item-label">${esc(item.title)} <span style="background:${stBg};color:${stColor};padding:1px 6px;border-radius:999px;font-size:8px;font-weight:900">${esc(stLabel)}</span></div>
-          ${item.comment?`<div class="pdf-pes-item-comment">💬 Comment:  ${esc(item.comment)}</div>`:""}
+          <div class="pdf-pes-item-label">${esc(item.title)} <span style="background:${stBg};color:${stColor};padding:2px 7px;border-radius:999px;font-size:9px;font-weight:900">${esc(stLabel)}</span></div>
+          ${item.comment?`<div class="pdf-pes-item-comment">💬 ${esc(item.comment)}</div>`:""}
           <div class="pdf-pes-photos">
             ${item.photos.map(ph=>`<div class="pdf-pes-photo"><div class="pdf-pes-photo-label">Photo #${ph.number}</div><div class="pdf-pes-photo-box"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}
           </div>
@@ -1275,24 +1422,19 @@ function buildPdfDom(){
     pesHtml+=`</div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
     pesPage.innerHTML=pesHtml;
     report.appendChild(pesPage);
+  }
 
-
-  // General photos
   if(data.photos.length){
-    chunkArray(data.photos,4).forEach((chunk,ci)=>{
+    chunkArray(data.photos,2).forEach((chunk,ci)=>{
       pageNumber++;
       const pp=document.createElement("div");pp.className="pdf-page";
-      pp.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div><div class="pdf-section"><div class="pdf-sec-head"><h3>Additional Photo Evidence</h3><span class="pdf-sec-note">Photos ${ci*4+1}–${ci*4+chunk.length}</span></div><div class="pdf-sec-body"><div class="pdf-photo-grid">${chunk.map(ph=>`<div class="pdf-photo-card"><div class="pdf-photo-title">Photo ${ph.number}</div><div class="pdf-photo-box"><img src="${ph.src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}</div></div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
+      pp.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div><div class="pdf-section"><div class="pdf-sec-head"><h3>Additional Photo Evidence</h3><span class="pdf-sec-note">Photos ${ci*2+1}–${ci*2+chunk.length}</span></div><div class="pdf-sec-body"><div class="pdf-photo-grid">${chunk.map(ph=>`<div class="pdf-photo-card"><div class="pdf-photo-title">Photo ${ph.number}</div><div class="pdf-photo-box"><img src="${ph.src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}</div></div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
       report.appendChild(pp);
     });
   }
 
   root.appendChild(report);
-  
-  }
-
-  
-return report;
+  return report;
 }
 
 function flattenChecklistRows(sections){
@@ -1311,8 +1453,8 @@ function paginateChecklistRows(rows){
   const pages=[];let current=[];let units=0;const max=25.4;
   for(const row of rows){
     let u;
-    if(row.type==="section") u=2.0;
-    else if(row.type==="section_end") u=0.08;
+    if(row.type==="section")u=2.0;
+    else if(row.type==="section_end")u=0.08;
     else{
       const textLen=((row.title||"").length+(row.comment||"").length);
       const photoCount=(row.photos||[]).length;
@@ -1330,7 +1472,7 @@ async function domToPdfBlob(node,filename,onProgress){
   const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
   const pages=Array.from(node.querySelectorAll(".pdf-page"));
   for(let i=0;i<pages.length;i++){
-    const canvas=await html2canvas(pages[i],{scale:4,useCORS:true,backgroundColor:"#ffffff",logging:false,imageTimeout:0,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
+    const canvas=await html2canvas(pages[i],{scale:5,useCORS:true,backgroundColor:"#ffffff",logging:false,imageTimeout:0,letterRendering:true,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
     const imgData=canvas.toDataURL("image/png");
     if(i>0)pdf.addPage();
     pdf.addImage(imgData,"PNG",0,0,210,297,undefined,"SLOW");
@@ -1340,12 +1482,8 @@ async function domToPdfBlob(node,filename,onProgress){
 }
 
 async function generatePdfReport(){
-  // Validate first
   const errors=validateReport();
-  if(errors.info.length||errors.items.length){
-    showValidationModal(errors);
-    return;
-  }
+  if(errors.info.length||errors.items.length){showValidationModal(errors);return;}
   closePanel();
   const btn=document.querySelector(".btn-primary");
   const orig=btn.textContent;btn.textContent="Generating…";btn.disabled=true;
@@ -1367,7 +1505,6 @@ async function generatePdfReport(){
   finally{setTimeout(hideProgress,700);btn.textContent=orig;btn.disabled=false;}
 }
 
-/* GENERAL PHOTOS */
 let photoInputBusy=false;
 function triggerPhoto(){
   closePanel();
@@ -1417,7 +1554,6 @@ function rotP(btn,d){const c=btn.closest(".photo-card");c.dataset.rot=parseInt(c
 function deletePhotoCard(btn){const c=btn.closest(".photo-card");if(c)c.remove();renumber();updatePills();scheduleSilentAutosave();}
 function renumber(){document.querySelectorAll(".photo-card").forEach((c,i)=>{c.dataset.n=i+1;c.querySelector(".photo-num").textContent=`Photo ${i+1}`;});photoCtr=document.querySelectorAll(".photo-card").length;}
 
-/* EMAIL MODAL */
 function openSendModal(){
   closePanel();
   const outlet=gv("locationOutlet")||gv("hotelName")||"";
@@ -1442,7 +1578,6 @@ async function doSendFlow(){
   closeSendModal();
 }
 
-/* SETTINGS MODAL */
 function openSettingsModal(){
   closePanel();
   document.getElementById("settingPropertyName").value=appSettings.propertyName||"";
@@ -1516,7 +1651,6 @@ function exportSettingsJson(){
   const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="InspectionSetting.json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
-/* FILE SYSTEM */
 const AUTOSAVE_HANDLE_DB="fsr_autosave_db",AUTOSAVE_HANDLE_STORE="handles",AUTOSAVE_HANDLE_KEY="report-json";
 let autoSaveFileHandle=null;
 function openAutoSaveDb(){return new Promise((resolve,reject)=>{if(!window.indexedDB){resolve(null);return;}const req=indexedDB.open(AUTOSAVE_HANDLE_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(AUTOSAVE_HANDLE_STORE))db.createObjectStore(AUTOSAVE_HANDLE_STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
@@ -1526,7 +1660,6 @@ async function ensureAutoSavePermission(handle,withPrompt=false){if(!handle)retu
 async function writeAutosaveFile(data,{promptForPermission=false}={}){if(!window.showSaveFilePicker)return false;if(!autoSaveFileHandle)autoSaveFileHandle=await loadPersistedAutoSaveHandle();if(!autoSaveFileHandle)return false;const ok=await ensureAutoSavePermission(autoSaveFileHandle,promptForPermission);if(!ok)return false;try{const writable=await autoSaveFileHandle.createWritable();await writable.write(JSON.stringify(data,null,2));await writable.close();return true;}catch(e){console.error('Auto file write failed',e);return false;}}
 async function chooseAutoSaveFile(data){if(!window.showSaveFilePicker)throw new Error('Not supported.');const handle=await window.showSaveFilePicker({suggestedName:(data.meta&&data.meta.fileName)||getAutosaveFilename(),types:[{description:'JSON Files',accept:{'application/json':['.json']}}]});autoSaveFileHandle=handle;await persistAutoSaveHandle(handle);await writeAutosaveFile(data,{promptForPermission:true});return true;}
 
-/* DATA */
 function collectData(){
   return{
     info:{hotelName:gv("hotelName"),locationOutlet:gv("locationOutlet"),inspectionDateTime:document.getElementById("inspectionDateTime").value,personOnDuty:gv("personOnDuty"),departmentName:gv("departmentName"),auditorName:gv("auditorName"),generalObservation:gv("generalObservation"),correctiveAction:gv("correctiveAction")},
@@ -1599,6 +1732,7 @@ function applyData(data){
       (item.photos||[]).forEach(p=>addItemPhotoCard(sIdx,iIdx,p));
     });
   });
+  renumberItemPhotos();
   document.getElementById("photoGrid").innerHTML="";photoCtr=0;
   (data.photos||[]).forEach(p=>{addPhotoCard(p);photoCtr=Math.max(photoCtr,p.number||0);});
   renumber();updatePills();scheduleSilentAutosave();updateSelectedStyles();resizeAllAutoComments();
@@ -1643,7 +1777,6 @@ function loadSettings(){
   }catch(e){appSettings={...DEFAULT_SETTINGS,checklistSections:JSON.parse(JSON.stringify(DEFAULT_SETTINGS.checklistSections)),reportNotes:DEFAULT_SETTINGS.reportNotes.slice()};}
 }
 
-/* INIT */
 buildChecklist();
 loadSettings();
 bindSilentAutosave();
