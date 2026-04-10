@@ -417,7 +417,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-item-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:4px}
 .pdf-item-photo-card{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;background:#fff}
 .pdf-item-photo-label{padding:3px 5px;font-size:8px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef}
-.pdf-item-photo-box{height:22mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.pdf-item-photo-box{height:40mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
 .pdf-item-photo-box img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .pdf-pes-group{border:1px solid #dbe5ef;border-radius:11px;overflow:hidden;margin-bottom:7px;background:#fff}
 .pdf-pes-head{padding:7px 10px;background:linear-gradient(135deg,#ebf7ff,#eafbf5);border-bottom:1px solid #dbe5ef;display:flex;justify-content:space-between;align-items:center}
@@ -429,7 +429,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-pes-photos{display:flex;flex-wrap:wrap;gap:5px}
 .pdf-pes-photo{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;width:68.8mm}
 .pdf-pes-photo-label{padding:3px 6px;font-size:9px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef;line-height:1.35}
-.pdf-pes-photo-box{height:52.9mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
+.pdf-pes-photo-box{height:70mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
 .pdf-pes-photo-box img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .pdf-photo-grid{display:grid;grid-template-columns:1fr;gap:10px}
 .pdf-photo-card{border:1px solid #dbe4ee;border-radius:12px;padding:9px;background:#fff;page-break-inside:avoid;break-inside:avoid;box-shadow:0 2px 8px rgba(15,23,42,.04)}
@@ -538,7 +538,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
     <div class="tool-group">
       <div class="tool-title">Actions</div>
       <div class="stack" id="actionStack">
-        <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF</button>
+        <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF Report</button>
         <button class="btn btn-send" id="btnEmail" onclick="openSendModal()">✉️ Email Draft</button>
         <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()">📷 Add Photos</button>
         <input class="hidden" type="file" id="photoInput" multiple accept="image/*">
@@ -546,8 +546,8 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
         <input class="hidden" type="file" id="loadInput" accept=".json,application/json">
         <input class="hidden" type="file" id="settingsLoadInput" accept=".json,application/json">
         <button class="btn btn-soft" id="btnSettings" onclick="openSettingsModal()">⚙️ Settings</button>
-        <button class="btn btn-soft" id="btnSave" onclick="saveData()">💾 Auto File Save</button>
-        <button class="btn btn-soft" id="btnLoad" onclick="document.getElementById('loadInput').click()">📂 Load Data</button>
+        <button class="btn btn-soft" id="btnSave" onclick="saveData()">💾 Save Report</button>
+        <button class="btn btn-soft" id="btnLoad" onclick="document.getElementById('loadInput').click()">📂 Load Report (Json File)</button>
         <button class="btn btn-soft" id="btnLoadSettings" onclick="document.getElementById('settingsLoadInput').click()">📥 Load Settings</button>
         <button class="btn btn-danger" id="btnClear" onclick="openClearAllModal()">🗑️ Clear All</button>
       </div>
@@ -1001,7 +1001,7 @@ function rebuildPhotoEvidenceSummary(){
             ${esc(item.title)}
             <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;background:${stBg};color:${stColor}">${esc(stLabel)}</span>
           </div>`;
-        if(item.comment)html+=`<div class="pes-item-comment">💬 ${esc(item.comment)}</div>`;
+        if(item.comment)html+=`<div class="pes-item-comment">💬 Inspector Comment: ${esc(item.comment)}</div>`;
         html+=`<div class="pes-photos-row">`;
         item.photos.forEach(ph=>{
           html+=`<div class="pes-photo-thumb">
@@ -1366,7 +1366,7 @@ function buildPdfDom(){
           <div class="pdf-check-title">${row.index}. ${esc(row.title)}</div>
           <span class="pdf-check-status ${stCls}">${esc(row.status)}</span>
         </div>
-        ${row.comment?`<div class="pdf-check-comment">💬 ${esc(row.comment)}</div>`:""}
+        ${row.comment?`<div class="pdf-check-comment">💬 Inspector Comment: ${esc(row.comment)}</div>`:""}
         ${photosHtml}
       </div>`;
     }).join("");
@@ -1411,7 +1411,7 @@ function buildPdfDom(){
         const stBg=st?st.bg:"#eceff3";const stColor=st?st.color:"#475467";
         pesHtml+=`<div class="pdf-pes-item">
           <div class="pdf-pes-item-label">${esc(item.title)} <span style="background:${stBg};color:${stColor};padding:2px 7px;border-radius:999px;font-size:9px;font-weight:900">${esc(stLabel)}</span></div>
-          ${item.comment?`<div class="pdf-pes-item-comment">💬 ${esc(item.comment)}</div>`:""}
+          ${item.comment?`<div class="pdf-pes-item-comment">💬 Inspector Comment: ${esc(item.comment)}</div>`:""}
           <div class="pdf-pes-photos">
             ${item.photos.map(ph=>`<div class="pdf-pes-photo"><div class="pdf-pes-photo-label">Photo #${ph.number}</div><div class="pdf-pes-photo-box"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}
           </div>
