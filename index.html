@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Food Safety Inspection Report</title>
+<title>Food Safety Inspection Report - No Photo Summary</title>
 <style>
 :root{
   --bg:#f3f7fb;--card:#fff;--line:#d6e1ec;--text:#0f172a;--muted:#607186;
@@ -293,11 +293,11 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pes-item-block:last-child{border-bottom:none}
 .pes-item-label{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;display:flex;align-items:center;gap:6px}
 .pes-item-comment{font-size:11px;color:var(--muted);margin-bottom:7px;font-style:italic}
-.pes-photos-row{display:flex;flex-wrap:wrap;gap:8px}
-.pes-photo-thumb{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card);width:200px}
+.pes-photos-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;align-items:start}
+.pes-photo-thumb{border:1px solid var(--line);border-radius:9px;overflow:hidden;background:var(--card);width:100%;min-width:0}
 .pes-photo-thumb .pt-head{padding:4px 7px;font-size:10px;font-weight:800;color:var(--brand);background:var(--check-head-bg);border-bottom:1px solid var(--line)}
-.pes-photo-thumb .pt-img-wrap{height:160px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center}
-.pes-photo-thumb img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+.pes-photo-thumb .pt-img-wrap{height:160px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px}
+.pes-photo-thumb img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
 .pes-empty{padding:12px;font-size:13px;color:var(--muted);text-align:center}
 
 /* General photo section */
@@ -359,7 +359,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 #pdfRenderRoot{position:fixed;left:-100000px;top:0;width:210mm;background:#fff;z-index:-1;pointer-events:none}
 
 /* PDF */
-.pdf-report{width:210mm;min-height:297mm;background:#fff;color:#0f172a;font-family:"Segoe UI",Inter,Arial,sans-serif}
+.pdf-report{width:210mm;min-height:297mm;background:#fff;color:#0f172a;font-family:"Segoe UI",Inter,Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .pdf-page{width:210mm;min-height:297mm;padding:10mm 9mm;background:#fff;page-break-after:always;break-after:page;overflow:hidden}
 .pdf-page:last-child{page-break-after:auto;break-after:auto}
 .pdf-confidential{text-align:right;font-size:9px;font-weight:700;color:#64748b;letter-spacing:.05em;margin-bottom:4mm}
@@ -424,18 +424,18 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-pes-head h4{margin:0;font-size:12px;color:#0b4f64;font-weight:900}
 .pdf-pes-item{padding:7px 10px;border-bottom:1px solid #edf2f8}
 .pdf-pes-item:last-child{border-bottom:none}
-.pdf-pes-item-label{font-size:11.5px;font-weight:800;color:#0f172a;margin-bottom:4px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
-.pdf-pes-item-comment{font-size:10px;color:#475569;font-style:italic;margin-bottom:6px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
-.pdf-pes-photos{display:flex;flex-wrap:wrap;gap:5px}
-.pdf-pes-photo{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;width:68.8mm}
-.pdf-pes-photo-label{padding:3px 6px;font-size:9px;font-weight:800;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef;line-height:1.35}
-.pdf-pes-photo-box{height:70mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111}
-.pdf-pes-photo-box img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-.pdf-photo-grid{display:grid;grid-template-columns:1fr;gap:10px}
-.pdf-photo-card{border:1px solid #dbe4ee;border-radius:12px;padding:9px;background:#fff;page-break-inside:avoid;break-inside:avoid;box-shadow:0 2px 8px rgba(15,23,42,.04)}
-.pdf-photo-title{font-size:11px;font-weight:900;color:#0b4f64;margin-bottom:7px}
-.pdf-photo-box{border:1px solid #dfe7ef;border-radius:10px;padding:4px;height:118mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fafbfc}
-.pdf-photo-desc{margin-top:6px;font-size:9.5px;line-height:1.45;color:#334155;white-space:pre-wrap;word-break:break-word}
+.pdf-pes-item-label{font-size:12.8px;font-weight:900;color:#0f172a;margin-bottom:5px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+.pdf-pes-item-comment{font-size:11px;color:#334155;font-style:italic;margin-bottom:7px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.pdf-pes-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;align-items:start}
+.pdf-pes-photo{border:1px solid #dbe4ee;border-radius:7px;overflow:hidden;width:auto;min-width:0}
+.pdf-pes-photo-label{padding:4px 7px;font-size:9.8px;font-weight:900;color:#0b4f64;background:#ebf7ff;border-bottom:1px solid #dbe5ef;line-height:1.35}
+.pdf-pes-photo-box{height:70mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;padding:2mm}
+.pdf-pes-photo-box img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.pdf-photo-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.pdf-photo-card{border:1px solid #dbe4ee;border-radius:12px;padding:8px;background:#fff;page-break-inside:avoid;break-inside:avoid;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+.pdf-photo-title{font-size:11px;font-weight:900;color:#0b4f64;margin-bottom:6px}
+.pdf-photo-box{border:1px solid #dfe7ef;border-radius:10px;padding:4px;height:96mm;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fafbfc}
+.pdf-photo-desc{margin-top:5px;font-size:10px;line-height:1.42;color:#1e293b;white-space:pre-wrap;word-break:break-word;min-height:14mm}
 .pdf-notes-list{margin:0;padding-left:16px;display:grid;gap:5px;font-size:10.5px;line-height:1.6;color:#334155}
 .pdf-page-footer{text-align:center;font-size:9px;color:#64748b;margin-top:7px;font-weight:700}
 
@@ -646,11 +646,6 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
         <div class="sec-body"><div id="checklistRoot"></div></div>
       </section>
 
-      <section class="section" id="photoEvidenceSummarySection">
-        <div class="sec-head"><h3>Photo Evidence Summary</h3><span class="sec-note">All item photos grouped by section</span></div>
-        <div class="sec-body"><div id="photoEvidenceSummaryRoot" class="photo-evidence-summary"><p class="pes-empty">No item photos added yet.</p></div></div>
-      </section>
-
       <section class="section">
         <div class="sec-head"><h3>General Observation &amp; Corrective Action</h3></div>
         <div class="sec-body">
@@ -662,14 +657,14 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
       </section>
 
       <section class="section">
-        <div class="sec-head"><h3>Additional Photo Evidence</h3></div>
+        <div class="sec-head"><h3>Additional Photo Evidence</h3><span class="sec-note">Optional photos with description</span></div>
         <div class="photo-add-bar">
           <span>Add general photographic evidence</span>
           <button class="btn-photo-quick" onclick="triggerPhoto()">📷 Add Photos</button>
         </div>
         <div class="sec-body">
           <div class="photos-grid" id="photoGrid"></div>
-          <p id="noPhotoMsg" style="color:var(--muted);font-size:13px;margin:4px 0 0">No photos yet — click "Add Photos" above or in the action panel.</p>
+          <p id="noPhotoMsg" style="color:var(--muted);font-size:13px;margin:4px 0 0">No photos yet — click "Add Photos" above or in the action panel, then add a description for each photo if needed.</p>
         </div>
       </section>
 
@@ -972,51 +967,7 @@ function closeValidationModal(){document.getElementById("validationModal").style
 document.getElementById("validationModal").addEventListener("click",e=>{if(e.target.id==="validationModal")closeValidationModal();});
 
 /* ── PHOTO EVIDENCE SUMMARY ── */
-function rebuildPhotoEvidenceSummary(){
-  const root=document.getElementById("photoEvidenceSummaryRoot");
-  if(!root)return;
-  let hasAny=false,html="";
-  SECTIONS.forEach((sec,sIdx)=>{
-    const itemsWithPhotos=[];
-    sec.items.forEach((itemTitle,iIdx)=>{
-      const photos=getItemPhotosData(sIdx,iIdx);
-      if(photos.length){
-        const comment=getItemCommentValue(sIdx,iIdx);
-        const checked=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
-        const statusVal=checked?checked.value:"";
-        const st=STATUS.find(x=>x.value===statusVal);
-        itemsWithPhotos.push({title:itemTitle,photos,comment,statusVal,st});
-      }
-    });
-    if(itemsWithPhotos.length){
-      hasAny=true;
-      html+=`<div class="pes-group">
-        <div class="pes-group-head"><h4>${esc(sec.name)}</h4><span style="font-size:11px;color:var(--muted)">${itemsWithPhotos.reduce((a,i)=>a+i.photos.length,0)} photo(s)</span></div>`;
-      itemsWithPhotos.forEach(item=>{
-        const stLabel=item.st?STATUS_FULL[item.st.value]:"Not Rated";
-        const stColor=item.st?item.st.color:"#475467";
-        const stBg=item.st?item.st.bg:"#eceff3";
-        html+=`<div class="pes-item-block">
-          <div class="pes-item-label">
-            ${esc(item.title)}
-            <span style="display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:800;background:${stBg};color:${stColor}">${esc(stLabel)}</span>
-          </div>`;
-        if(item.comment)html+=`<div class="pes-item-comment">💬 Inspector Comment: ${esc(item.comment)}</div>`;
-        html+=`<div class="pes-photos-row">`;
-        item.photos.forEach(ph=>{
-          html+=`<div class="pes-photo-thumb">
-            <div class="pt-head">Photo #${ph.number}</div>
-            <div class="pt-img-wrap"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg)" onclick="openLightbox('${ph.src}',${ph.rot||0})"></div>
-          </div>`;
-        });
-        html+=`</div></div>`;
-      });
-      html+=`</div>`;
-    }
-  });
-  if(!hasAny)html=`<p class="pes-empty">No item photos added yet.</p>`;
-  root.innerHTML=html;
-}
+function rebuildPhotoEvidenceSummary(){ return; }
 
 /* ── CHECKLIST BUILD ── */
 function buildChecklist(){
@@ -1254,16 +1205,30 @@ function hideProgress(){const o=document.getElementById("progressOverlay");o.cla
 function setProgressTitle(t,h){const te=document.getElementById("progressTitle"),he=document.getElementById("progressHint");if(te)te.textContent=t;if(he)he.textContent=h;}
 function waitForPaint(){return new Promise(r=>requestAnimationFrame(()=>setTimeout(r,0)));}
 
-function compressImage(dataUrl,maxW=1200,quality=0.72){
+function compressImage(dataUrl,maxW=2200,quality=0.86,maxH=2200){
   return new Promise(resolve=>{
     const img=new Image();
     img.onload=()=>{
       let w=img.width,h=img.height;
-      if(w>maxW){h=Math.round(h*(maxW/w));w=maxW;}
+      const ratio=Math.min(maxW/w,maxH/h,1);
+      w=Math.max(1,Math.round(w*ratio));
+      h=Math.max(1,Math.round(h*ratio));
+      const megapixels=(img.width*img.height)/1000000;
+      let q=quality;
+      if(megapixels>18) q=0.74;
+      else if(megapixels>12) q=0.78;
+      else if(megapixels>8) q=0.82;
       const canvas=document.createElement('canvas');
       canvas.width=w;canvas.height=h;
-      canvas.getContext('2d').drawImage(img,0,0,w,h);
-      resolve(canvas.toDataURL('image/jpeg',quality));
+      const ctx=canvas.getContext('2d',{alpha:false});
+      if(ctx){
+        ctx.fillStyle='#ffffff';
+        ctx.fillRect(0,0,w,h);
+        ctx.imageSmoothingEnabled=true;
+        ctx.imageSmoothingQuality='high';
+        ctx.drawImage(img,0,0,w,h);
+      }
+      resolve(canvas.toDataURL('image/jpeg',q));
     };
     img.onerror=()=>resolve(dataUrl);
     img.src=dataUrl;
@@ -1271,7 +1236,7 @@ function compressImage(dataUrl,maxW=1200,quality=0.72){
 }
 async function compressAllPhotoSrcs(photos){
   return Promise.all(photos.map(async p=>{
-    if(!p.src||p.src.startsWith('data:image/jpeg'))return p;
+    if(!p.src)return p;
     const compressed=await compressImage(p.src);
     return{...p,src:compressed};
   }));
@@ -1393,42 +1358,24 @@ function buildPdfDom(){
     appendSectionsBeforeFooter(lastChecklistPage,summaryInlineHtml);
   }
 
-  const groupsWithPhotos=data.sections.filter(sec=>sec.items.some(i=>i.photos&&i.photos.length));
-  if(groupsWithPhotos.length){
-    pageNumber++;
-    const pesPage=document.createElement("div");pesPage.className="pdf-page";
-    let pesHtml=`<div class="pdf-confidential">Private &amp; Confidential</div>
-      <div class="pdf-section">
-        <div class="pdf-sec-head"><h3>Photo Evidence Summary</h3><span class="pdf-sec-note">All item photos grouped by section</span></div>
-        <div class="pdf-sec-body">`;
-    groupsWithPhotos.forEach(sec=>{
-      const itemsWithPhotos=sec.items.filter(i=>i.photos&&i.photos.length);
-      pesHtml+=`<div class="pdf-pes-group">
-        <div class="pdf-pes-head"><h4>${esc(sec.name)}</h4><span style="font-size:9.5px;color:#64748b">${itemsWithPhotos.reduce((a,i)=>a+i.photos.length,0)} photo(s)</span></div>`;
-      itemsWithPhotos.forEach(item=>{
-        const stLabel=item.value?STATUS_FULL[item.value]||item.status:"Not Rated";
-        const st=STATUS.find(x=>x.value===item.value);
-        const stBg=st?st.bg:"#eceff3";const stColor=st?st.color:"#475467";
-        pesHtml+=`<div class="pdf-pes-item">
-          <div class="pdf-pes-item-label">${esc(item.title)} <span style="background:${stBg};color:${stColor};padding:2px 7px;border-radius:999px;font-size:9px;font-weight:900">${esc(stLabel)}</span></div>
-          ${item.comment?`<div class="pdf-pes-item-comment">💬 Inspector Comment: ${esc(item.comment)}</div>`:""}
-          <div class="pdf-pes-photos">
-            ${item.photos.map(ph=>`<div class="pdf-pes-photo"><div class="pdf-pes-photo-label">Photo #${ph.number}</div><div class="pdf-pes-photo-box"><img src="${ph.src}" style="transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}
-          </div>
-        </div>`;
-      });
-      pesHtml+=`</div>`;
-    });
-    pesHtml+=`</div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
-    pesPage.innerHTML=pesHtml;
-    report.appendChild(pesPage);
-  }
-
   if(data.photos.length){
     chunkArray(data.photos,2).forEach((chunk,ci)=>{
       pageNumber++;
-      const pp=document.createElement("div");pp.className="pdf-page";
-      pp.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div><div class="pdf-section"><div class="pdf-sec-head"><h3>Additional Photo Evidence</h3><span class="pdf-sec-note">Photos ${ci*2+1}–${ci*2+chunk.length}</span></div><div class="pdf-sec-body"><div class="pdf-photo-grid">${chunk.map(ph=>`<div class="pdf-photo-card"><div class="pdf-photo-title">Photo ${ph.number}</div><div class="pdf-photo-box"><img src="${ph.src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;transform:rotate(${ph.rot||0}deg)"></div></div>`).join("")}</div></div></div><div class="pdf-page-footer">Page ${pageNumber}</div>`;
+      const pp=document.createElement("div");pp.className="pdf-page pdf-page--photo-heavy";
+      pp.innerHTML=`<div class="pdf-confidential">Private &amp; Confidential</div>
+      <div class="pdf-section">
+        <div class="pdf-sec-head"><h3>Additional Photo Evidence</h3><span class="pdf-sec-note">Photos ${ci*2+1}–${ci*2+chunk.length} · 2 per page</span></div>
+        <div class="pdf-sec-body">
+          <div class="pdf-photo-grid">
+            ${chunk.map(ph=>`<div class="pdf-photo-card">
+              <div class="pdf-photo-title">Photo ${ph.number}</div>
+              <div class="pdf-photo-box"><img src="${ph.src}" style="max-width:100%;max-height:100%;object-fit:contain;display:block;margin:auto;transform:rotate(${ph.rot||0}deg)"></div>
+              <div class="pdf-photo-desc"><strong>Comment:</strong> ${esc((ph.desc||'').trim()||'—')}</div>
+            </div>`).join("")}
+          </div>
+        </div>
+      </div>
+      <div class="pdf-page-footer">Page ${pageNumber}</div>`;
       report.appendChild(pp);
     });
   }
@@ -1466,16 +1413,52 @@ function paginateChecklistRows(rows){
   if(current.length)pages.push(current);
   return pages;
 }
+function getEnterpriseRenderProfile(pageEl,totalPhotos,totalPages){
+  const isPhotoHeavy=pageEl.classList.contains("pdf-page--photo-heavy");
+  const hasManyInlinePhotos=pageEl.querySelectorAll(".pdf-item-photo-card, .pdf-photo-card").length>=3;
+  if(isPhotoHeavy){
+    return {scale:2.15, format:'JPEG', quality: totalPhotos>=12 ? 0.68 : 0.74, aliasCompression:'MEDIUM'};
+  }
+  if(hasManyInlinePhotos){
+    return {scale:2.25, format:'JPEG', quality: totalPages>=8 ? 0.76 : 0.82, aliasCompression:'MEDIUM'};
+  }
+  return {scale:2.4, format:'PNG', quality:1, aliasCompression:'FAST'};
+}
+function canvasToEnterpriseDataUrl(canvas,profile){
+  if(profile.format==='PNG') return canvas.toDataURL('image/png');
+  const exportCanvas=document.createElement('canvas');
+  exportCanvas.width=canvas.width;
+  exportCanvas.height=canvas.height;
+  const ctx=exportCanvas.getContext('2d',{alpha:false});
+  if(ctx){
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(0,0,exportCanvas.width,exportCanvas.height);
+    ctx.drawImage(canvas,0,0);
+  }
+  return exportCanvas.toDataURL('image/jpeg',profile.quality);
+}
 async function domToPdfBlob(node,filename,onProgress){
   if(!window.jspdf||!window.html2canvas)throw new Error("PDF libraries not loaded.");
   const{jsPDF}=window.jspdf;
   const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
   const pages=Array.from(node.querySelectorAll(".pdf-page"));
+  const totalPhotos=node.querySelectorAll(".pdf-item-photo-card img, .pdf-photo-card img").length;
   for(let i=0;i<pages.length;i++){
-    const canvas=await html2canvas(pages[i],{scale:5,useCORS:true,backgroundColor:"#ffffff",logging:false,imageTimeout:0,letterRendering:true,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});
-    const imgData=canvas.toDataURL("image/png");
+    const profile=getEnterpriseRenderProfile(pages[i],totalPhotos,pages.length);
+    const canvas=await html2canvas(pages[i],{
+      scale:profile.scale,
+      useCORS:true,
+      backgroundColor:"#ffffff",
+      logging:false,
+      imageTimeout:0,
+      letterRendering:true,
+      removeContainer:true,
+      windowWidth:pages[i].scrollWidth,
+      windowHeight:pages[i].scrollHeight
+    });
+    const imgData=canvasToEnterpriseDataUrl(canvas,profile);
     if(i>0)pdf.addPage();
-    pdf.addImage(imgData,"PNG",0,0,210,297,undefined,"SLOW");
+    pdf.addImage(imgData,profile.format,0,0,210,297,undefined,profile.aliasCompression);
     if(typeof onProgress==="function")onProgress(((i+1)/pages.length)*100);
   }
   return pdf.output("blob");
@@ -1658,7 +1641,21 @@ async function persistAutoSaveHandle(handle){if(!handle)return;const db=await op
 async function loadPersistedAutoSaveHandle(){const db=await openAutoSaveDb();if(!db)return null;return await new Promise((resolve,reject)=>{const tx=db.transaction(AUTOSAVE_HANDLE_STORE,'readonly');const req=tx.objectStore(AUTOSAVE_HANDLE_STORE).get(AUTOSAVE_HANDLE_KEY);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error);});}
 async function ensureAutoSavePermission(handle,withPrompt=false){if(!handle)return false;try{if(handle.queryPermission){const current=await handle.queryPermission({mode:'readwrite'});if(current==='granted')return true;if(current==='prompt'&&withPrompt&&handle.requestPermission){const requested=await handle.requestPermission({mode:'readwrite'});return requested==='granted';}return false;}return true;}catch(e){return false;}}
 async function writeAutosaveFile(data,{promptForPermission=false}={}){if(!window.showSaveFilePicker)return false;if(!autoSaveFileHandle)autoSaveFileHandle=await loadPersistedAutoSaveHandle();if(!autoSaveFileHandle)return false;const ok=await ensureAutoSavePermission(autoSaveFileHandle,promptForPermission);if(!ok)return false;try{const writable=await autoSaveFileHandle.createWritable();await writable.write(JSON.stringify(data,null,2));await writable.close();return true;}catch(e){console.error('Auto file write failed',e);return false;}}
-async function chooseAutoSaveFile(data){if(!window.showSaveFilePicker)throw new Error('Not supported.');const handle=await window.showSaveFilePicker({suggestedName:(data.meta&&data.meta.fileName)||getAutosaveFilename(),types:[{description:'JSON Files',accept:{'application/json':['.json']}}]});autoSaveFileHandle=handle;await persistAutoSaveHandle(handle);await writeAutosaveFile(data,{promptForPermission:true});return true;}
+async function chooseAutoSaveFile(data,{persistHandle=true}={}){
+  if(!window.showSaveFilePicker)throw new Error('Not supported.');
+  const handle=await window.showSaveFilePicker({
+    suggestedName:(data.meta&&data.meta.fileName)||getAutosaveFilename(),
+    types:[{description:'JSON Files',accept:{'application/json':['.json']}}]
+  });
+  if(persistHandle){
+    autoSaveFileHandle=handle;
+    await persistAutoSaveHandle(handle);
+  }
+  const writable=await handle.createWritable();
+  await writable.write(JSON.stringify(data,null,2));
+  await writable.close();
+  return true;
+}
 
 function collectData(){
   return{
@@ -1680,12 +1677,32 @@ async function saveData(){
   setProgressTitle("Saving data","");setProgress(10,"Compressing photos…");await waitForPaint();
   const base=await collectDataWithPhotos();
   const data={meta:{fileName:getAutosaveFilename(),savedAt:new Date().toISOString(),includesPhotos:true},...base};
-  setProgress(60,"Writing file…");await waitForPaint();
-  try{localStorage.setItem("fsr_ultra",JSON.stringify(data));localStorage.setItem("fsr_ultra_autosave",JSON.stringify(data));}catch(e){}
-  try{const wrote=await writeAutosaveFile(data,{promptForPermission:true});if(wrote){setProgress(100,"Saved.");setTimeout(hideProgress,600);return;}await chooseAutoSaveFile(data);setProgress(100,"Saved.");setTimeout(hideProgress,600);return;}catch(e){console.warn('FS save not available',e);}
+  setProgress(60,"Preparing file…");await waitForPaint();
+  try{
+    localStorage.setItem("fsr_ultra",JSON.stringify(data));
+    localStorage.setItem("fsr_ultra_autosave",JSON.stringify(data));
+  }catch(e){}
+  try{
+    if(window.showSaveFilePicker){
+      await chooseAutoSaveFile(data,{persistHandle:false});
+      setProgress(100,"Saved.");
+      setTimeout(hideProgress,600);
+      return;
+    }
+  }catch(e){
+    console.warn('Manual save picker unavailable',e);
+  }
   const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=data.meta.fileName;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-  setProgress(100,"Saved.");setTimeout(hideProgress,600);
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=data.meta.fileName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  setProgress(100,"Saved.");
+  setTimeout(hideProgress,600);
 }
 
 document.getElementById("loadInput").addEventListener("change",e=>{
