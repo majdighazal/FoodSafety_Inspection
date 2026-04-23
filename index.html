@@ -88,7 +88,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .field input,.field textarea,.field select{width:100%;border:1px solid var(--field-border);border-radius:9px;padding:8px 10px;font-size:13px;color:var(--field-text);background:var(--field-bg);outline:none;font-family:inherit;min-height:38px;transition:background .2s,border-color .2s,color .2s}
 .field textarea{resize:vertical;min-height:80px}
 .field input:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(14,165,164,.12)}
-.field input.field-error{border-color:#ef4444!important;box-shadow:0 0 0 3px rgba(239,68,68,.15)!important}
+.field input.field-error,.field textarea.field-error,.field select.field-error{border-color:#ef4444!important;box-shadow:0 0 0 3px rgba(239,68,68,.15)!important;background:#fff1f2!important}
 .report-info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .info-card{border:1px solid var(--info-card-border);border-radius:12px;padding:10px;background:var(--info-card-bg)}
 .info-label{font-size:10px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
@@ -132,13 +132,16 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .check-row{
   border:1px solid var(--line);
   border-radius:10px;
-  padding:9px 10px 10px;
+  padding:10px 12px 12px;
   background:var(--check-row-bg);
   display:grid;
-  /* col 1 = content, col 2 = floating add-photo btn */
-  grid-template-columns:1fr auto;
-  grid-template-rows:auto auto auto;
-  gap:6px 10px;
+  grid-template-columns:minmax(0,1fr) auto;
+  grid-template-areas:
+    "title addphoto"
+    "rating addphoto"
+    "comment comment"
+    "photos photos";
+  gap:8px 12px;
   align-items:start;
   transition:background .2s;
 }
@@ -148,22 +151,24 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 /* title: left col, row 1 */
 .check-title{
   font-size:13px;font-weight:700;line-height:1.45;
-  grid-column:1;grid-row:1;
+  grid-area:title;
   color:var(--text);
   padding-right:4px;
 }
 
 /* rating pills: left col, row 2 */
 .rating-group{
-  grid-column:1;grid-row:2;
+  grid-area:rating;
   display:flex;flex-direction:row;gap:4px;
   align-items:center;flex-wrap:wrap;
 }
 
 /* comment: left col, row 3 */
 .checklist-comment-field{
-  grid-column:1;grid-row:3;
+  grid-area:comment;
   display:flex;align-items:flex-start;gap:8px;
+  min-width:0;
+  width:100%;
 }
 .checklist-comment-field label{
   font-size:10px;font-weight:700;color:var(--muted);
@@ -171,10 +176,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   flex:none;padding-top:8px;
 }
 .checklist-comment-field textarea{
-  flex:1;border:1px solid var(--field-border);border-radius:7px;
+  flex:1;min-width:0;border:1px solid var(--field-border);border-radius:7px;
   padding:6px 9px;font-size:12px;color:var(--field-text);
   background:var(--field-bg);outline:none;font-family:inherit;
-  min-height:32px;height:32px;line-height:1.45;resize:none;overflow:hidden;
+  min-height:38px;height:auto;line-height:1.45;resize:vertical;overflow:auto;
   transition:background .2s;
 }
 .checklist-comment-field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(14,165,164,.10)}
@@ -182,8 +187,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 /* ── FLOATING ADD PHOTO BUTTON ── */
 /* right col, spans all rows — sits flush top-right */
 .item-add-photo-btn{
-  grid-column:2;
-  grid-row:1 / 4;          /* span all content rows */
+  grid-area:addphoto;
   align-self:start;
   display:flex;
   flex-direction:column;
@@ -205,7 +209,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .btn-add-item-photo:active{transform:translateY(0)}
 /* tooltip label under icon */
 .btn-add-item-photo-label{
-  font-size:9px;font-weight:800;color:var(--muted);
+  font-size:8px;font-weight:700;color:var(--muted);
   text-transform:uppercase;letter-spacing:.05em;
   margin-top:4px;text-align:center;line-height:1.2;
   white-space:nowrap;
@@ -214,12 +218,12 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 /* ── ITEM PHOTO GRID ── */
 /* full width, below ALL columns */
 .item-photo-grid{
-  grid-column:1 / -1;
-  grid-row:4;
+  grid-area:photos;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:8px;
-  margin-top:4px;
+  grid-template-columns:repeat(auto-fit,minmax(200px,200px));
+  justify-content:center;
+  gap:14px;
+  margin-top:6px;
 }
 
 /* ── ITEM PHOTO CARD ── */
@@ -239,6 +243,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 
 /* photo wrapper — fixed height, overflow hidden, object-cover for fill */
 .item-photo-card .photo-wrap{
+  width:200px;
+  height:150px;
+  margin:auto;
+
   flex:1;
   position:relative;
   overflow:hidden;
@@ -363,10 +371,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .pdf-page{width:210mm;min-height:297mm;padding:10mm 9mm;background:#fff;page-break-after:always;break-after:page;overflow:hidden}
 .pdf-page:last-child{page-break-after:auto;break-after:auto}
 .pdf-confidential{text-align:right;font-size:9px;font-weight:700;color:#64748b;letter-spacing:.05em;margin-bottom:4mm}
-.pdf-hero{margin:-10mm -9mm 8mm;padding:14mm 14mm 11mm;background:linear-gradient(135deg,#0b3356 0%,#0f4c81 42%,#155e75 76%,#1295a8 100%);color:#fff;position:relative;overflow:hidden}
+.pdf-hero{margin:-10mm -9mm 8mm;padding:18mm 14mm 15mm;background:linear-gradient(135deg,#0b3356 0%,#0f4c81 42%,#155e75 76%,#1295a8 100%);color:#fff;position:relative;overflow:hidden}
 .pdf-hero:before{content:"";position:absolute;right:-20mm;top:-20mm;width:90mm;height:55mm;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.15),transparent 68%)}
-.pdf-hero h1{margin:0 0 5px;font-size:26px;font-weight:900}
-.pdf-hero p{margin:0;font-size:11px;opacity:.95;line-height:1.5;max-width:130mm}
+.pdf-hero h1{margin:0 0 6px;font-size:28px;font-weight:900;line-height:1.12}
+.pdf-hero p{margin:0;font-size:12px;opacity:.95;line-height:1.6;max-width:138mm}
 .pdf-section{border:1px solid #dbe5f0;border-radius:14px;overflow:hidden;background:#fff;margin-bottom:7px;position:relative}
 .pdf-section:before{content:"";position:absolute;inset:0 auto 0 0;width:1.4mm;background:linear-gradient(180deg,#0f4c81,#0ea5a4)}
 .pdf-sec-head{padding:8px 11px 8px 13px;border-bottom:1px solid #e2e8f0;background:linear-gradient(180deg,#fbfdff,#f2f7fc);display:flex;justify-content:space-between;align-items:center}
@@ -471,6 +479,10 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   .issue-summary{grid-template-columns:1fr 1fr}
   .item-photo-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
 }
+
+@media(max-width:900px){
+  .item-photo-grid{grid-template-columns:repeat(2,minmax(180px,200px));justify-content:center;gap:12px}
+}
 @media(max-width:540px){
   body{padding:6px}
   .grid-3{grid-template-columns:1fr}
@@ -483,15 +495,28 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   .hero h2{font-size:16px}
   .content{padding:8px;gap:8px}
   .sec-body{padding:8px}
-  /* On small screens: stack rating below title, btn stays right */
-  .check-row{grid-template-columns:1fr auto}
-  .check-title{grid-column:1;grid-row:1}
-  .rating-group{grid-column:1;grid-row:2;flex-wrap:wrap;justify-content:flex-start}
-  .checklist-comment-field{grid-column:1;grid-row:3;align-items:flex-start}
-  .checklist-comment-field label{padding-top:8px}
-  .item-add-photo-btn{grid-column:2;grid-row:1/4}
-  .item-photo-grid{grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
-  .item-photo-card .photo-wrap{height:100px}
+  /* Responsive action-plan layout */
+  .check-row{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "title"
+      "rating"
+      "addphoto"
+      "comment"
+      "photos";
+  }
+  .rating-group{flex-wrap:wrap;justify-content:flex-start}
+  .checklist-comment-field{align-items:flex-start;flex-direction:column;gap:6px}
+  .checklist-comment-field label{padding-top:0}
+  .item-add-photo-btn{justify-self:start;align-items:flex-start}
+  .btn-add-item-photo-label{text-align:left}
+  .item-photo-grid{grid-template-columns:repeat(auto-fit,minmax(160px,1fr));justify-content:stretch;gap:10px}
+  .item-photo-card .photo-wrap{width:100%;max-width:200px;height:150px}
+  .item-photo-card .photo-wrap{
+  width:200px;
+  height:150px;
+  margin:auto;
+height:100px}
   .status-chip{font-size:10px;padding:5px 8px}
   .photos-grid{grid-template-columns:1fr}
   .modal{width:100%;max-width:100%;border-radius:14px 14px 0 0;position:fixed;bottom:0;left:0;right:0}
@@ -503,6 +528,66 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 .score-ring{width:160px;height:160px;transform:rotate(-90deg)}
 .score-ring-track{fill:none;stroke:#e5e7eb;stroke-width:12}
 .score-ring-progress{fill:none;stroke:var(--brand);stroke-width:12;stroke-linecap:round;stroke-dasharray:364.4247;stroke-dashoffset:364.4247;transition:stroke-dashoffset 1s ease}
+
+@media(max-width:900px){
+  .ap-info-grid{grid-template-columns:1fr 1fr}
+  .ap-info-cell:nth-child(3n){border-right:.7px solid var(--line2)}
+  .ap-info-cell:nth-child(2n){border-right:none}
+  .ap-info-cell:nth-last-child(-n+3){border-bottom:.7px solid var(--line2)}
+  .ap-info-cell:nth-last-child(-n+2){border-bottom:none}
+}
+@media(max-width:640px){
+  .ap-info-grid,.ap-item-head-grid{grid-template-columns:1fr}
+  .ap-info-cell,.ap-head-cell{border-right:none}
+  .ap-info-cell:not(:last-child),.ap-head-cell:not(:last-child){border-bottom:.7px solid var(--line2)}
+  .ap-kv-narrow .ap-kv-value,.ap-kv-rating .ap-kv-value,.ap-item-no{justify-content:flex-start;text-align:left}
+}
+
+
+
+
+
+
+.ap-page .photo-btn-text{
+  font-size:8px !important;
+  font-weight:700 !important;
+}
+
+  .item-add-photo-btn .btn-add-item-photo{
+    width:44px !important;
+    height:44px !important;
+    min-height:44px !important;
+  }
+}
+
+
+/* ===== ACTION PLAN: ADD PHOTO BUTTON FIX (CORRECT TARGET) ===== */
+.ap-page .btn-add-item-photo{
+  width:52px !important;
+  height:52px !important;
+  min-height:52px !important;
+  font-size:20px !important;
+}
+
+.ap-page .btn-add-item-photo-label{
+  font-size:8px !important;
+  font-weight:700 !important;
+  line-height:1.2;
+}
+
+@media (max-width:640px){
+  .ap-page .btn-add-item-photo{
+    width:48px !important;
+    height:48px !important;
+    min-height:48px !important;
+  }
+
+  .ap-page .btn-add-item-photo-label{
+    font-size:8px !important;
+    font-weight:700 !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -518,7 +603,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
 <div class="mobile-topbar" id="mobileTopbar">
   <div style="display:flex;align-items:center;gap:10px">
     <div class="brand-mark">FS</div>
-    <div><h1>Food Safety Report</h1><div class="sub">Premium A4 Layout</div></div>
+    <div><h1>Food Safety Report</h1></div>
   </div>
   <button class="hamburger" id="hamburgerBtn" onclick="togglePanel()" aria-label="Menu">☰</button>
 </div>
@@ -527,7 +612,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
   <aside class="panel" id="sidePanel">
     <div class="brand">
       <div class="brand-mark">FS</div>
-      <div><h1>Food Safety<br>Report</h1><div class="sub">Direct PDF · Premium A4 layout</div></div>
+      <div><h1>Food Safety<br>Report</h1></div>
     </div>
     <div class="tool-group">
       <div class="tool-title">Appearance</div>
@@ -539,6 +624,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
       <div class="tool-title">Actions</div>
       <div class="stack" id="actionStack">
         <button class="btn btn-primary" id="btnGenPdf" onclick="generatePdfReport()">📄 Generate PDF Report</button>
+        <button class="btn btn-soft" id="btnGenActionPlan" onclick="generateActionPlan()">🗂️ Generate Action Plan</button>
         <button class="btn btn-send" id="btnEmail" onclick="openSendModal()">✉️ Email Draft</button>
         <button class="btn btn-soft" id="btnAddPhoto" onclick="triggerPhoto()">📷 Add Photos</button>
         <input class="hidden" type="file" id="photoInput" multiple accept="image/*">
@@ -554,7 +640,7 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
     </div>
     <div class="tool-group">
       <div class="tool-title">Scoring Guide</div>
-      <div class="note-card">Achieved = 100%&nbsp;&nbsp;·&nbsp;&nbsp;Partial = 50%<br>Did Not Achieve = 0%&nbsp;&nbsp;·&nbsp;&nbsp;N/A = excluded</div>
+      <div class="note-card">Achieved&nbsp;&nbsp;·&nbsp;&nbsp;Partial<br>Did Not Achieve&nbsp;&nbsp;·&nbsp;&nbsp;N/A</div>
     </div>
   </aside>
 
@@ -616,8 +702,8 @@ body{font-family:"Segoe UI",Inter,Arial,sans-serif;color:var(--text);background:
         <div class="sec-body">
           <div class="criteria-grid">
             <div class="criteria-card"><h4>Achieved</h4><p>Fully compliant. Score: <strong>100%</strong>.</p></div>
-            <div class="criteria-card"><h4>Partially Achieved</h4><p>Partially compliant. Score: <strong>50%</strong>.</p></div>
-            <div class="criteria-card"><h4>Did Not Achieve</h4><p>Non-compliant. Score: <strong>0%</strong>.</p></div>
+            <div class="criteria-card"><h4>Partially Achieved</h4><p>Partially compliant.</p></div>
+            <div class="criteria-card"><h4>Did Not Achieve</h4><p>Non-compliant.</p></div>
             <div class="criteria-card"><h4>Not Applicable</h4><p>Excluded from score calculation.</p></div>
           </div>
         </div>
@@ -830,6 +916,67 @@ const STATUS=[
   {value:"na",label:"N/A",score:null,bg:"#eceff3",color:"#475467",cls:"tag-na"}
 ];
 const STATUS_FULL={achieved:"Achieved",partial:"Partially Achieved",not_achieved:"Did Not Achieve",na:"Not Applicable"};
+const ACTION_PROGRESS_OPTIONS=["completed","Partially Completed","not started"];
+let actionPlanState={};
+function actionPlanItemKey(section,item){return `${section}||${item}`;}
+function getActionPlanItems(){
+  const rows=[];
+  SECTIONS.forEach((sec,sIdx)=>{
+    sec.items.forEach((title,iIdx)=>{
+      const checked=document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`);
+      if(!checked)return;
+      if(checked.value!=="partial"&&checked.value!=="not_achieved")return;
+      rows.push({
+        idx:rows.length+1,
+        key:actionPlanItemKey(sec.name,title),
+        section:sec.name,
+        item:title,
+        rating:STATUS_FULL[checked.value]||checked.value,
+        statusValue:checked.value,
+        comment:gv(`cmt_${sIdx}_${iIdx}`),
+        sIdx,
+        iIdx,
+        photos:getItemPhotosData(sIdx,iIdx)
+      });
+    });
+  });
+  return rows;
+}
+function ensureActionPlanStateShape(){if(!actionPlanState||typeof actionPlanState!=="object"||Array.isArray(actionPlanState))actionPlanState={};}
+function getActionPlanRecord(item){
+  ensureActionPlanStateShape();
+  const existing=actionPlanState[item.key]||{};
+  const evidencePhotos=Array.isArray(existing.evidencePhotos)?existing.evidencePhotos:[];
+  const normalized={
+    correctiveAction:String(existing.correctiveAction??existing.corrective_action??"").trim(),
+    department:String(existing.department??"").trim(),
+    person:String(existing.person??"").trim(),
+    date:String(existing.date??"").trim(),
+    progress:ACTION_PROGRESS_OPTIONS.includes(existing.progress)?existing.progress:"",
+    evidencePhotos:evidencePhotos
+      .filter(p=>p&&p.src)
+      .map(p=>({src:String(p.src),rot:parseInt(p.rot||0,10)||0}))
+  };
+  actionPlanState[item.key]=normalized;
+  return normalized;
+}
+window.__fsrGetActionPlanData=()=>actionPlanState;
+window.__fsrSetActionPlanField=(key,field,value)=>{
+  ensureActionPlanStateShape();
+  const row=actionPlanState[key]||{};
+  row[field]=String(value??"");
+  actionPlanState[key]=row;
+  scheduleSilentAutosave();
+};
+window.__fsrSetActionPlanPhotos=(key,photos)=>{
+  ensureActionPlanStateShape();
+  const row=actionPlanState[key]||{};
+  row.evidencePhotos=(Array.isArray(photos)?photos:[])
+    .filter(p=>p&&p.src)
+    .map(p=>({src:String(p.src),rot:parseInt(p.rot||0,10)||0}));
+  actionPlanState[key]=row;
+  scheduleSilentAutosave();
+};
 
 let photoCtr=0;
 let itemPhotoTarget=null;
@@ -1176,13 +1323,14 @@ function applySettingsToForm(){
   if(!gv("hotelName"))sv("hotelName",s.propertyName||"");
 }
 function getFilenameBase(){
-  const outlet=(gv("locationOutlet")||gv("hotelName")||"Inspection").replace(/[\/:*?"<>|]+/g,"-").trim();
-  const dt=document.getElementById("inspectionDateTime").value;
-  let ds="";
-  if(dt){try{const d=new Date(dt);if(!isNaN(d.getTime()))ds=`-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}`;}catch(e){}}
+  const outlet=(gv("locationOutlet")||gv("hotelName")||"Inspection").replace(/[\/:*?"<>|]+/g,"-").trim()||"Inspection";
+  const now=new Date();
+  const ds=`-${now.getFullYear()}${String(now.getMonth()+1).padStart(2,"0")}${String(now.getDate()).padStart(2,"0")}`;
   return`${outlet}${ds}`;
 }
 function getFilename(){return`${getFilenameBase()}-FoodSafetyReport.pdf`;}
+function getActionPlanFilename(){return`${getFilenameBase()}-ActionPlan.html`;}
+
 function formatNowForFileName(d=new Date()){
   const yyyy=d.getFullYear(),mm=String(d.getMonth()+1).padStart(2,"0"),dd=String(d.getDate()).padStart(2,"0");
   const hh=String(d.getHours()).padStart(2,"0"),mi=String(d.getMinutes()).padStart(2,"0"),ss=String(d.getSeconds()).padStart(2,"0");
@@ -1537,6 +1685,1136 @@ function rotP(btn,d){const c=btn.closest(".photo-card");c.dataset.rot=parseInt(c
 function deletePhotoCard(btn){const c=btn.closest(".photo-card");if(c)c.remove();renumber();updatePills();scheduleSilentAutosave();}
 function renumber(){document.querySelectorAll(".photo-card").forEach((c,i)=>{c.dataset.n=i+1;c.querySelector(".photo-num").textContent=`Photo ${i+1}`;});photoCtr=document.querySelectorAll(".photo-card").length;}
 
+function scrollToFirstActionPlanError(errors){
+  const firstInfoId=(errors&&errors.info&&errors.info[0]&&errors.info[0].id)||null;
+  if(firstInfoId){
+    const el=document.getElementById(firstInfoId);
+    if(el){
+      el.scrollIntoView({behavior:"smooth",block:"center"});
+      try{el.focus({preventScroll:true});}catch(err){}
+      return;
+    }
+  }
+  if(errors&&errors.items&&errors.items.length){
+    const first=errors.items[0];
+    const row=document.querySelector(`input[name="r_${first.sIdx}_${first.iIdx}"]`)?.closest(".check-row");
+    if(row) row.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+}
+
+function validateActionPlanSource(){
+  const base=validateReport();
+  const infoMap={
+    "Hotel / Property Name":"hotelName",
+    "Location / Outlet":"locationOutlet",
+    "Inspection Date & Time":"inspectionDateTime",
+    "Person on Duty":"personOnDuty",
+    "Department":"departmentName",
+    "Inspection Done By":"auditorName"
+  };
+  base.infoDetailed=(base.info||[]).map(label=>({label,id:infoMap[label]||null}));
+  return base;
+}
+
+function generateActionPlan(){
+  closePanel();
+  const sourceErrors=validateActionPlanSource();
+  if((sourceErrors.info&&sourceErrors.info.length)||(sourceErrors.items&&sourceErrors.items.length)){
+    showValidationModal(sourceErrors);
+    scrollToFirstActionPlanError({
+      info:sourceErrors.infoDetailed||[],
+      items:sourceErrors.items||[]
+    });
+    return;
+  }
+
+  const rows=getActionPlanItems();
+  if(!rows.length){
+    alert("No matching items found. Action plan exports only checklist items rated as Partially Achieved or Did Not Achieve.");
+    return;
+  }
+  const partialCount=rows.filter(r=>r.statusValue==='partial').length;
+  const failedCount=rows.filter(r=>r.statusValue==='not_achieved').length;
+
+  setProgressTitle("Exporting action plan HTML","");
+  setProgress(8,"Collecting action plan items…");
+  const info={
+    hotelName:gv("hotelName")||"—",
+    locationOutlet:gv("locationOutlet")||"—",
+    inspectionDateTime:document.getElementById("inspectionDateTime")?.value||"",
+    personOnDuty:gv("personOnDuty")||"—",
+    departmentName:gv("departmentName")||"—",
+    auditorName:gv("auditorName")||"—"
+  };
+  const inspectionDisplay=info.inspectionDateTime ? safeFormatDateTime(info.inspectionDateTime) : "—";
+
+  const progressChoiceOptions=['completed','partially completed','not started'];
+  const totalActionPlanPages=rows.length+1;
+  const generalObservationValue=gv("generalObservation")||"—";
+  const generalCorrectiveActionValue=gv("correctiveAction")||"—";
+
+  const introPage=`
+      <section class="ap-page ap-page-intro" data-page="1">
+        <div class="ap-header ap-header-compact">
+          <div class="ap-header-main">
+            <div class="ap-kicker">Private &amp; Confidential</div>
+            <h1>Food Safety Action Plan</h1>
+            <div class="ap-subtitle">Corrective action follow-up aligned to the inspection report format</div>
+          </div>
+        </div>
+        <div class="ap-summary-table-wrap">
+          <div class="ap-info-grid">
+            <div class="ap-info-cell"><div class="ap-info-label">Hotel / Property</div><div class="ap-info-value">${esc(info.hotelName)}</div></div>
+            <div class="ap-info-cell"><div class="ap-info-label">Location / Outlet</div><div class="ap-info-value">${esc(info.locationOutlet)}</div></div>
+            <div class="ap-info-cell"><div class="ap-info-label">Inspection Date</div><div class="ap-info-value">${esc(inspectionDisplay)}</div></div>
+            <div class="ap-info-cell"><div class="ap-info-label">Person on Duty</div><div class="ap-info-value">${esc(info.personOnDuty)}</div></div>
+            <div class="ap-info-cell"><div class="ap-info-label">Department</div><div class="ap-info-value">${esc(info.departmentName)}</div></div>
+            <div class="ap-info-cell"><div class="ap-info-label">Inspection Done By</div><div class="ap-info-value">${esc(info.auditorName)}</div></div>
+          </div>
+        </div>
+        <div class="ap-item-panel ap-general-notes-panel">
+          <div class="ap-item-head ap-item-head-table">
+            <div class="ap-item-head-grid ap-item-head-grid-kv ap-item-head-grid-full">
+              <div class="ap-head-cell ap-kv-cell ap-kv-wide ap-kv-wide-full">
+                <div class="ap-kv-label">Action Plan Summary</div>
+                <div class="ap-kv-value">${rows.length} item(s) requiring corrective action · ${partialCount} partially achieved · ${failedCount} did not achieve</div>
+              </div>
+            </div>
+          </div>
+          <div class="ap-item-grid ap-item-grid-stacked">
+            <div class="ap-readonly-block ap-span-3">
+              <label>General Observation</label>
+              <div class="ro-value ro-value-comment ro-value-notes">${esc(generalObservationValue)}</div>
+            </div>
+            <div class="ap-readonly-block ap-span-3">
+              <label>General Notes / Corrective Action</label>
+              <div class="ro-value ro-value-comment ro-value-notes">${esc(generalCorrectiveActionValue)}</div>
+            </div>
+            <div class="ap-readonly-block ap-span-3">
+              <label>Notes &amp; Guidance</label>
+              <div class="ro-value ro-value-comment ro-value-notes">${(REPORT_NOTES&&REPORT_NOTES.length)?REPORT_NOTES.map(n=>esc(n)).join('<br>• ').replace(/^/,'• '):'—'}</div>
+            </div>
+          </div>
+        </div>
+        <div class="ap-footer"></div>
+        <div class="ap-page-meta-footer"><span class="ap-page-confidential">Private &amp; Confidential</span><span class="ap-page-number">Page 1 of ${totalActionPlanPages}</span></div>
+      </section>`;
+
+  const actionCards=rows.map((row,idx)=>{
+    const existingSaved=getActionPlanRecord(row);
+    const saved=Object.assign({
+      correctiveAction:"",
+      department:"",
+      person:"",
+      date:"",
+      progress:"",
+      evidencePhotos:[]
+    }, existingSaved||{});
+    const inspectorComment=(row.comment||row.inspectorComment||"").trim()||"—";
+    const evidencePhotos=(saved.evidencePhotos||[]).filter(p=>p&&p.src).map((ph,pIdx)=>`
+      <div class="ap-shot-card ap-shot-card-evidence">
+        <div class="ap-shot-head">
+          <span>Evidence ${pIdx+1}</span>
+          <div class="ap-shot-tools">
+            <button type="button" class="photo-toolbar-btn photo-rotate-btn" title="Rotate Left" onclick="rotateEvidencePhoto(this,-90)">
+              <span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 12A9 9 0 1 0 6 5"/><path d="M3 5V10H8"/></svg></span>
+            </button>
+            <button type="button" class="photo-toolbar-btn photo-rotate-btn" title="Rotate Right" onclick="rotateEvidencePhoto(this,90)">
+              <span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12A9 9 0 1 1 18 5"/><path d="M21 5V10H16"/></svg></span>
+            </button>
+            <button type="button" class="photo-toolbar-btn photo-remove-btn" title="Remove Photo" onclick="removeEvidencePhoto(this)">
+              <span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg></span>
+              <span class="photo-btn-text">Del</span>
+            </button>
+          </div>
+        </div>
+        <div class="ap-shot-frame">
+          <img class="ap-evidence-img" src="${ph.src}" alt="Evidence photo ${pIdx+1}" data-rot="${parseInt(ph.rot||0,10)||0}" style="transform:rotate(${parseInt(ph.rot||0,10)||0}deg)" onclick="openApLightbox(this.src,this.dataset.rot)">
+        </div>
+      </div>
+    `).join("");
+
+    return `
+      <section class="ap-page" data-page="${idx+2}" data-key="${esc(row.key)}">
+        <div class="ap-mini-top ap-mini-top-compact">
+          <div class="ap-mini-title">Food Safety Action Plan</div>
+        </div>
+
+        <div class="ap-item-panel">
+          <div class="ap-item-head ap-item-head-table">
+            <div class="ap-item-head-grid ap-item-head-grid-kv">
+              <div class="ap-head-cell ap-kv-cell ap-kv-wide">
+                <div class="ap-kv-label">Inspection Group</div>
+                <div class="ap-kv-value">${esc(row.section)}</div>
+              </div>
+              <div class="ap-head-cell ap-kv-cell ap-kv-narrow">
+                <div class="ap-kv-label">Item No.</div>
+                <div class="ap-kv-value ap-item-no">${idx+1}</div>
+              </div>
+              <div class="ap-head-cell ap-kv-cell ap-kv-rating">
+                <div class="ap-kv-label">Rating</div>
+                <div class="ap-kv-value"><span class="ap-rating ${row.statusValue==='partial'?'is-partial':'is-failed'}">${esc(row.rating)}</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ap-item-grid ap-item-grid-stacked">
+            <div class="ap-readonly-block ap-span-3">
+              <label>Inspection Item</label>
+              <div class="ro-value ro-value-item">${esc(row.item)}</div>
+            </div>
+            <div class="ap-readonly-block ap-span-3">
+              <label>Inspector Comment</label>
+              <div class="ro-value ro-value-comment">${esc(inspectorComment)}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-plan-grid">
+          <div class="ap-edit-block ap-plan-main">
+            <label>Corrective Action</label>
+            <textarea class="ap-field ap-textarea" data-key="${esc(row.key)}" data-field="correctiveAction" placeholder=""></textarea>
+          </div>
+
+          <div class="ap-meta-row">
+            <div class="ap-edit-block">
+              <label>Department</label>
+              <input class="ap-field" type="text" data-key="${esc(row.key)}" data-field="department" value="" placeholder="">
+            </div>
+            <div class="ap-edit-block">
+              <label>Responsible Person</label>
+              <input class="ap-field" type="text" data-key="${esc(row.key)}" data-field="person" value="" placeholder="">
+            </div>
+            <div class="ap-edit-block">
+              <label>Completion Date</label>
+              <input class="ap-field" type="date" data-key="${esc(row.key)}" data-field="date" value="">
+            </div>
+            <div class="ap-edit-block">
+              <label>Progress</label>
+              <select class="ap-field ap-progress-select" data-key="${esc(row.key)}" data-field="progress">${[''].concat(progressChoiceOptions.filter(Boolean)).map(opt=>{ const label=opt ? opt.charAt(0).toUpperCase()+opt.slice(1) : 'Select progress'; return `<option value="${esc(opt)}" ${opt===''?'selected':''}>${esc(label)}</option>`; }).join('')}</select>
+            </div>
+          </div>
+
+
+          <div class="ap-photo-row">
+            <div class="ap-photo-stack ap-photo-stack-reportlike">
+              <div class="ap-edit-block ap-evidence-photo-block ap-photo-card ap-photo-card-reportlike" data-key="${esc(row.key)}">
+                <div class="ap-photo-card-head ap-photo-card-head-with-action">
+                  <div class="ap-photo-card-title">Evidence Photos</div>
+                  <label class="photo-toolbar-btn photo-add-btn photo-add-inline" title="Add Evidence Photo">
+                    <span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4.75 7.5H7.4L9.05 5.75H14.95L16.6 7.5H19.25C20.22 7.5 21 8.28 21 9.25V18.25C21 19.22 20.22 20 19.25 20H4.75C3.78 20 3 19.22 3 18.25V9.25C3 8.28 3.78 7.5 4.75 7.5Z"/><circle cx="12" cy="13.2" r="3.1"/><path d="M18 10.35V14.05M16.15 12.2H19.85"/></svg></span>
+                    <span class="photo-btn-text">Add Photo</span>
+                    <input class="ap-photo-input" type="file" multiple accept="image/*,.png,.jpg,.jpeg,.gif,.bmp,.webp,.svg,.heic,.heif,.tif,.tiff" data-key="${esc(row.key)}">
+                  </label>
+                </div>
+                <div class="ap-photo-stage ap-photo-stage-reportlike">
+                  <div class="photo-placeholder ap-photo-placeholder ${evidencePhotos ? 'hidden' : ''}">No evidence photo attached yet. Use Add Photo for this item.</div>
+                  <div class="ap-photo-grid ap-photo-grid-reportlike ap-evidence-grid ap-evidence-grid-four">
+                    ${evidencePhotos}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ap-footer"></div>
+        <div class="ap-page-meta-footer"><span class="ap-page-confidential">Private &amp; Confidential</span><span class="ap-page-number">Page ${idx+2} of ${totalActionPlanPages}</span></div>
+      </section>`;
+  }).join("");
+
+  const html=`<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(getFilenameBase()||'Food Safety Action Plan')}</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>
+<style>
+:root{
+  --navy:#0f4c81;--navy2:#0b3356;--teal:#1295a8;--teal2:#0ea5a4;
+  --line:#d9e3ee;--line2:#c2d2e2;--paper:#ffffff;--bg:#eef3f8;
+  --text:#162130;--muted:#667085;--soft:#f6f9fc;
+  --warnBg:#fff1c7;--warnText:#8a5b00;--badBg:#fee4e2;--badText:#b42318;
+  --shadow:0 18px 48px rgba(15,23,42,.10)
+}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",Arial,sans-serif}
+body{padding:12px}
+.preview-shell{max-width:210mm;margin:0 auto}
+.pdf-clone-shell{width:210mm;height:297mm;display:flex;align-items:flex-start;justify-content:center;margin:0 auto;background:#fff;overflow:hidden}
+.preview-toolbar{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin:0 0 12px;position:sticky;top:10px;z-index:5}
+.toolbtn{border:none;border-radius:12px;padding:11px 16px;font-size:13px;font-weight:800;cursor:pointer;transition:.15s}
+.toolbtn.primary{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff}
+.toolbtn.soft{background:#fff;color:var(--navy2);border:1px solid var(--line2)}
+.toolbtn:hover{transform:translateY(-1px)}
+.ap-page{
+  width:210mm;
+  min-height:297mm;
+  height:297mm;
+  margin:0 auto 14px;
+  background:var(--paper);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  page-break-after:always;
+  break-after:page;
+  padding:0 0 8mm;
+  display:flex;
+  flex-direction:column;
+}
+.ap-page:last-child{page-break-after:auto;break-after:auto}
+.ap-header{
+  padding:11mm 12mm 9mm;
+  background:linear-gradient(135deg,var(--navy2) 0%,var(--navy) 48%,var(--teal) 100%);
+  color:#fff; position:relative; overflow:hidden;
+  display:flex;justify-content:flex-start;align-items:center;gap:8mm
+}
+.ap-header:before{
+  content:""; position:absolute; right:-26mm; top:-22mm; width:90mm; height:56mm; border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.18),transparent 70%);
+}
+.ap-header-main,.ap-header-meta{position:relative;z-index:1}
+.ap-header-main{max-width:146mm;text-align:left}
+.ap-kicker{font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;opacity:.95;margin-bottom:2mm}
+.ap-header h1{margin:0 0 1.4mm;font-size:26px;line-height:1.08;font-weight:900;text-align:left}
+.ap-subtitle{font-size:11.5px;line-height:1.45;max-width:156mm;font-weight:600;opacity:.98;text-align:left}
+.ap-header-meta{font-size:10px;line-height:1.8;font-weight:700;text-align:right;white-space:nowrap}
+.ap-header-meta strong{font-weight:900}
+.ap-confidential{
+  text-align:right;padding:3mm 14mm 0;font-size:9px;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase
+}
+.ap-mini-top{
+  display:flex;justify-content:space-between;align-items:center;gap:8mm;
+  padding:3mm 12mm 0;color:#123d64
+}
+.ap-mini-title{font-size:16px;font-weight:900}
+.ap-mini-meta{font-size:10px;font-weight:800;color:var(--muted)}
+:root{--ap-content-max-width:200mm}
+.ap-summary-table-wrap,.ap-attention-table-wrap{margin:3mm auto 0;width:calc(100% - 10mm);max-width:var(--ap-content-max-width);box-sizing:border-box}
+.ap-info-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:.7px solid var(--line2);border-radius:5mm;overflow:hidden;background:#fff}
+.ap-info-cell{min-width:0;padding:2.6mm 3.2mm;border-right:.7px solid var(--line2);border-bottom:.7px solid var(--line2);background:#fff}
+.ap-info-cell:nth-child(3n){border-right:none}
+.ap-info-cell:nth-last-child(-n+3){border-bottom:none}
+.ap-info-label{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;line-height:1.15;margin-bottom:1.4mm;white-space:nowrap}
+.ap-info-value{font-size:13px;font-weight:400;color:var(--text);line-height:1.4;word-break:break-word;min-height:8mm}
+.ap-attention-table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;background:#fff;border:.7px solid var(--line2);border-radius:5mm;overflow:hidden}
+.ap-attention-table th,.ap-attention-table td{border-right:.7px solid var(--line2);border-bottom:.7px solid var(--line2);padding:2.6mm 3mm;font-size:13px;line-height:1.32;vertical-align:top;word-break:normal;overflow-wrap:normal}
+.ap-attention-table tr:last-child th,.ap-attention-table tr:last-child td{border-bottom:none}
+.ap-attention-table th:last-child,.ap-attention-table td:last-child{border-right:none}
+.ap-attention-table th{font-weight:900;text-transform:uppercase;letter-spacing:.04em;text-align:left;width:32%}
+.ap-attention-table td{font-weight:900;text-align:center;font-size:12px}
+.ap-attention-table .bad{background:#fff4f4;color:#991b1b}
+.ap-attention-table .warn{background:#fff7e8;color:#9a3412}
+.ap-mini-top-compact .ap-mini-title{font-size:12px}
+
+.ap-general-notes-panel{margin-top:3mm}
+.ap-item-head-grid-full{grid-template-columns:1fr}
+.ap-kv-wide-full{grid-column:1/-1}
+.ro-value-notes{min-height:26mm;white-space:pre-wrap}
+.ap-item-panel,.ap-plan-grid,.ap-footer{
+  margin:2.4mm auto 0;
+  width:calc(100% - 10mm);
+  max-width:var(--ap-content-max-width);
+  box-sizing:border-box
+}
+.ap-item-panel-first{margin-top:1.6mm}
+.ap-item-panel{
+  border:1px solid var(--line);border-radius:5mm;overflow:hidden;background:#fff
+}
+.ap-item-head{
+  display:flex;justify-content:space-between;align-items:center;gap:3mm;
+  padding:0;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#f8fbff,#eef5fb)
+}
+.ap-item-head-table{display:block}
+.ap-item-head-grid{display:grid;grid-template-columns:minmax(0,1fr) 22mm 36mm;align-items:stretch}
+.ap-item-head-grid-kv{background:#fff}
+.ap-head-cell{padding:2.6mm 3.2mm;border-right:.7px solid var(--line2);font-size:13px;line-height:1.32;background:#fff}
+.ap-head-cell:last-child{border-right:none}
+.ap-kv-cell{display:flex;flex-direction:column;justify-content:flex-start;gap:1.4mm}
+.ap-kv-label{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;line-height:1.15;white-space:nowrap}
+.ap-kv-value{font-size:13px;font-weight:400;color:var(--text);line-height:1.35;word-break:break-word;min-height:7mm;display:flex;align-items:flex-start}
+.ap-kv-narrow .ap-kv-value{justify-content:center}.ap-kv-rating .ap-kv-value{justify-content:flex-start;text-align:left}
+.ap-item-no{text-align:center;justify-content:center}.ap-kv-rating{text-align:left}
+.ap-rating{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:1.2mm 2.4mm;font-size:8px;font-weight:900}
+.ap-rating.is-partial{background:var(--warnBg);color:var(--warnText)}
+.ap-rating.is-failed{background:var(--badBg);color:var(--badText)}
+.ap-item-grid{
+  display:grid;
+  grid-template-columns:24mm 1fr 1fr;
+  gap:1.4mm;
+  padding:1.8mm 2.2mm
+}
+.ap-item-grid-stacked{grid-template-columns:1fr}
+.ap-span-2{grid-column:span 2}
+.ap-span-3{grid-column:1 / -1}
+.ap-readonly-block label,.ap-edit-block label{
+  display:block;margin-bottom:1.2mm;font-size:13px;font-weight:800;color:#334155;line-height:1.2;text-transform:uppercase;letter-spacing:.02em;white-space:nowrap;overflow-wrap:normal;word-break:normal
+}
+.ro-value{
+  border:.7px solid var(--line);
+  border-radius:2.6mm;
+  background:var(--soft);
+  min-height:8mm;
+  padding:2.2mm 2.6mm;
+  font-size:13px;
+  line-height:1.38;
+  font-weight:400;
+  white-space:pre-wrap;
+  word-break:break-word
+}
+.ro-value-item{min-height:10mm}
+.ro-value-comment{min-height:8mm}
+.ro-value.compact{min-height:9mm}
+.ro-value.tall{min-height:12mm;font-weight:700;color:#334155}
+.ap-plan-grid{display:grid;grid-template-columns:1fr;gap:1.8mm;align-items:start}
+.ap-edit-block{
+  border:.7px solid var(--line);
+  border-radius:3.4mm;
+  background:#fff;
+  padding:2.2mm 2.4mm
+}
+.ap-field{
+  width:100%;border:.7px solid var(--line2);border-radius:2.6mm;padding:2.2mm 2.6mm;background:#fff;color:#111827;
+  font-family:"Segoe UI",Arial,sans-serif;font-size:13px;font-weight:400;line-height:1.35;min-height:12mm;outline:none
+}
+.ap-field:focus{border-color:#7ea8cd;box-shadow:0 0 0 1.2mm rgba(15,76,129,.10)}
+.ap-field.ap-missing{border-color:#ef4444 !important;box-shadow:0 0 0 1.2mm rgba(239,68,68,.14) !important;background:#fff1f2 !important}
+.ap-textarea{min-height:22mm;resize:vertical;line-height:1.4}
+.ap-meta-row{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2.2mm;align-items:start
+}
+.ap-plan-status-note{display:none !important}
+.ap-progress-select{transition:background-color .2s ease,color .2s ease,border-color .2s ease}
+.ap-progress-select.progress-completed{background:#dcfce7;color:#166534;border-color:#86efac}
+.ap-progress-select.progress-partial{background:#ffedd5;color:#9a3412;border-color:#fdba74}
+.ap-progress-select.progress-not-started{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.ap-photo-row{
+  display:grid;grid-template-columns:1fr;gap:4mm;align-items:start
+}
+.ap-photo-stack{display:grid;grid-template-columns:1fr;gap:4mm}
+.ap-original-photo-block,.ap-evidence-photo-block{width:100%}
+
+.ap-photo-card{position:relative}
+.photo-btn-icon{
+  width:14px;height:14px;display:flex;align-items:center;justify-content:center;
+  line-height:1;flex:none;margin:0;padding:0;
+}
+.photo-btn-icon svg{
+  width:14px;height:14px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;overflow:visible;flex:none;
+}
+.photo-btn-text{display:inline-block}
+.hidden{display:none !important}
+.ap-photo-input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.ap-photo-stage{
+  width:100%;
+  min-height:28mm;
+  border:1px solid var(--line2);
+  border-radius:3mm;
+  background:#ffffff;
+  padding:1.8mm;
+  position:relative
+}
+.ap-photo-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  align-items:start;
+  justify-content:stretch
+}
+.ap-photo-grid-reportlike{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.ap-evidence-grid{min-height:22mm}
+.ap-photo-card-reportlike{padding:0;border:1px solid var(--line2);overflow:hidden}
+.ap-photo-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:3mm;
+  padding:2.2mm 2.6mm;
+  background:linear-gradient(180deg,#edf5fd,#e5f0fa);
+  border-bottom:1px solid var(--line2)
+}
+.ap-photo-card-head-with-action{flex-wrap:wrap}
+ .ap-photo-card-title{
+  font-size:13px;
+  font-weight:800;
+  color:var(--navy);
+  text-transform:none;
+  letter-spacing:.02em
+}
+.ap-photo-stage-reportlike{min-height:0;padding:1.5mm;background:#fff}
+.ap-shot-card{
+  border:1px solid var(--line2);
+  border-radius:3mm;
+  overflow:hidden;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  box-shadow:0 2px 8px rgba(15,23,42,.04)
+}
+.ap-shot-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1mm;
+  padding:4px 6px;
+  background:#f8fbff;
+  border-bottom:.7px solid var(--line2);
+  font-size:8px;
+  font-weight:800;
+  color:var(--navy)
+}
+.ap-shot-tools{display:flex;gap:1.2mm;align-items:center;flex-wrap:wrap}
+.ap-shot-frame{
+  width:100%;
+  height:225px;
+  overflow:hidden;
+  background:#111827;
+  display:flex;
+  align-items:center;
+  justify-content:center
+}
+.ap-shot-frame img,.ap-evidence-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+  transform-origin:center center;
+  cursor:zoom-in
+}
+.photo-toolbar{
+  display:flex;
+  gap:2mm;
+  align-items:center;
+  justify-content:flex-start;
+  padding:2.4mm 2.6mm;
+  background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(243,247,251,.98));
+  border-top:1px solid var(--line2)
+}
+.photo-toolbar-inline{
+  position:static;
+  margin-top:6px;
+  border:.7px solid var(--line2);
+  border-radius:3mm;
+  background:#f8fbff
+}
+.photo-toolbar-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:.6mm;
+  min-height:5mm;
+  height:5mm;
+  padding:0 1.2mm;
+  margin:0;
+  border-radius:2.4mm;
+  border:.7px solid #d6e1ec;
+  background:#ffffff;
+  color:#000000;
+  font-size:7.8px;
+  font-weight:800;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+  cursor:pointer;
+  transition:.18s;
+  flex:none;
+  text-align:center;
+  vertical-align:middle;
+}
+.photo-toolbar-btn > *{margin:0 auto}
+.photo-add-btn{
+  background:linear-gradient(135deg,#0b3d67,#0f4c81) !important;
+  border-color:#0b3d67 !important;
+  color:#ffffff !important;
+}
+.photo-rotate-btn{background:#ffffff;border-color:#d6e1ec;color:#111827}
+.photo-remove-btn{background:#dc2626;border-color:#dc2626;color:#ffffff;min-width:11mm}
+.photo-toolbar-btn:hover{transform:translateY(-1px);filter:none}
+.photo-add-btn:hover{background:linear-gradient(135deg,#0a3459,#0d446f) !important}
+.photo-rotate-btn:hover{background:#f8fafc}
+.photo-remove-btn:hover{background:#b91c1c}
+.photo-remove-btn[disabled],.photo-rotate-btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.photo-add-wide{
+  width:100%;
+  min-width:0;
+  justify-content:center;
+  padding-left:4mm;
+  padding-right:4mm;
+  min-height:10mm;
+  height:10mm;
+  border-style:dashed;
+  border-width:1.2px;
+}
+.photo-add-inline{
+  min-height:10mm;
+  height:10mm;
+  padding:0 2.4mm;
+  border-style:solid;
+  border-width:1px;
+  width:auto;
+}
+.ap-photo-stack-reportlike{display:grid;gap:3.4mm}
+.ap-evidence-photo-block .ap-photo-stage{
+  background:linear-gradient(180deg,#fbfdff,#f4f8fb)
+}
+.ap-original-photo-block .ap-photo-stage{
+  background:#ffffff
+}
+.photo-placeholder{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;text-align:center;padding:3mm;color:#6b7280;
+  font-size:11px;font-weight:700;line-height:1.4;background:repeating-conic-gradient(#f9fbfd 0% 25%,#f3f7fb 0% 50%) 0 0/16px 16px
+}
+.ap-photo-placeholder{
+  min-height:14mm;
+  margin-bottom:1.4mm;
+}
+
+.ap-header-compact:before{right:-30mm;top:-26mm;width:84mm;height:46mm}
+.ap-footer-note{font-size:7.6px;line-height:1.2}
+.ap-page-meta-footer{margin-top:auto;padding:1.4mm 12mm 0;display:flex;justify-content:space-between;align-items:center;font-size:7.8px;color:var(--muted);font-weight:800}
+.ap-page-confidential{text-transform:uppercase;letter-spacing:.05em}
+@media print{
+  body{padding:0;background:#fff}
+  .preview-toolbar{display:none !important}
+  .ap-page{margin:0;box-shadow:none;border:none}
+}
+.pdf-exporting .ap-page{
+  box-shadow:none !important;
+  border:none !important;
+  margin:0 !important;
+}
+.pdf-exporting .photo-toolbar-inline{display:none !important}
+.pdf-exporting .photo-toolbar-btn,.pdf-exporting .ap-photo-input{display:none !important}
+.pdf-exporting .ap-footer{display:none !important}
+.ap-footer{display:grid;gap:.8mm;padding-bottom:3mm}
+.ap-footer-note{font-size:8px;color:var(--muted);line-height:1.35}
+.ap-page-meta-footer{position:absolute;left:12mm;right:12mm;bottom:4mm;padding-top:1.6mm;border-top:.7px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:6mm;font-size:8px;font-weight:800;color:var(--muted);background:#fff}
+.ap-page-confidential{text-transform:uppercase;letter-spacing:.08em;text-align:left}
+.ap-page-number{text-align:right;margin-left:auto}
+
+.ap-lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:20000;align-items:center;justify-content:center;padding:16px}
+.ap-lightbox.open{display:flex}
+.ap-lightbox-inner{position:relative;max-width:94vw;max-height:94vh;display:flex;align-items:center;justify-content:center}
+.ap-lightbox-img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:10px;box-shadow:0 10px 50px rgba(0,0,0,.6)}
+.ap-lightbox-close{position:fixed;top:16px;right:18px;width:40px;height:40px;border:none;border-radius:50%;background:rgba(255,255,255,.18);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ap-lightbox-close:hover{background:rgba(255,255,255,.28)}
+
+.pdf-exporting .ap-photo-grid,.pdf-exporting .ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:6px !important;justify-content:stretch !important}
+.pdf-exporting .ap-shot-frame{width:200px !important;height:150px !important;max-width:100% !important;margin:0 auto !important}
+@media print{
+  .ap-photo-grid,.ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr)) !important;gap:6px !important;justify-content:stretch !important}
+  .ap-shot-frame{width:200px !important;height:150px !important;max-width:100% !important;margin:0 auto !important}
+  .photo-toolbar-btn,.ap-photo-input{display:none !important}
+}
+.validation-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.50);display:none;align-items:center;justify-content:center;z-index:9999;padding:16px
+}
+.validation-card{
+  width:min(640px,94vw);max-height:82vh;overflow:auto;background:#fff;border-radius:16px;border:1px solid var(--line);
+  box-shadow:0 24px 70px rgba(15,23,42,.25);padding:18px
+}
+.validation-card h3{margin:0 0 8px;font-size:18px;color:#b42318}
+.validation-card p{margin:0 0 12px;font-size:13px;color:#475467;line-height:1.5}
+.validation-list{display:grid;gap:8px;margin:0 0 16px}
+.validation-item{
+  border:1px solid #fecaca;background:#fff7f7;border-radius:12px;padding:10px 12px
+}
+.validation-item strong{display:block;font-size:13px;color:#991b1b;margin-bottom:4px}
+.validation-item span{display:block;font-size:12px;color:#7f1d1d;line-height:1.45}
+.validation-actions{display:flex;justify-content:flex-end}
+.validation-actions button{
+  border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:800;background:#0f4c81;color:#fff;cursor:pointer
+}
+.progress-overlay{
+  position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;align-items:center;justify-content:center;z-index:10000;padding:16px
+}
+.progress-card{
+  width:min(420px,94vw);background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:0 24px 70px rgba(15,23,42,.25);padding:18px
+}
+.progress-card h3{margin:0 0 8px;font-size:18px;color:#0f4c81}
+.progress-card p{margin:0 0 12px;font-size:13px;color:#475467}
+.progress-bar{height:10px;border-radius:999px;background:#e9eff6;overflow:hidden}
+.progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--navy2),var(--navy),var(--teal));transition:width .25s ease}
+.progress-meta{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:12px;font-weight:800;color:#475467}
+
+
+.ap-page:first-child .ap-header{padding-bottom:8mm}
+.ap-page:first-child .ap-top-grid{padding-top:2mm}
+.ap-page:first-child .ap-attention-summary{padding-top:2mm}
+.ap-page:first-child .ap-item-panel-first{margin-top:2mm}
+.ap-page:first-child .ap-photo-stage-reportlike{min-height:30mm}
+
+@media print{
+  .ap-photo-grid,.ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
+}
+.pdf-exporting .ap-photo-grid,.pdf-exporting .ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr)) !important}
+
+@page{size:A4 portrait;margin:0}
+@media print{
+  html,body{background:#fff}
+  body{padding:0}
+  .preview-toolbar,.validation-overlay,.photo-action-stack{display:none !important}
+  .preview-shell{max-width:none}
+  .ap-page{margin:0;box-shadow:none;border:none}
+}
+@media (max-width:900px){
+  body{padding:8px}
+  .preview-shell{max-width:100%}
+  .ap-page{width:100%;min-height:auto}
+  .ap-header{padding:18px 16px 14px;gap:14px}
+  .ap-top-grid{grid-template-columns:1fr 1fr;padding:8px 16px 0}
+  .ap-attention-summary{grid-template-columns:1fr 1fr;padding:8px 16px 0}
+  .ap-item-panel,.ap-plan-grid,.ap-footer{margin:10px 16px 0}
+  .ap-meta-row{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:900px){
+  .ap-photo-grid,.ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .ap-header{display:block}
+  .ap-header-meta{text-align:left;white-space:normal;margin-top:8px}
+  .ap-top-grid{grid-template-columns:1fr}
+  .ap-attention-summary{grid-template-columns:1fr}
+  .ap-item-grid,.ap-meta-row,.ap-photo-row{grid-template-columns:1fr}
+  .ap-span-2,.ap-span-3{grid-column:auto}
+  .ap-photo-grid,.ap-photo-grid-reportlike{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+  .ap-shot-head{padding:3px 4px;font-size:7px}
+  .ap-shot-frame{height:95px}
+  .ap-photo-card-head{align-items:flex-start}
+}
+
+/* ===== ACTION PLAN: ADD PHOTO BUTTON FIX (CORRECT TARGET) ===== */
+.ap-page .btn-add-item-photo{
+  width:52px !important;
+  height:52px !important;
+  min-height:52px !important;
+  font-size:20px !important;
+}
+
+.ap-page .btn-add-item-photo-label{
+  font-size:8px !important;
+  font-weight:700 !important;
+  line-height:1.2;
+}
+
+@media (max-width:640px){
+  .ap-page .btn-add-item-photo{
+    width:48px !important;
+    height:48px !important;
+    min-height:48px !important;
+  }
+
+  .ap-page .btn-add-item-photo-label{
+    font-size:8px !important;
+    font-weight:700 !important;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="ap-lightbox" id="apLightbox" onclick="closeApLightbox(event)">
+  <div class="ap-lightbox-inner">
+    <img class="ap-lightbox-img" id="apLightboxImg" src="" alt="Evidence photo preview">
+  </div>
+  <button class="ap-lightbox-close" type="button" onclick="closeApLightbox()">✕</button>
+</div>
+<div class="preview-shell">
+  <div class="preview-toolbar">
+    <button class="toolbtn soft" onclick="window.close()">Close</button>
+    <button class="toolbtn primary" id="exportPdfBtn" onclick="exportActionPlanPdf()">Generate PDF</button>
+  </div>
+  <div id="actionPlanRoot">${introPage}${actionCards}</div>
+</div>
+
+<div class="validation-overlay" id="validationOverlay">
+  <div class="validation-card">
+    <h3>Missing required action plan fields</h3>
+    <p>Please complete Corrective Action, Department, Responsible Person, Completion Date, and Progress for every item before generating the PDF.</p>
+    <div class="validation-list" id="validationList"></div>
+    <div class="validation-actions">
+      <button type="button" onclick="closeValidationPrompt()">OK, I will complete it</button>
+    </div>
+  </div>
+</div>
+
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-card">
+    <h3>Generating Action Plan PDF</h3>
+    <p>Please wait while the pages are rendered in high quality.</p>
+    <div class="progress-bar"><div class="progress-bar-fill" id="progressBarFill"></div></div>
+    <div class="progress-meta"><span id="progressLabel">0%</span><span id="progressHint">Preparing pages</span></div>
+  </div>
+</div>
+
+<script>
+function openApLightbox(src,rot){
+  const lb=document.getElementById('apLightbox');
+  const img=document.getElementById('apLightboxImg');
+  if(!lb||!img||!src) return;
+  img.src=src;
+  img.style.transform='rotate('+(parseInt(rot||0,10)||0)+'deg)';
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeApLightbox(e){
+  const lb=document.getElementById('apLightbox');
+  if(!lb) return;
+  if(e&&e.target!==lb&&!String(e.target.className||'').includes('ap-lightbox-close')) return;
+  lb.classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeApLightbox(); });
+
+(function(){
+  function sync(el){
+    const key=el.getAttribute('data-key');
+    const field=el.getAttribute('data-field');
+    if(!key||!field||!window.opener||window.opener.closed||typeof window.opener.__fsrSetActionPlanField!=='function')return;
+    window.opener.__fsrSetActionPlanField(key,field,el.value||'');
+  }
+  function applyProgressStyle(sel){
+    if(!sel) return;
+    sel.classList.remove('progress-completed','progress-partial','progress-not-started');
+    const v=(sel.value||'').toLowerCase().trim();
+    if(v==='completed') sel.classList.add('progress-completed');
+    else if(v==='partially completed') sel.classList.add('progress-partial');
+    else if(v==='not started') sel.classList.add('progress-not-started');
+  }
+  function applyAllProgressStyles(){
+    document.querySelectorAll('.ap-progress-select').forEach(function(sel){ applyProgressStyle(sel); });
+  }
+  document.querySelectorAll('.ap-field').forEach(function(el){
+    el.addEventListener('input',function(){sync(el);if((el.value||'').trim()) el.classList.remove('ap-missing');});
+    el.addEventListener('change',function(){sync(el);if((el.value||'').trim()) el.classList.remove('ap-missing');});
+  });
+  document.querySelectorAll('.ap-progress-select').forEach(function(sel){
+    sel.addEventListener('change',function(){applyProgressStyle(sel);if((sel.value||'').trim()) sel.classList.remove('ap-missing');});
+  });
+  function getEvidencePhotos(wrap){
+    return Array.from(wrap.querySelectorAll('.ap-evidence-img')).map(function(img){
+      return {src:img.getAttribute('src')||'',rot:parseInt(img.dataset.rot||'0',10)||0};
+    }).filter(function(p){ return !!p.src; });
+  }
+  function syncEvidencePhotos(wrap){
+    if(!wrap||!window.opener||window.opener.closed||typeof window.opener.__fsrSetActionPlanPhotos!=='function') return;
+    const key=wrap.getAttribute('data-key')||'';
+    if(!key) return;
+    window.opener.__fsrSetActionPlanPhotos(key,getEvidencePhotos(wrap));
+  }
+  function renumberEvidenceCards(wrap){
+    if(!wrap) return;
+    Array.from(wrap.querySelectorAll('.ap-shot-card-evidence')).forEach(function(card,idx){
+      const label=card.querySelector('.ap-shot-head > span');
+      const img=card.querySelector('.ap-evidence-img');
+      if(label) label.textContent='Evidence Photo '+(idx+1);
+      if(img) img.setAttribute('alt','Evidence photo '+(idx+1));
+    });
+    const title=wrap.querySelector('.ap-photo-card-title');
+    const count=wrap.querySelectorAll('.ap-evidence-img').length;
+    if(title) title.textContent='Evidence Photo'+(count===1?'':'s');
+  }
+  function refreshEvidencePlaceholder(wrap){
+    if(!wrap) return;
+    const empty=wrap.querySelector('.ap-photo-placeholder');
+    const hasPhotos=wrap.querySelectorAll('.ap-evidence-img').length>0;
+    if(empty) empty.classList.toggle('hidden',hasPhotos);
+    renumberEvidenceCards(wrap);
+  }
+  window.syncEvidencePhotos=syncEvidencePhotos;
+  window.refreshEvidencePlaceholder=refreshEvidencePlaceholder;
+  function buildEvidenceCard(src,rot){
+    const safeSrc=String(src||'');
+    const safeRot=parseInt(rot||0,10)||0;
+    return ''+
+      '<div class="ap-shot-card ap-shot-card-evidence">'+
+        '<div class="ap-shot-head">'+
+          '<span>Evidence Photo</span>'+
+          '<div class="ap-shot-tools">'+
+            '<button type="button" class="photo-toolbar-btn photo-rotate-btn" title="Rotate Left" onclick="rotateEvidencePhoto(this,-90)">'+
+              '<span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 12A9 9 0 1 0 6 5"/><path d="M3 5V10H8"/></svg></span>'+
+            '</button>'+
+            '<button type="button" class="photo-toolbar-btn photo-rotate-btn" title="Rotate Right" onclick="rotateEvidencePhoto(this,90)">'+
+              '<span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 12A9 9 0 1 1 18 5"/><path d="M21 5V10H16"/></svg></span>'+
+            '</button>'+
+            '<button type="button" class="photo-toolbar-btn photo-remove-btn" title="Remove Photo" onclick="removeEvidencePhoto(this)">'+
+              '<span class="photo-btn-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6L18 18"/><path d="M18 6L6 18"/></svg></span>'+
+              '<span class="photo-btn-text">Del</span>'+
+            '</button>'+
+          '</div>'+
+        '</div>'+
+        '<div class="ap-shot-frame">'+
+          '<img class="ap-evidence-img" src="'+safeSrc+'" alt="Evidence photo" data-rot="'+safeRot+'" style="transform:rotate('+safeRot+'deg)" onclick="openApLightbox(this.src,this.dataset.rot)">'+
+        '</div>'+
+      '</div>';
+  }
+  document.querySelectorAll('.ap-photo-input').forEach(function(input){
+    input.addEventListener('change', function(){
+      const files=Array.from(this.files||[]);
+      const wrap=this.closest('.ap-evidence-photo-block');
+      if(!wrap)return;
+      const grid=wrap.querySelector('.ap-evidence-grid');
+      if(!files.length){
+        refreshEvidencePlaceholder(wrap);
+        return;
+      }
+      Promise.all(files.map(function(file){
+        return new Promise(function(resolve){
+          const reader=new FileReader();
+          reader.onload=function(e){ resolve({src:e.target.result,rot:0}); };
+          reader.onerror=function(){ resolve(null); };
+          reader.readAsDataURL(file);
+        });
+      })).then(function(items){
+        const valid=items.filter(Boolean);
+        if(!grid||!valid.length){ refreshEvidencePlaceholder(wrap); return; }
+        valid.forEach(function(photo){
+          grid.insertAdjacentHTML('beforeend', buildEvidenceCard(photo.src,photo.rot));
+        });
+        refreshEvidencePlaceholder(wrap);
+        syncEvidencePhotos(wrap);
+      });
+      try{ this.value=''; }catch(err){}
+    });
+  });
+  function clearActionPlanFieldErrors(){
+    document.querySelectorAll('.ap-field.ap-missing').forEach(function(el){ el.classList.remove('ap-missing'); });
+  }
+  function markFieldState(el,isMissing){
+    if(!el) return;
+    el.classList.toggle('ap-missing',!!isMissing);
+  }
+  function focusFirstMissingField(){
+    const first=document.querySelector('.ap-field.ap-missing');
+    if(first){
+      first.scrollIntoView({behavior:'smooth',block:'center'});
+      try{first.focus({preventScroll:true});}catch(err){ try{first.focus();}catch(err2){} }
+    }
+  }
+  window.__validateActionPlan=function(){
+    const pages=Array.from(document.querySelectorAll('.ap-page[data-key]'));
+    const problems=[];
+    clearActionPlanFieldErrors();
+    pages.forEach(function(page,idx){
+      const key=page.getAttribute('data-key')||'';
+      const getField=(field)=>page.querySelector('.ap-field[data-field="'+field+'"]');
+      const fieldDefs=[
+        ['correctiveAction','Corrective Action'],
+        ['department','Department'],
+        ['person','Responsible Person'],
+        ['date','Completion Date'],
+        ['progress','Progress']
+      ];
+      const missing=[];
+      fieldDefs.forEach(function(def){
+        const el=getField(def[0]);
+        const val=(el&&typeof el.value!=='undefined'?el.value:'').trim();
+        const isMissing=!val;
+        markFieldState(el,isMissing);
+        if(isMissing) missing.push(def[1]);
+      });
+      if(missing.length){
+        const itemTitle=((page.querySelector('.ap-readonly-block .ro-value')||{}).textContent||'').trim();
+        problems.push({page:idx+2, itemTitle:itemTitle, fields:missing});
+      }
+    });
+    return problems;
+  };
+  window.__showValidationPrompt=function(problems){
+    const overlay=document.getElementById('validationOverlay');
+    const list=document.getElementById('validationList');
+    if(!overlay||!list) return;
+    list.innerHTML=problems.map(function(p){
+      const title=p.itemTitle ? ' — '+p.itemTitle : '';
+      return '<div class="validation-item"><strong>Item Page '+p.page+title+'</strong><span>Missing: '+p.fields.join(', ')+'</span></div>';
+    }).join('');
+    overlay.style.display='flex';
+    focusFirstMissingField();
+  };
+  applyAllProgressStyles();
+  document.querySelectorAll('.ap-evidence-photo-block').forEach(function(wrap){ refreshEvidencePlaceholder(wrap); });
+})();
+function closeValidationPrompt(){
+  const overlay=document.getElementById('validationOverlay');
+  if(overlay) overlay.style.display='none';
+}
+document.getElementById('validationOverlay').addEventListener('click',function(e){
+  if(e.target.id==='validationOverlay') closeValidationPrompt();
+});
+
+function rotateEvidencePhoto(btn,delta){
+  const card=btn.closest('.ap-shot-card-evidence');
+  const wrap=btn.closest('.ap-evidence-photo-block');
+  if(!card || !wrap) return;
+  const img=card.querySelector('.ap-evidence-img');
+  if(!img || !img.getAttribute('src')) return;
+  const next=((parseInt(img.dataset.rot||'0',10)+delta)%360+360)%360;
+  img.dataset.rot=String(next);
+  img.style.transform='rotate('+next+'deg)';
+  syncEvidencePhotos(wrap);
+}
+
+function removeEvidencePhoto(btn){
+  const card=btn.closest('.ap-shot-card-evidence');
+  const wrap=btn.closest('.ap-evidence-photo-block');
+  if(!card || !wrap) return;
+  card.remove();
+  refreshEvidencePlaceholder(wrap);
+  syncEvidencePhotos(wrap);
+}
+
+function setPdfProgress(current,total,text){
+  const overlay=document.getElementById('progressOverlay');
+  const fill=document.getElementById('progressBarFill');
+  const label=document.getElementById('progressLabel');
+  const hint=document.getElementById('progressHint');
+  const pct=Math.max(0,Math.min(100,Math.round((current/Math.max(total,1))*100)));
+  if(overlay) overlay.style.display='flex';
+  if(fill) fill.style.width=pct+'%';
+  if(label) label.textContent=pct+'%';
+  if(hint) hint.textContent=text||'Rendering pages';
+}
+function hidePdfProgress(){
+  const overlay=document.getElementById('progressOverlay');
+  if(overlay) overlay.style.display='none';
+}
+async function exportActionPlanPdf(){
+  const problems=window.__validateActionPlan ? window.__validateActionPlan() : [];
+  if(problems.length){
+    window.__showValidationPrompt && window.__showValidationPrompt(problems);
+    return;
+  }
+  const btn=document.getElementById('exportPdfBtn');
+  const originalText=btn ? btn.textContent : '';
+  if(btn){btn.disabled=true;btn.textContent='Generating PDF...';}
+  try{
+    const { jsPDF } = window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait', unit:'mm', format:'a4', compress:true});
+    const pages=Array.from(document.querySelectorAll('.ap-page'));
+    const allImages=Array.from(document.querySelectorAll('.ap-page img'));
+    await Promise.all(allImages.map(function(img){
+      if(img.complete) return Promise.resolve();
+      return new Promise(function(resolve){
+        img.onload=resolve;
+        img.onerror=resolve;
+      });
+    }));
+    setPdfProgress(0,pages.length,'Preparing pages');
+    document.body.classList.add('pdf-exporting');
+
+    for(let i=0;i<pages.length;i++){
+      const page=pages[i];
+      setPdfProgress(i,pages.length,'Rendering page '+(i+1)+' of '+pages.length);
+
+      const cloneWrap=document.createElement('div');
+      cloneWrap.style.position='fixed';
+      cloneWrap.style.left='-100000px';
+      cloneWrap.style.top='0';
+      cloneWrap.style.width='210mm';
+      cloneWrap.style.height='297mm';
+      cloneWrap.style.background='#ffffff';
+      cloneWrap.style.zIndex='-1';
+      cloneWrap.style.overflow='hidden';
+
+      const cloneShell=document.createElement('div');
+      cloneShell.className='pdf-clone-shell';
+
+      const clone=page.cloneNode(true);
+      clone.style.margin='0 auto';
+      clone.style.width='210mm';
+      clone.style.height='297mm';
+      clone.style.minHeight='297mm';
+      clone.style.border='none';
+      clone.style.boxShadow='none';
+      clone.style.overflow='hidden';
+      clone.querySelectorAll('.photo-toolbar,.preview-toolbar,.validation-overlay,.progress-overlay').forEach(function(el){
+        el.remove();
+      });
+      const originalFields=Array.from(page.querySelectorAll('input, textarea, select'));
+      const cloneFields=Array.from(clone.querySelectorAll('input, textarea, select'));
+      originalFields.forEach(function(field, idx){
+        const c=cloneFields[idx];
+        if(!c) return;
+        if(field.tagName==='SELECT'){
+          c.value=field.value;
+          Array.from(c.options||[]).forEach(function(opt){ opt.selected = opt.value === field.value; });
+          const v=(field.value||'').toLowerCase().trim();
+          c.classList.remove('progress-completed','progress-partial','progress-not-started');
+          if(v==='completed') c.classList.add('progress-completed');
+          else if(v==='partially completed') c.classList.add('progress-partial');
+          else if(v==='not started') c.classList.add('progress-not-started');
+        }else{
+          c.value=field.value;
+        }
+      });
+      cloneShell.appendChild(clone);
+      cloneWrap.appendChild(cloneShell);
+      document.body.appendChild(cloneWrap);
+
+      const canvas=await html2canvas(cloneShell,{
+        scale:2.2,
+        useCORS:true,
+        allowTaint:true,
+        backgroundColor:'#ffffff',
+        scrollX:0,
+        scrollY:0,
+        width:cloneShell.offsetWidth,
+        height:cloneShell.offsetHeight,
+        windowWidth:cloneShell.offsetWidth,
+        windowHeight:cloneShell.offsetHeight,
+        foreignObjectRendering:false,
+        removeContainer:true
+      });
+
+      document.body.removeChild(cloneWrap);
+
+      const imgData=canvas.toDataURL('image/png');
+      if(i>0) pdf.addPage('a4','p');
+      pdf.addImage(imgData,'PNG',0,0,210,297,undefined,'FAST');
+      setPdfProgress(i+1,pages.length,'Composing PDF');
+    }
+    pdf.save((document.title||'Action Plan')+'.pdf');
+  }catch(err){
+    console.error(err);
+    alert('Failed to generate Action Plan PDF. Please try again.');
+  }finally{
+    document.body.classList.remove('pdf-exporting');
+    hidePdfProgress();
+    if(btn){btn.disabled=false;btn.textContent=originalText||'Generate PDF';}
+  }
+}
+<\/script>
+</body>
+</html>`;
+
+  try{
+    setProgressTitle("Exporting action plan HTML","");
+    setProgress(25,"Building responsive action plan file…");
+    const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+    setProgress(70,"Preparing download…");
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download=(getActionPlanFilename().replace(/\.json$/i,'')||'Food Safety Action Plan') + ".html";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setProgress(100,"Action plan HTML exported.");
+    setTimeout(function(){ URL.revokeObjectURL(url); hideProgress(); }, 700);
+  }catch(err){
+    console.error(err);
+    hideProgress();
+    alert("Failed to export Action Plan HTML.");
+  }
+}
+
 function openSendModal(){
   closePanel();
   const outlet=gv("locationOutlet")||gv("hotelName")||"";
@@ -1663,7 +2941,8 @@ function collectData(){
     globalItemPhotoCtr,
     sections:SECTIONS.map((_,sIdx)=>({items:SECTIONS[sIdx].items.map((__,iIdx)=>({status:document.querySelector(`input[name="r_${sIdx}_${iIdx}"]:checked`)?.value||"",comment:gv(`cmt_${sIdx}_${iIdx}`),photos:getItemPhotosData(sIdx,iIdx)}))})),
     photos:Array.from(document.querySelectorAll(".photo-card")).map(c=>({number:parseInt(c.dataset.n),rot:parseInt(c.dataset.rot||0),src:c.querySelector(".photo-img").src,desc:c.querySelector("textarea")?.value||""})),
-    settings:appSettings
+    settings:appSettings,
+    actionPlanState
   };
 }
 async function collectDataWithPhotos(){
@@ -1739,6 +3018,7 @@ function applyData(data){
   const i=data.info||{};
   ["hotelName","locationOutlet","inspectionDateTime","personOnDuty","departmentName","auditorName","generalObservation","correctiveAction"].forEach(id=>sv(id,i[id]||""));
   if(data.globalItemPhotoCtr)globalItemPhotoCtr=data.globalItemPhotoCtr;
+  actionPlanState=(data.actionPlanState&&typeof data.actionPlanState==="object"&&!Array.isArray(data.actionPlanState))?data.actionPlanState:{};
   document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
   document.querySelectorAll("#checklistRoot textarea").forEach(e=>{e.value="";if(e.classList.contains("auto-expand-text"))autoResizeComment(e);});
   document.querySelectorAll(".item-photo-grid").forEach(g=>g.innerHTML="");
@@ -1767,7 +3047,7 @@ function clearAll(){
   document.querySelectorAll(".check-row").forEach(r=>r.classList.remove("row-unrated"));
   document.querySelectorAll(".field-error").forEach(el=>el.classList.remove("field-error"));
   try{localStorage.removeItem("fsr_ultra");localStorage.removeItem("fsr_ultra_autosave");}catch(e){}
-  photoCtr=0;globalItemPhotoCtr=0;updatePills();updateSelectedStyles();scheduleSilentAutosave();closePanel();rebuildPhotoEvidenceSummary();
+  photoCtr=0;globalItemPhotoCtr=0;actionPlanState={};updatePills();updateSelectedStyles();scheduleSilentAutosave();closePanel();rebuildPhotoEvidenceSummary();
 }
 document.addEventListener("click",e=>{if(e.target&&e.target.id==="clearAllModal")closeClearAllModal();});
 
